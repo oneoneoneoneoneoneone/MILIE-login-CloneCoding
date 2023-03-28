@@ -93,4 +93,14 @@ extension LoginViewController: UITextFieldDelegate{
             passwordStackView.layer.borderColor = UIColor.lightGray.cgColor
         }
     }
+    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        //text 변경
+        if phoneTextField.text == "" || passwordTextField.text == "" {
+            loginButton.isEnabled = false
+        }
+        else{
+            loginButton.isEnabled = true
+        }
+    }
 }
