@@ -1,6 +1,10 @@
 # Created by https://www.toptal.com/developers/gitignore/api/swift,xcode,firebase,cocoapods
 # Edit at https://www.toptal.com/developers/gitignore?templates=swift,xcode,firebase,cocoapods
 
+
+### Firebase key 정보..###
+GoogleService-Info.plist
+
 ### CocoaPods ###
 ## CocoaPods GitIgnore Template
 
