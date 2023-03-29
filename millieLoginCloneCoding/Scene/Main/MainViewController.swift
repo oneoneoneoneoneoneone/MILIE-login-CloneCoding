@@ -25,7 +25,9 @@ class MainViewController: UIViewController {
     }
     
     @IBAction func logoutButtonTap(_ sender: UIButton) {
-        self.loginVM.logout()
+        if self.loginVM.logout(){
+            self.dismiss(animated: true)
+        }
     }
 }
 
