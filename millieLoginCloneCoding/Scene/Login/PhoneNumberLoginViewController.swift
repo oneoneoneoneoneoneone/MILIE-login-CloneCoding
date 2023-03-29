@@ -48,7 +48,7 @@ class PhoneNumberLoginViewController: UIViewController {
     @IBAction func getverificationCodeButtonTap(_ sender: UIButton) {
         guard let phoneNumber = phoneTextField.text else {return}
         
-        loginVM.getverificationCode(phoneNumber: phoneNumber)
+        loginVM.requestVerificationCode(phoneNumber: phoneNumber)
     }
     
     @IBAction func loginButtonTap(_ sender: UIButton) {
@@ -62,6 +62,7 @@ class PhoneNumberLoginViewController: UIViewController {
                 self.navigationController?.popToRootViewController(animated: true)                
             }
             else{
+                print("로그인 실패")
             }
         }
     }
