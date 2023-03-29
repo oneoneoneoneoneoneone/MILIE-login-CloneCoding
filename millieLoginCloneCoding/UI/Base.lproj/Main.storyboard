@@ -302,7 +302,7 @@
                                             <backgroundConfiguration key="background" image="apple" imageContentMode="scaleAspectFill"/>
                                         </buttonConfiguration>
                                         <connections>
-                                            <action selector="appleLoginButtonTap:" destination="m3V-mW-Cs2" eventType="touchUpInside" id="0yg-eT-gMT"/>
+                                            <action selector="appleLoginButtonTap:" destination="m3V-mW-Cs2" eventType="touchUpInside" id="xBF-E7-dbG"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="las-bS-VfY">
@@ -403,7 +403,7 @@
                     </view>
                     <navigationItem key="navigationItem" largeTitleDisplayMode="always" id="BV1-Z7-ImP"/>
                     <connections>
-                        <outlet property="appleLoginButton" destination="U9n-fu-vfW" id="7dA-py-qpl"/>
+                        <outlet property="appleLoginButton" destination="U9n-fu-vfW" id="gFQ-64-g4b"/>
                         <outlet property="facebookLoginButton" destination="U7I-7U-RbE" id="1ds-IF-Dnj"/>
                         <outlet property="googleLoginButton" destination="las-bS-VfY" id="TfN-ry-IIw"/>
                         <outlet property="kakaoLoginButton" destination="qpq-06-sTB" id="rZT-yb-hb9"/>
@@ -414,6 +414,7 @@
                         <outlet property="phoneNumberLoginButton" destination="kGW-Ba-dy7" id="4bn-5o-Qal"/>
                         <outlet property="phoneStackView" destination="0vl-V7-h76" id="m1n-k8-Chs"/>
                         <outlet property="phoneTextField" destination="xFv-Zu-xsb" id="Dhn-0X-gxN"/>
+                        <outlet property="socialLoginStackView" destination="sX8-33-tTJ" id="sQg-3c-LHr"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="za8-h3-OHp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
