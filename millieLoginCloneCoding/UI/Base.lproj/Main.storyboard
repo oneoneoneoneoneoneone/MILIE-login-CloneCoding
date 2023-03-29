@@ -290,7 +290,7 @@
                                             <action selector="facebookLoginButtonTap:" destination="m3V-mW-Cs2" eventType="touchUpInside" id="a9a-n2-7Jj"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U9n-fu-vfW">
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U9n-fu-vfW" customClass="ASAuthorizationAppleIDButton">
                                         <rect key="frame" x="237.33333333333337" y="0.0" width="50" height="50"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="50" id="E24-4Q-mYp"/>
