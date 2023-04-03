@@ -4,6 +4,8 @@
 
 ### Firebase key 정보..###
 GoogleService-Info.plist
+APIKey.plist
+info.plist
 
 ### CocoaPods ###
 ## CocoaPods GitIgnore Template
