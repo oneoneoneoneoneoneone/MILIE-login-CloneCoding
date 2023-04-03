@@ -11,12 +11,9 @@ import AuthenticationServices
 class LoginViewController: UIViewController {
     private var loginVM: LoginViewModel!
     
-    @IBOutlet weak var phoneStackView: UIStackView!
-    @IBOutlet weak var phoneTextField: UITextField!
-    
-    @IBOutlet weak var passwordStackView: UIStackView!
-    @IBOutlet weak var passwordTextField: UITextField!
-    
+    @IBOutlet weak var phoneInputView: InputStackView!
+    @IBOutlet weak var passwordInputView: InputStackView!
+
     @IBOutlet weak var loginButton: UIButton!
     
     @IBOutlet weak var socialLoginStackView: UIStackView!
@@ -48,17 +45,9 @@ class LoginViewController: UIViewController {
     }
     
     private func setAttribute(){
-        phoneTextField.delegate = self
-        passwordTextField.delegate = self
-        
-        phoneStackView.layer.cornerRadius = 5
-        phoneStackView.layer.borderWidth = 1
-        phoneStackView.layer.borderColor = UIColor.lightGray.cgColor
-        
-        passwordStackView.layer.cornerRadius = 5
-        passwordStackView.layer.borderWidth = 1
-        passwordStackView.layer.borderColor = UIColor.lightGray.cgColor
-        
+        phoneInputView.delegate = self
+        passwordInputView.delegate = self
+
         loginButton.layer.cornerRadius = 5
         
         kakaoLoginButton.layer.cornerRadius = 25
@@ -73,12 +62,20 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func loginButtonTap(_ sender: UIButton) {
-        guard let phoneNumber = phoneTextField.text,
-              let password = passwordTextField.text else {return}
+        guard let phoneNumber = phoneInputView.textField.text,
+              let password = passwordInputView.textField.text else {return}
     }
     
     @IBAction func kakaoLoginButtonTap(_ sender: UIButton) {
-        
+        loginVM.kakaoLogin{result in
+            if result{
+                //login 성공
+                self.dismiss(animated: true)
+                self.navigationController?.popToRootViewController(animated: true)
+            }
+            else{
+            }
+        }
     }
     
     @IBAction func naverLoginButtonTap(_ sender: UIButton) {
@@ -123,30 +120,10 @@ class LoginViewController: UIViewController {
     }
 }
 
-extension LoginViewController: UITextFieldDelegate{
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        //시작
-        if textField == phoneTextField {
-            phoneStackView.layer.borderColor = UIColor.black.cgColor
-        }
-        if textField == passwordTextField{
-            passwordStackView.layer.borderColor = UIColor.black.cgColor
-        }
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        //끝
-        if textField == phoneTextField {
-            phoneStackView.layer.borderColor = UIColor.lightGray.cgColor
-        }
-        if textField == passwordTextField{
-            passwordStackView.layer.borderColor = UIColor.lightGray.cgColor
-        }
-    }
-    
+extension LoginViewController: InputStackViewDelegate{
     func textFieldDidChangeSelection(_ textField: UITextField) {
         //text 변경
-        if phoneTextField.text == "" || passwordTextField.text == "" {
+        if phoneInputView.textField.text == "" || passwordInputView.textField.text == "" {
             loginButton.isEnabled = false
         }
         else{

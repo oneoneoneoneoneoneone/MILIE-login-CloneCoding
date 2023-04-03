@@ -10,14 +10,10 @@ import UIKit
 class PhoneNumberLoginViewController: UIViewController {
     private var loginVM: LoginViewModel!
     
-    @IBOutlet weak var phoneStackView: UIStackView!
-    @IBOutlet weak var phoneTextField: UITextField!
+    @IBOutlet weak var phoneInputView: InputStackView!
+    @IBOutlet weak var verificationCodeInputView: InputStackView!
     
     @IBOutlet weak var verificationCodeButton: UIButton!
-    
-    @IBOutlet weak var verificationCodeStackView: UIStackView!
-    @IBOutlet weak var verificationCodeTextField: UITextField!
-    
     @IBOutlet weak var loginButton: UIButton!
     
     override func viewDidLoad() {
@@ -29,31 +25,22 @@ class PhoneNumberLoginViewController: UIViewController {
     }
     
     private func setAttribute(){
-        phoneTextField.delegate = self
-        verificationCodeTextField.delegate = self
-        
-        phoneStackView.layer.cornerRadius = 5
-        phoneStackView.layer.borderWidth = 1
-        phoneStackView.layer.borderColor = UIColor.lightGray.cgColor
-        
-        verificationCodeStackView.layer.cornerRadius = 5
-        verificationCodeStackView.layer.borderWidth = 1
-        verificationCodeStackView.layer.borderColor = UIColor.lightGray.cgColor
-        
+        phoneInputView.delegate = self
+        verificationCodeInputView.delegate = self
+                
         verificationCodeButton.layer.cornerRadius = 5
         loginButton.layer.cornerRadius = 5
-        
     }
     
     @IBAction func getverificationCodeButtonTap(_ sender: UIButton) {
-        guard let phoneNumber = phoneTextField.text else {return}
+        guard let phoneNumber = phoneInputView.textField.text else {return}
         
         loginVM.requestVerificationCode(phoneNumber: phoneNumber)
     }
     
     @IBAction func loginButtonTap(_ sender: UIButton) {
-        guard let phoneNumber = phoneTextField.text,
-              let verificationCode = verificationCodeTextField.text else {return}
+        guard let phoneNumber = phoneInputView.textField.text,
+              let verificationCode = verificationCodeInputView.textField.text else {return}
         
         loginVM.phoneNumberLogin(phoneNumber: phoneNumber, verificationCode: verificationCode){result in
             if result{
@@ -69,37 +56,17 @@ class PhoneNumberLoginViewController: UIViewController {
     
 }
 
-extension PhoneNumberLoginViewController: UITextFieldDelegate{
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        //시작
-        if textField == phoneTextField {
-            phoneStackView.layer.borderColor = UIColor.black.cgColor
-        }
-        if textField == verificationCodeTextField{
-            verificationCodeTextField.layer.borderColor = UIColor.black.cgColor
-        }
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        //끝
-        if textField == phoneTextField {
-            phoneStackView.layer.borderColor = UIColor.lightGray.cgColor
-        }
-        if textField == verificationCodeTextField{
-            verificationCodeTextField.layer.borderColor = UIColor.lightGray.cgColor
-        }
-    }
-    
+extension PhoneNumberLoginViewController: InputStackViewDelegate{
     func textFieldDidChangeSelection(_ textField: UITextField) {
         //text 변경
-        if phoneTextField.text == "" {
+        if phoneInputView.textField.text == "" {
             verificationCodeButton.isEnabled = false
             loginButton.isEnabled = false
         }
         else{
             verificationCodeButton.isEnabled = true
             
-            if verificationCodeTextField.text == ""{
+            if verificationCodeInputView.textField.text == ""{
                 loginButton.isEnabled = false
             }
             else{
