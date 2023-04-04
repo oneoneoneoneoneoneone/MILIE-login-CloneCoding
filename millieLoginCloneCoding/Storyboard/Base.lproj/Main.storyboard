@@ -28,7 +28,7 @@
         <!--Start View Controller-->
         <scene sceneID="UGg-nz-Set">
             <objects>
-                <viewController id="EK4-FR-a7O" customClass="StartViewController" customModule="millieLoginCloneCoding" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="StartViewController" id="EK4-FR-a7O" customClass="StartViewController" customModule="millieLoginCloneCoding" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="svo-Qd-RKn">
                         <rect key="frame" x="0.0" y="0.0" width="430" height="932"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -105,7 +105,7 @@
         <!--Login View Controller-->
         <scene sceneID="I9P-en-cup">
             <objects>
-                <viewController id="m3V-mW-Cs2" customClass="LoginViewController" customModule="millieLoginCloneCoding" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginViewController" id="m3V-mW-Cs2" customClass="LoginViewController" customModule="millieLoginCloneCoding" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="sew-mc-T1j">
                         <rect key="frame" x="0.0" y="0.0" width="430" height="932"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -413,7 +413,7 @@
         <!--Phone Number Login View Controller-->
         <scene sceneID="d9Q-KY-SMh">
             <objects>
-                <viewController id="UhO-rx-WiT" customClass="PhoneNumberLoginViewController" customModule="millieLoginCloneCoding" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PhoneNumberLoginViewController" id="UhO-rx-WiT" customClass="PhoneNumberLoginViewController" customModule="millieLoginCloneCoding" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4mt-yF-Gbf">
                         <rect key="frame" x="0.0" y="0.0" width="430" height="932"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
