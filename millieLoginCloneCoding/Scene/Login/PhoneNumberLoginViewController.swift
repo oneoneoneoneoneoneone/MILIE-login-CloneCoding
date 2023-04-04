@@ -8,7 +8,7 @@
 import UIKit
 
 class PhoneNumberLoginViewController: UIViewController {
-    private var loginVM: LoginViewModel!
+    private var loginVM: FirebaseLogin!
     
     @IBOutlet weak var phoneInputView: InputStackView!
     @IBOutlet weak var verificationCodeInputView: InputStackView!
@@ -19,7 +19,7 @@ class PhoneNumberLoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.loginVM = LoginViewModel()
+        self.loginVM = FirebaseLogin()
         
         setAttribute()
     }
@@ -57,7 +57,7 @@ class PhoneNumberLoginViewController: UIViewController {
 }
 
 extension PhoneNumberLoginViewController: InputStackViewDelegate{
-    func textFieldDidChangeSelection(_ textField: UITextField) {
+    func inputTextFieldDidChangeSelection(_ textField: UITextField) {
         //text 변경
         if phoneInputView.textField.text == "" {
             verificationCodeButton.isEnabled = false
@@ -73,5 +73,9 @@ extension PhoneNumberLoginViewController: InputStackViewDelegate{
                 loginButton.isEnabled = true
             }
         }
+    }
+    
+    func inputTextField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        true
     }
 }

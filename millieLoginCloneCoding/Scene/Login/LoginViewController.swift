@@ -9,14 +9,14 @@ import UIKit
 import AuthenticationServices
 
 class LoginViewController: UIViewController {
-    private var loginVM: LoginViewModel!
+    private var loginVM: FirebaseLogin!
+    private var socialLoginVM: SocialLogin!
     
     @IBOutlet weak var phoneInputView: InputStackView!
     @IBOutlet weak var passwordInputView: InputStackView!
 
     @IBOutlet weak var loginButton: UIButton!
     
-    @IBOutlet weak var socialLoginStackView: UIStackView!
     @IBOutlet weak var kakaoLoginButton: UIButton!
     @IBOutlet weak var naverLoginButton: UIButton!
     @IBOutlet weak var facebookLoginButton: UIButton!
@@ -27,7 +27,8 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.loginVM = LoginViewModel()
+        self.loginVM = FirebaseLogin()
+        self.socialLoginVM = SocialLogin(firebaseLogin: loginVM)
         
         setAttribute()
     }
@@ -67,7 +68,7 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func kakaoLoginButtonTap(_ sender: UIButton) {
-        loginVM.kakaoLogin{result in
+        socialLoginVM.kakaoLogin{result in
             if result{
                 //login 성공
                 self.dismiss(animated: true)
@@ -108,7 +109,7 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func googleLoginButtonTap(_ sender: UIButton) {
-        loginVM.googleLogin(viewController: self){result in
+        socialLoginVM.googleLogin(viewController: self){result in
             if result{
                 //login 성공
                 self.dismiss(animated: true)
@@ -121,7 +122,7 @@ class LoginViewController: UIViewController {
 }
 
 extension LoginViewController: InputStackViewDelegate{
-    func textFieldDidChangeSelection(_ textField: UITextField) {
+    func inputTextFieldDidChangeSelection(_ textField: UITextField) {
         //text 변경
         if phoneInputView.textField.text == "" || passwordInputView.textField.text == "" {
             loginButton.isEnabled = false
@@ -129,6 +130,10 @@ extension LoginViewController: InputStackViewDelegate{
         else{
             loginButton.isEnabled = true
         }
+    }
+    
+    func inputTextField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        true
     }
 }
 
@@ -150,7 +155,7 @@ extension LoginViewController: ASAuthorizationControllerDelegate {
             }
             
             //firebase 자격증명 사용
-            loginVM.appleLogin(IDToken: idTokenString){result in
+            socialLoginVM.appleLogin(IDToken: idTokenString){result in
                 if result{
                     //login 성공
                     DispatchQueue.main.async{

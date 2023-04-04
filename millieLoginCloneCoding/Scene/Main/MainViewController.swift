@@ -8,14 +8,14 @@
 import UIKit
 
 class MainViewController: UIViewController {
-    private var loginVM: LoginViewModel!
+    private var loginVM: FirebaseLogin!
     
     @IBOutlet weak var userNameLabel: UILabel!
     @IBOutlet weak var logoutButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.loginVM = LoginViewModel()
+        self.loginVM = FirebaseLogin()
         
         setAttribute()
     }

@@ -11,25 +11,32 @@ import FirebaseAuth
 import FirebaseCore
 import GoogleSignIn
 import AuthenticationServices
+import KakaoSDKUser
+import KakaoSDKCommon
+import KakaoSDKAuth
 
-protocol LoginProtocol {
+protocol FirebaseLoginProtocol {
     func checkLogin() -> Bool
-    func logout() -> Bool
     func login(credential: AuthCredential, completionHandler: @escaping ((Bool) -> Void))
-        
-    func phoneNumberLogin(phoneNumber: String, verificationCode: String, completionHandler: @escaping ((Bool) -> Void))
-    func kakaoLogin(completionHandler: @escaping ((Bool) -> Void))
-    func naverLogin(completionHandler: @escaping ((Bool) -> Void))
-    func facebookLogin(completionHandler: @escaping ((Bool) -> Void))
-    func appleLogin(IDToken: String, completionHandler: @escaping ((Bool) -> Void))
-    func googleLogin(viewController: UIViewController, completionHandler: @escaping ((Bool) -> Void))
+    func logout() -> Bool
     
+    func checkJoin() -> Bool
+    func Join(completionHandler: @escaping ((Bool) -> Void))
+    
+    func phoneNumberLogin(phoneNumber: String, verificationCode: String, completionHandler: @escaping ((Bool) -> Void))
     func requestVerificationCode(phoneNumber: String)
-    func requestGoogleSignIn(viewController: UIViewController, completionHandler: @escaping ((AuthCredential?) -> Void))
 }
 
 
-class LoginViewModel: LoginProtocol{
+class FirebaseLogin: FirebaseLoginProtocol{
+    func checkJoin() -> Bool {
+        return true
+    }
+    
+    func Join(completionHandler: @escaping ((Bool) -> Void)) {
+        
+    }
+    
     
     ///MFA(다중인증) 여부
     ///
@@ -142,44 +149,11 @@ class LoginViewModel: LoginProtocol{
             completionHandler(result)
         }
     }
-    
-    func kakaoLogin(completionHandler: @escaping ((Bool) -> Void)){}
-    func naverLogin(completionHandler: @escaping ((Bool) -> Void)){}
-    func facebookLogin(completionHandler: @escaping ((Bool) -> Void)){}
-    
-    ///firebase apple 로그인 - 자격증명 생성
-    func appleLogin(IDToken: String, completionHandler: @escaping ((Bool) -> Void)){
-        guard let nonce = currentNonce else {
-            fatalError("Invalid state: A login callback was received, but no login request was sent.")
-        }
-        
-        //자격증명 생성
-        let credential = OAuthProvider.credential(withProviderID: "apple.com",
-                                                  idToken: IDToken,
-                                                  rawNonce: nonce) as AuthCredential
-        
-        self.login(credential: credential){result in
-            completionHandler(true)
-        }
-    }
-    
-    ///firebase google 로그인 - 자격증명 생성
-    func googleLogin(viewController: UIViewController, completionHandler: @escaping ((Bool) -> Void)){
-        requestGoogleSignIn(viewController: viewController){ credential in
-            guard let credential = credential else {
-                return completionHandler(false)
-            }
-            
-            self.login(credential: credential){result in
-                completionHandler(true)
-            }
-        }
-    }
         
     ///firebase 전화번호 로그인 - 인증번호 전송
     ///- 원래 요청이 시간 초과되지 않았다면 SMS를 재차 보내지 않습니다.
     ///- test number - 01000120000 / code - 002002
-    func requestVerificationCode(phoneNumber: String){
+    internal func requestVerificationCode(phoneNumber: String){
         //Change language code to french.
 //        Auth.auth().languageCode = "kr";
         
@@ -195,47 +169,13 @@ class LoginViewModel: LoginProtocol{
           }
     }
     
-    ///GoogleSignIn 로그인 요청
-    func requestGoogleSignIn(viewController: UIViewController, completionHandler: @escaping ((AuthCredential?) -> Void)){
-        guard let clientID = FirebaseApp.app()?.options.clientID else { return }
-
-        // Create Google Sign In configuration object.
-        let config = GIDConfiguration(clientID: clientID)
-        GIDSignIn.sharedInstance.configuration = config
-
-        // Start the sign in flow!
-        GIDSignIn.sharedInstance.signIn(withPresenting: viewController) { [weak self] result, error in
-            guard error == nil else {
-                // ...
-                print(error)
-                completionHandler(nil)
-                return
-            }
-
-            guard let user = result?.user,
-            let idToken = user.idToken?.tokenString
-            else {
-                // ...?
-                completionHandler(nil)
-                return
-            }
-            //로그인 성공
-            let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: user.accessToken.tokenString) as AuthCredential
-            
-            completionHandler(credential)
-        }
-    }
-    
-       
-    
-    
     ///textField에 안내 메시지 표시
     ///- parameter withMessage: 사용자에게 보여줄 메시지
     ///
-    func showTextInputPrompt(withMessage: String, completionBlock: (Bool, String?)->Void){
-        print(withMessage)
-        //userPressedOK, displayName
-        completionBlock(true, "")
-        
-    }
+//    func showTextInputPrompt(withMessage: String, completionBlock: (Bool, String?)->Void){
+//        print(withMessage)
+//        //userPressedOK, displayName
+//        completionBlock(true, "")
+//
+//    }
 }
