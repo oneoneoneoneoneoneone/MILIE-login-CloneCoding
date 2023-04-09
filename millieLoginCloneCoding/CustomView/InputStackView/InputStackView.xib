@@ -13,6 +13,7 @@
                 <outlet property="stackView" destination="cpa-mn-ZPB" id="Luk-13-sgb"/>
                 <outlet property="textField" destination="Zbq-BF-abW" id="mJm-Fc-yXK"/>
                 <outlet property="titleLabel" destination="REQ-xq-qaS" id="7XN-BX-ux2"/>
+                <outlet property="view" destination="iN0-l3-epB" id="B10-sQ-paH"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>

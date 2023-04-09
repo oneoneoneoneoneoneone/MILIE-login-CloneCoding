@@ -14,6 +14,7 @@ import UIKit
 
 @IBDesignable
 class InputStackView: UIView {
+    @IBOutlet var view: UIView!
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var textField: UITextField!
@@ -69,7 +70,9 @@ class InputStackView: UIView {
     }
     
     func xibSetup() {
-        guard let view = loadViewFromNib(nib: "InputStackView") else { return }
+        let bundle = Bundle(for: InputStackView.self)
+        bundle.loadNibNamed("InputStackView", owner: self, options: nil)
+        
         view.frame = bounds
         view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         addSubview(view)
@@ -101,13 +104,5 @@ extension InputStackView: UITextFieldDelegate{
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         return delegate?.inputTextField!(textField, shouldChangeCharactersIn: range, replacementString: string) ?? true
-    }
-}
-
-extension UIView {
-    func loadViewFromNib(nib: String) -> UIView? {
-        let bundle = Bundle(for: type(of: self))
-        let nib = UINib(nibName: nib, bundle: bundle)
-        return nib.instantiate(withOwner: self, options: nil).first as? UIView
     }
 }
