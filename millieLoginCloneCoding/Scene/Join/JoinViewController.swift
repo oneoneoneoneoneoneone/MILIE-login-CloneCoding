@@ -23,6 +23,7 @@ protocol SocialJoinDelegate{
 }
 
 class JoinViewController: UIViewController {
+    private var loginVM: FirebaseLogin!
     private var socialLoginVM: SocialLogin!
     
     @IBOutlet weak var nameInputView: InputStackView!
@@ -41,12 +42,16 @@ class JoinViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //test
+        nextButton.isEnabled = true
+        
         setAttribute()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.socialLoginVM = SocialLogin(firebaseLogin: FirebaseLogin())
+        self.loginVM = FirebaseLogin()
+        self.socialLoginVM = SocialLogin()
         
         phoneInputView.textField.becomeFirstResponder()
     }
@@ -109,15 +114,33 @@ class JoinViewController: UIViewController {
             return
         }
         //회원 여부 확인
-        if false{
-            return
+        loginVM.checkJoin(phone: phoneInputView.textField.text){ [self] result in
+            if result{
+                //이미 회원임
+                return
+            }
+            
+            DispatchQueue.main.async {
+                self.view.endEditing(true)
+                agencyStackView.layer.borderColor = UIColor.black.cgColor
+                
+                let termsofUseViewController = TermsofUseViewController()//(delegate: self)
+                if let sheet = termsofUseViewController.sheetPresentationController {
+                    //크기
+                    sheet.detents = [.medium(), .large()]
+                    //무조건 싯트 아래 어둡게
+                    sheet.largestUndimmedDetentIdentifier = .none
+                    //크기확장X
+                    sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+                    //아래 고정
+                    sheet.prefersEdgeAttachedInCompactHeight = true
+                    //너비 맞춤
+                    sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
+                    sheet.preferredCornerRadius = 30
+                }
+                self.present(termsofUseViewController, animated: true)
+            }
         }
-        
-        guard let joinJoinTermsofUseVC =  UIStoryboard(name: "Join", bundle: nil)
-            .instantiateViewController(withIdentifier: "JoinTermsofUseViewController") as? JoinTermsofUseViewController else {return}
-        joinJoinTermsofUseVC.modalPresentationStyle = .fullScreen
-        
-        self.show(joinJoinTermsofUseVC, sender: nextButton)
     }
 }
 

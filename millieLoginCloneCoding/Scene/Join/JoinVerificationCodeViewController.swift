@@ -1,5 +1,5 @@
 //
-//  PhoneNumberLoginViewController.swift
+//  JoinVerificationCodeViewController.swift
 //  millieLoginCloneCoding
 //
 //  Created by hana on 2023/03/28.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PhoneNumberLoginViewController: UIViewController {
+class JoinVerificationCodeViewController: UIViewController {
     private var loginVM: FirebaseLogin!
     
     @IBOutlet weak var phoneInputView: InputStackView!
@@ -56,7 +56,7 @@ class PhoneNumberLoginViewController: UIViewController {
     
 }
 
-extension PhoneNumberLoginViewController: InputStackViewDelegate{
+extension JoinVerificationCodeViewController: InputStackViewDelegate{
     func inputTextFieldDidChangeSelection(_ textField: UITextField) {
         //text 변경
         if phoneInputView.textField.text == "" {

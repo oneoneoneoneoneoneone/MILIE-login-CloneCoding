@@ -22,13 +22,11 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var facebookLoginButton: UIButton!
     @IBOutlet weak var appleLoginButton: ASAuthorizationAppleIDButton!
     @IBOutlet weak var googleLoginButton: UIButton!
-    
-    @IBOutlet weak var phoneNumberLoginButton: UIButton!
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         self.loginVM = FirebaseLogin()
-        self.socialLoginVM = SocialLogin(firebaseLogin: loginVM)
+        self.socialLoginVM = SocialLogin()
         
         setAttribute()
     }
@@ -58,8 +56,6 @@ class LoginViewController: UIViewController {
         googleLoginButton.layer.cornerRadius = 25
         googleLoginButton.layer.borderWidth = 0.5
         googleLoginButton.layer.borderColor = UIColor.lightGray.cgColor
-        
-        phoneNumberLoginButton.layer.cornerRadius = 5
     }
     
     @IBAction func loginButtonTap(_ sender: UIButton) {
