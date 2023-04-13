@@ -9,9 +9,9 @@ Firebase Authentication을 활용한 밀리의 서재 앱(ver 5.4.1) 로그인/�
 
 ## 기술 스택
 - UIKit / UIStoryboard
-- Firebase Authentication / Firebase Realtime Database
-- URLSession
-- MVVM Architecture
+- Firebase Authentication / ~~Firebase Realtime Database~~
+- ~~URLSession~~
+- MVC Architecture
 
 
 </br>
