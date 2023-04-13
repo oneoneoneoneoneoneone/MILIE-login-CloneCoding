@@ -8,45 +8,55 @@
 import UIKit
 
 class JoinVerificationCodeViewController: UIViewController {
-    private var loginVM: FirebaseLogin!
+    private var loginVM: FirebaseLoginProtocol!
     
-    @IBOutlet weak var phoneInputView: InputStackView!
     @IBOutlet weak var verificationCodeInputView: InputStackView!
     
-    @IBOutlet weak var verificationCodeButton: UIButton!
-    @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet weak var resendButton: UIButton!
+    @IBOutlet weak var nextButton: UIButton!
+    
+    init(loginVM: FirebaseLoginProtocol!) {
+        self.loginVM = loginVM
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.loginVM = FirebaseLogin()
-        
+                
         setAttribute()
     }
     
     private func setAttribute(){
-        phoneInputView.delegate = self
         verificationCodeInputView.delegate = self
-                
-        verificationCodeButton.layer.cornerRadius = 5
-        loginButton.layer.cornerRadius = 5
+        
+        nextButton.layer.cornerRadius = 5
     }
     
-    @IBAction func getverificationCodeButtonTap(_ sender: UIButton) {
-        guard let phoneNumber = phoneInputView.textField.text else {return}
-        
-        loginVM.requestVerificationCode(phoneNumber: phoneNumber)
+    @IBAction func resendButtonTap(_ sender: UIButton) {
+        loginVM.requestVerificationCode(phoneNumber: ""){result in
+            if result{
+                //재전송
+            }else{
+                //싫패
+            }
+        }
     }
     
-    @IBAction func loginButtonTap(_ sender: UIButton) {
-        guard let phoneNumber = phoneInputView.textField.text,
-              let verificationCode = verificationCodeInputView.textField.text else {return}
+    @IBAction func nextButtonTap(_ sender: UIButton) {
+        guard let verificationCode = verificationCodeInputView.textField.text else {return}
         
-        loginVM.phoneNumberLogin(phoneNumber: phoneNumber, verificationCode: verificationCode){result in
+        loginVM.phoneNumberLogin(verificationCode: verificationCode){result in
             if result{
                 //login 성공
-                self.dismiss(animated: true)
-                self.navigationController?.popToRootViewController(animated: true)                
+                guard let joinProfileViewController =  UIStoryboard(name: "Join", bundle: nil)
+                    .instantiateViewController(withIdentifier: "JoinProfileViewController") as? JoinProfileViewController else {return}
+                
+                self.navigationController?.pushViewController(joinProfileViewController, animated: true)
             }
             else{
                 print("로그인 실패")
@@ -58,20 +68,11 @@ class JoinVerificationCodeViewController: UIViewController {
 
 extension JoinVerificationCodeViewController: InputStackViewDelegate{
     func inputTextFieldDidChangeSelection(_ textField: UITextField) {
-        //text 변경
-        if phoneInputView.textField.text == "" {
-            verificationCodeButton.isEnabled = false
-            loginButton.isEnabled = false
+        if textField.text == "" {
+            nextButton.isEnabled = false
         }
         else{
-            verificationCodeButton.isEnabled = true
-            
-            if verificationCodeInputView.textField.text == ""{
-                loginButton.isEnabled = false
-            }
-            else{
-                loginButton.isEnabled = true
-            }
+            nextButton.isEnabled = true
         }
     }
     

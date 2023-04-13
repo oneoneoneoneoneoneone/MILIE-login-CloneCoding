@@ -8,6 +8,7 @@
 import UIKit
 
 class JoinProfileViewController: UIViewController {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }

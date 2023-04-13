@@ -9,7 +9,7 @@ import UIKit
 import AuthenticationServices
 
 class SocialJoinViewController: UIViewController {
-    var delegate: SocialJoinDelegate! = nil
+    var delegate: SocialJoinDelegate!
     
     @IBOutlet weak var baseView: UIView!
     

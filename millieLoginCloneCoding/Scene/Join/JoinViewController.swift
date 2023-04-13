@@ -10,7 +10,10 @@ import AuthenticationServices
 
 protocol AgencyDelegate{
     func sendValue(selectedAgency: String)
-    func dismissed()
+    func dismissedAgency()
+}
+protocol TermsofUseDelegate{
+    func dismissedTermsofUse()
 }
 protocol SocialJoinDelegate{
     func kakaoJoin()
@@ -23,8 +26,8 @@ protocol SocialJoinDelegate{
 }
 
 class JoinViewController: UIViewController {
-    private var loginVM: FirebaseLogin!
-    private var socialLoginVM: SocialLogin!
+    private var loginVM: FirebaseLoginProtocol!
+    private var socialLoginVM: SocialLoginProtocol!
     
     @IBOutlet weak var nameInputView: InputStackView!
     
@@ -53,7 +56,7 @@ class JoinViewController: UIViewController {
         self.loginVM = FirebaseLogin()
         self.socialLoginVM = SocialLogin()
         
-        phoneInputView.textField.becomeFirstResponder()
+//        phoneInputView.textField.becomeFirstResponder()
     }
         
     private func setAttribute(){
@@ -114,7 +117,7 @@ class JoinViewController: UIViewController {
             return
         }
         //회원 여부 확인
-        loginVM.checkJoin(phone: phoneInputView.textField.text){ [self] result in
+        loginVM.checkJoin(phone: phoneInputView.textField.text, email: ""){ [self] result in
             if result{
                 //이미 회원임
                 return
@@ -124,7 +127,10 @@ class JoinViewController: UIViewController {
                 self.view.endEditing(true)
                 agencyStackView.layer.borderColor = UIColor.black.cgColor
                 
-                let termsofUseViewController = TermsofUseViewController()//(delegate: self)
+                guard let termsofUseViewController =  UIStoryboard(name: "Join", bundle: nil)
+                    .instantiateViewController(withIdentifier: "TermsofUseViewController") as? TermsofUseViewController else {return}
+                termsofUseViewController.delegate = self
+                
                 if let sheet = termsofUseViewController.sheetPresentationController {
                     //크기
                     sheet.detents = [.medium(), .large()]
@@ -213,6 +219,12 @@ extension JoinViewController: InputStackViewDelegate{
 }
 
 extension JoinViewController: AgencyDelegate{
+    func dismissedAgency() {
+        agencyStackView.layer.borderColor = UIColor.lightGray.cgColor
+        //@@@@@@@@@@@@@@@@@
+        //birthStackView 에 포커스 가야해
+    }
+    
     func sendValue(selectedAgency: String){
         
         agencyButton.setTitle(selectedAgency, for: .normal)
@@ -220,11 +232,26 @@ extension JoinViewController: AgencyDelegate{
         
         birthStackView.isHidden = false
     }
-    
-    func dismissed(){
-        agencyStackView.layer.borderColor = UIColor.lightGray.cgColor
-        //@@@@@@@@@@@@@@@@@
-        //birthStackView 에 포커스 가야해
+}
+
+extension JoinViewController: TermsofUseDelegate{
+    func dismissedTermsofUse() {
+        //휴대폰번호 보내기 실패 확인. 개인정보 검증하는듯
+        guard let phoneNumber = phoneInputView.textField.text else {return}
+        loginVM.requestVerificationCode(phoneNumber: phoneNumber){result in
+            if result{
+                let joinVerificationCodeViewController = JoinVerificationCodeViewController(loginVM: self.loginVM)
+                        //UIStoryboard(name: "Join", bundle: nil)
+//                    .instantiateViewController(withIdentifier: "JoinVerificationCodeViewController") as? JoinVerificationCodeViewController( else {return}
+                //joinVerificationCodeViewController viewmodel 전달해야함
+
+                                                                                                                                             
+                self.navigationController?.pushViewController(joinVerificationCodeViewController, animated: true)
+            }else{
+                //알랏
+            }
+        }
+        
     }
 }
 

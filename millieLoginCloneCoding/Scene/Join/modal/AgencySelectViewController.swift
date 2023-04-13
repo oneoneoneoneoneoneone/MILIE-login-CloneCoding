@@ -76,7 +76,7 @@ class AgencySelectViewController: UIViewController{
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
         
-        delegate?.dismissed()
+        delegate?.dismissedAgency()
     }
 }
 
@@ -91,7 +91,7 @@ extension AgencySelectViewController: UITableViewDelegate, UITableViewDataSource
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        delegate?.sendValue(selectedAgency: agencyList[indexPath.row])
+        self.delegate?.sendValue(selectedAgency: agencyList[indexPath.row])
         self.dismiss(animated: true)
     }
 }
