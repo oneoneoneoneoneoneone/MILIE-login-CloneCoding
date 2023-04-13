@@ -35,15 +35,6 @@ Firebase Authentication을 활용한 밀리의 서재 앱(ver 5.4.1) 로그인/�
   
 - **Custom UI Component**
   - 반복되는 입력 컨트롤을 스토리보드에서 렌더링되도록 .xib로 작성했습니다.
-  
-
-</br>
-
-
-### 3. Database
-
-- Firebase Realtime Database
-  - email이 아닌 전화번호로 로그인하는 본 앱을 구현하기 위해 다양한 user 정보를 저장할 수 있게 db를 사용했습니다.
 
 
 </br>
