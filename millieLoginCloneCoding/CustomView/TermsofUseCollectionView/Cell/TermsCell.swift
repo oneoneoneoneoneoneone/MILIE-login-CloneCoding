@@ -28,20 +28,23 @@ class TermsCell: UITableViewCell {
         let bundle = Bundle(for: TermsCell.self)
         bundle.loadNibNamed("TermsCell", owner: self, options: nil)
         
+        addSubview(tableViewCell)
+        
         tableViewCell.frame = bounds
         tableViewCell.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        addSubview(tableViewCell)
-        tableViewCell.selectionStyle = .none
+//        tableViewCell.selectionStyle = .none
+        
+        checkButton.configurationUpdateHandler = {[weak self] button in
+            switch button.state{
+            case .normal:
+                button.configuration?.image = .init(systemName: "square")
+            case .selected:
+                button.configuration?.image = .init(systemName: "checkmark.square.fill")
+            default: break
+            }
+        }
     }
 
     private func setAttribute(){
     }
 }
-
-//extension UITableViewCell {
-//    func loadViewFromNib(nib: String) -> UIView? {
-//        let bundle = Bundle(for: type(of: self))
-//        let nib = UINib(nibName: nib, bundle: bundle)
-//        return nib.instantiate(withOwner: self, options: nil).first as? UIView
-//    }
-//}
