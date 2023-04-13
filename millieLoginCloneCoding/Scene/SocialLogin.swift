@@ -16,6 +16,8 @@ import KakaoSDKCommon
 import KakaoSDKAuth
 
 protocol SocialLoginProtocol {
+    var currentNonce: String? {get set}
+    
     func kakaoLogin(completionHandler: @escaping ((Bool) -> Void))
     func naverLogin(completionHandler: @escaping ((Bool) -> Void))
     func facebookLogin(completionHandler: @escaping ((Bool) -> Void))
@@ -27,7 +29,7 @@ protocol SocialLoginProtocol {
 
 
 class SocialLogin: SocialLoginProtocol{
-    let firebaseLogin: FirebaseLogin
+    let firebaseLogin: FirebaseLoginProtocol
     
     ///MFA(다중인증) 여부
     ///
@@ -39,7 +41,7 @@ class SocialLogin: SocialLoginProtocol{
     var currentNonce: String?
     
     
-    init(firebaseLogin: FirebaseLogin) {
+    init(firebaseLogin: FirebaseLogin = FirebaseLogin()) {
         self.firebaseLogin = firebaseLogin
     }
     

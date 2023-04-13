@@ -20,23 +20,16 @@ protocol FirebaseLoginProtocol {
     func login(credential: AuthCredential, completionHandler: @escaping ((Bool) -> Void))
     func logout() -> Bool
     
-    func checkJoin() -> Bool
-    func Join(completionHandler: @escaping ((Bool) -> Void))
+    func checkJoin(phone: String?, email: String?, completionHandler: @escaping ((Bool) -> Void))
+    func Join(nickname: String, name: String, phone: String, email: String?, password: String, completionHandler: @escaping ((Bool) -> Void))
     
-    func phoneNumberLogin(phoneNumber: String, verificationCode: String, completionHandler: @escaping ((Bool) -> Void))
-    func requestVerificationCode(phoneNumber: String)
+    func phoneNumberLogin(verificationCode: String, completionHandler: @escaping ((Bool) -> Void))
+    func requestVerificationCode(phoneNumber: String?, completionHandler: @escaping ((Bool) -> Void))
 }
 
 
 class FirebaseLogin: FirebaseLoginProtocol{
-    func checkJoin() -> Bool {
-        return true
-    }
-    
-    func Join(completionHandler: @escaping ((Bool) -> Void)) {
-        
-    }
-    
+    let networkManager = NetworkManager()
     
     ///MFA(다중인증) 여부
     ///
@@ -47,6 +40,30 @@ class FirebaseLogin: FirebaseLoginProtocol{
     ///apple login에 사용
     var currentNonce: String?
     
+    var phoneNumber: String!
+    
+    ///회원가입 여부 확인
+    func checkJoin(phone: String? = nil, email: String? = nil, completionHandler: @escaping ((Bool) -> Void)){
+        Task(priority: .userInitiated){
+            do{
+                if phone != nil{
+                    guard let user = try await networkManager.selectWherePhone(phone: phone!) else {return}
+                    
+                    if user.count > 0{
+                        //회원정보 있음
+                        completionHandler(true)
+                    }
+                    else{
+                        completionHandler(false)
+                    }
+                }
+            }catch{
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    ///로그인 여부 확인
     func checkLogin() -> Bool{
         if Auth.auth().currentUser != nil {
             return true
@@ -56,6 +73,20 @@ class FirebaseLogin: FirebaseLoginProtocol{
         }
     }
     
+    ///회원가입
+    func Join(nickname: String, name: String, phone: String, email: String?, password: String, completionHandler: @escaping ((Bool) -> Void)) {
+        Auth.auth().createUser(withEmail: phone, password: password){result, arg  in
+            let profile = result?.user.createProfileChangeRequest()
+            profile?.displayName = nickname
+            profile?.photoURL = URL(string: "")
+//            result?.user.updatePhoneNumber(PhoneAuthCredential(coder: NSCoder()))
+            profile?.commitChanges()
+        }
+        
+//        Auth.auth().currentUser?.phoneNumber
+    }
+    
+    ///firebase 로그아웃
     func logout() -> Bool{
         let firebaseAuth = Auth.auth()
         do {
@@ -137,7 +168,7 @@ class FirebaseLogin: FirebaseLoginProtocol{
     }
     
     ///firebase 전화번호 로그인 요청
-    func phoneNumberLogin(phoneNumber: String, verificationCode: String, completionHandler: @escaping ((Bool) -> Void)) {
+    func phoneNumberLogin(verificationCode: String, completionHandler: @escaping ((Bool) -> Void)) {
         guard let verificationID = UserDefaults.standard.string(forKey: "authId") else {return}
         
         let credential = PhoneAuthProvider.provider().credential(
@@ -153,19 +184,29 @@ class FirebaseLogin: FirebaseLoginProtocol{
     ///firebase 전화번호 로그인 - 인증번호 전송
     ///- 원래 요청이 시간 초과되지 않았다면 SMS를 재차 보내지 않습니다.
     ///- test number - 01000120000 / code - 002002
-    internal func requestVerificationCode(phoneNumber: String){
+    internal func requestVerificationCode(phoneNumber: String? = "", completionHandler: @escaping ((Bool) -> Void)) {
         //Change language code to french.
 //        Auth.auth().languageCode = "kr";
         
-        PhoneAuthProvider.provider()
-          .verifyPhoneNumber("+82 \(phoneNumber)", uiDelegate: nil) { verificationID, error in
-              if let error = error {
-                  print(error.localizedDescription)
+        if phoneNumber != "" {
+            self.phoneNumber = phoneNumber
+        }
+        
+        PhoneAuthProvider.provider().verifyPhoneNumber("+82 \(self.phoneNumber)", uiDelegate: nil) { verificationID, error in
+            if let error = error {
+                //에러남-.-
+                //Can't find keyplane that supports type 4 for keyboard iPhone-PortraitChoco-NumberPad; using 27303_PortraitChoco_iPhone-Simple-Pad_Default
+                //https://millie-login-default-rtdb.firebaseio.com/users.json?print=pretty&orderBy=%22phone%22&equalTo=%2201056246246%22
+                //Invalid format.
+                print(error.localizedDescription)
+                completionHandler(false)
                 return
-              }
-              //전송, id생성
-              self.isMFAEnabled = true
-              UserDefaults.standard.set(verificationID, forKey: "authId")
+            }
+            //전송, id생성
+            self.isMFAEnabled = true
+            UserDefaults.standard.set(verificationID, forKey: "authId")
+            
+            completionHandler(true)
           }
     }
     
