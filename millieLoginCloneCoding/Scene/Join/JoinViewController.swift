@@ -56,7 +56,8 @@ class JoinViewController: UIViewController {
         self.loginVM = FirebaseLogin()
         self.socialLoginVM = SocialLogin()
         
-//        phoneInputView.textField.becomeFirstResponder()
+        //firebase 로그인 캡챠인증 후 오류나는거같음
+        phoneInputView.textField.becomeFirstResponder()
     }
         
     private func setAttribute(){
@@ -150,6 +151,9 @@ class JoinViewController: UIViewController {
     }
 }
 
+
+//MARK: extension UITextFieldDelegate
+
 extension JoinViewController: UITextFieldDelegate{
     func textFieldDidBeginEditing(_ textField: UITextField) {
         //시작
@@ -165,11 +169,18 @@ extension JoinViewController: UITextFieldDelegate{
         }
     }
     
+    //지정된 텍스트 필드에서 텍스트 선택이 변경되면 대리자에게 알립니다.
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        if birthTextField.text?.count == 6 && genderTextField.text?.count == 1{
-            nameInputView.isHidden = false
-            //@@@@@@@@@@@@@@@@@@@@@@@@@
-            //nameInputView 에 포커스 가야해
+        if textField == birthTextField{
+            if birthTextField.text?.count == 6{
+                genderTextField.becomeFirstResponder()
+            }
+        }
+        if textField == genderTextField{
+            if genderTextField.text?.count == 1 && birthTextField.text?.count == 6 {
+                nameInputView.isHidden = false
+                nameInputView.textField.becomeFirstResponder()
+            }
         }
     }
     
@@ -177,8 +188,6 @@ extension JoinViewController: UITextFieldDelegate{
         if textField == birthTextField{
             if textField.text?.count == 6  && string != ""{
                 return false
-                //@@@@@@@@@@@@@@@@@@@@@@@@@
-                //genderTextField 에 포커스 가야해
             }
         }
         if textField == genderTextField{
@@ -190,10 +199,13 @@ extension JoinViewController: UITextFieldDelegate{
     }
 }
 
+//MARK: extension InputStackViewDelegate
+
 extension JoinViewController: InputStackViewDelegate{
     func inputTextFieldDidChangeSelection(_ textField: UITextField) {
         if textField == phoneInputView.textField{
-            if textField.text?.count == 11{
+            if textField.text?.ranges(of: Util.phoneRegex).isEmpty == false ||
+               textField.text?.ranges(of: Util.phone10Regex).isEmpty == false{
                 if agencyStackView.isHidden{
                     agencyStackView.isHidden = false
                     agencyButtonTap(agencyButton)
@@ -218,19 +230,20 @@ extension JoinViewController: InputStackViewDelegate{
     }
 }
 
+
+//MARK: extension protocolDelegate
+
 extension JoinViewController: AgencyDelegate{
     func dismissedAgency() {
         agencyStackView.layer.borderColor = UIColor.lightGray.cgColor
-        //@@@@@@@@@@@@@@@@@
-        //birthStackView 에 포커스 가야해
     }
     
     func sendValue(selectedAgency: String){
-        
         agencyButton.setTitle(selectedAgency, for: .normal)
         agencyButton.setTitleColor(.label, for: .normal)
         
         birthStackView.isHidden = false
+        birthTextField.becomeFirstResponder()
     }
 }
 
@@ -241,11 +254,6 @@ extension JoinViewController: TermsofUseDelegate{
         loginVM.requestVerificationCode(phoneNumber: phoneNumber){result in
             if result{
                 let joinVerificationCodeViewController = JoinVerificationCodeViewController(loginVM: self.loginVM)
-                        //UIStoryboard(name: "Join", bundle: nil)
-//                    .instantiateViewController(withIdentifier: "JoinVerificationCodeViewController") as? JoinVerificationCodeViewController( else {return}
-                //joinVerificationCodeViewController viewmodel 전달해야함
-
-                                                                                                                                             
                 self.navigationController?.pushViewController(joinVerificationCodeViewController, animated: true)
             }else{
                 //알랏
@@ -313,6 +321,9 @@ extension JoinViewController: SocialJoinDelegate{
         view.alpha = 1
     }
 }
+
+
+//MARK: extension ASAuthorizationControllerDelegate
 
 extension JoinViewController: ASAuthorizationControllerDelegate {
     ///인증에 성공하면 인증 컨트롤러는 앱이 사용자 데이터를 키체인에 저장하는 데 사용하는 위임 기능을 호출
