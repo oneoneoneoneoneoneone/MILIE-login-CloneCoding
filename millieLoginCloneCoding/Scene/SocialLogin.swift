@@ -53,7 +53,7 @@ class SocialLogin: SocialLoginProtocol{
                 return completionHandler(false)
             }
             
-            self.firebaseLogin.login(credential: credential){result in
+            self.firebaseLogin.socialLogin(credential: credential){result in
                 completionHandler(result)
             }
         }
@@ -87,7 +87,7 @@ class SocialLogin: SocialLoginProtocol{
                                                   idToken: IDToken,
                                                   rawNonce: nonce) as AuthCredential
         
-        self.firebaseLogin.login(credential: credential){result in
+        self.firebaseLogin.socialLogin(credential: credential){result in
             completionHandler(true)
         }
     }
@@ -99,7 +99,7 @@ class SocialLogin: SocialLoginProtocol{
                 return completionHandler(false)
             }
             
-            self.firebaseLogin.login(credential: credential){result in
+            self.firebaseLogin.socialLogin(credential: credential){result in
                 completionHandler(true)
             }
         }
