@@ -53,11 +53,13 @@ class InputStackView: UIView {
         }
     }
     
-    var delegate: InputStackViewDelegate? {
-        didSet {
-            textFieldDidChangeSelection(textField)
-        }
-    }
+    //?? didsetㅇ ㅙ 한거지
+    var delegate: InputStackViewDelegate?
+//    {
+//        didSet {
+//            textFieldDidChangeSelection(textField)
+//        }
+//    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -99,10 +101,10 @@ extension InputStackView: UITextFieldDelegate{
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        delegate?.inputTextFieldDidChangeSelection!(textField)
+        delegate?.inputTextFieldDidChangeSelection?(textField)
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        return delegate?.inputTextField!(textField, shouldChangeCharactersIn: range, replacementString: string) ?? true
+        return delegate?.inputTextField?(textField, shouldChangeCharactersIn: range, replacementString: string) ?? true
     }
 }
