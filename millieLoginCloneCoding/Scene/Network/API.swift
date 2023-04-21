@@ -39,6 +39,7 @@ struct API{
             URLQueryItem(name: "orderBy", value: "\"\(queryname!)\""),
             URLQueryItem(name: "equalTo", value: "\"\(queryvalue!)\"")
         ]
+        
         return components
     }
 }
