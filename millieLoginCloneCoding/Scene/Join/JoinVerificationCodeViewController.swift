@@ -8,22 +8,11 @@
 import UIKit
 
 class JoinVerificationCodeViewController: UIViewController {
-    private var loginVM: FirebaseLoginProtocol!
+    var loginVM: FirebaseLoginProtocol!
     
     @IBOutlet weak var verificationCodeInputView: InputStackView!
-    
     @IBOutlet weak var resendButton: UIButton!
     @IBOutlet weak var nextButton: UIButton!
-    
-    init(loginVM: FirebaseLoginProtocol!) {
-        self.loginVM = loginVM
-        
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,7 +27,7 @@ class JoinVerificationCodeViewController: UIViewController {
     }
     
     @IBAction func resendButtonTap(_ sender: UIButton) {
-        loginVM.requestVerificationCode(phoneNumber: ""){result in
+        loginVM.requestVerificationCode(){result in
             if result{
                 //재전송
             }else{
@@ -55,6 +44,7 @@ class JoinVerificationCodeViewController: UIViewController {
                 //login 성공
                 guard let joinProfileViewController =  UIStoryboard(name: "Join", bundle: nil)
                     .instantiateViewController(withIdentifier: "JoinProfileViewController") as? JoinProfileViewController else {return}
+                joinProfileViewController.loginVM = self.loginVM
                 
                 self.navigationController?.pushViewController(joinProfileViewController, animated: true)
             }
