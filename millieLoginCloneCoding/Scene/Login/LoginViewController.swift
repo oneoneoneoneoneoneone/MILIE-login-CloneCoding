@@ -61,6 +61,13 @@ class LoginViewController: UIViewController {
     @IBAction func loginButtonTap(_ sender: UIButton) {
         guard let phoneNumber = phoneInputView.textField.text,
               let password = passwordInputView.textField.text else {return}
+        
+        loginVM.login(phone: phoneNumber, password: password){result in
+            if result {
+                self.dismiss(animated: true)
+                self.navigationController?.popToRootViewController(animated: true)
+            }
+        }
     }
     
     @IBAction func kakaoLoginButtonTap(_ sender: UIButton) {
@@ -126,10 +133,6 @@ extension LoginViewController: InputStackViewDelegate{
         else{
             loginButton.isEnabled = true
         }
-    }
-    
-    func inputTextField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        true
     }
 }
 
