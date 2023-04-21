@@ -16,15 +16,40 @@ import KakaoSDKCommon
 import KakaoSDKAuth
 
 protocol FirebaseLoginProtocol {
+    ///로그인 여부 확인
     func checkLogin() -> Bool
-    func login(credential: AuthCredential, completionHandler: @escaping ((Bool) -> Void))
+    
+    ///firebase 로그인 - 기본로그인
+    func login(phone: String, password: String, completionHandler: @escaping ((Bool) -> Void))
+    
+    ///firebase 로그인 - 소셜인증
+    func socialLogin(credential: AuthCredential, completionHandler: @escaping ((Bool) -> Void))
+    
+    ///firebase 로그아웃
     func logout() -> Bool
     
-    func checkJoin(phone: String?, email: String?, completionHandler: @escaping ((Bool) -> Void))
-    func Join(nickname: String, name: String, phone: String, email: String?, password: String, completionHandler: @escaping ((Bool) -> Void))
+    ///회원가입 여부 확인
+    func checkJoin(phone: String, completionHandler: @escaping ((Bool) -> Void))
     
+    ///firebase 회원가입 - createUser email로만 회원가입 가능
+    ///1. 현재 로그인한 유저정보를 db에 저장시킴
+    ///2. db에서 받아온 email정보를 현재로그인 정보에 업데이트
+    func Join(password: String, completionHandler: @escaping ((Bool) -> Void))
+    
+    ///firebase 사용자 정보 업데이트 - 사용자 프로필 설정 후, db저장 전
+    func userInfoUpdate(displayName: String, photoURL: String)
+    
+    
+    ///firebase 전화번호 로그인 요청
     func phoneNumberLogin(verificationCode: String, completionHandler: @escaping ((Bool) -> Void))
+    
+    ///firebase 전화번호 로그인 - 인증번호 전송
+    ///- 원래 요청이 시간 초과되지 않았다면 SMS를 재차 보내지 않습니다.
+    ///- test number - 01000120000 / code - 002002
     func requestVerificationCode(phoneNumber: String?, completionHandler: @escaping ((Bool) -> Void))
+    
+    ///firebase 전화번호 로그인 - 인증번호 재전송
+    func requestVerificationCode(completionHandler: @escaping ((Bool) -> Void))
 }
 
 
@@ -40,27 +65,27 @@ class FirebaseLogin: FirebaseLoginProtocol{
     ///apple login에 사용
     var currentNonce: String?
     
-    var phoneNumber: String!
+    var phoneNumber: String = ""
     
     ///회원가입 여부 확인
-    func checkJoin(phone: String? = nil, email: String? = nil, completionHandler: @escaping ((Bool) -> Void)){
+    func checkJoin(phone: String, completionHandler: @escaping ((Bool) -> Void)){
         Task(priority: .userInitiated){
             do{
-                if phone != nil{
-                    guard let user = try await networkManager.selectWherePhone(phone: phone!) else {return}
-                    
-                    if user.count > 0{
-                        //회원정보 있음
-                        completionHandler(true)
-                    }
-                    else{
-                        completionHandler(false)
-                    }
+                guard let user = try await networkManager.selectWherePhone(phone: phone) else {return}
+                
+                if user.count > 0{
+                    //회원정보 있음
+                    completionHandler(true)
                 }
+                else{
+                    completionHandler(false)
+                }
+                
             }catch{
                 print(error.localizedDescription)
             }
         }
+        
     }
     
     ///로그인 여부 확인
@@ -71,19 +96,6 @@ class FirebaseLogin: FirebaseLoginProtocol{
         else{
             return false
         }
-    }
-    
-    ///회원가입
-    func Join(nickname: String, name: String, phone: String, email: String?, password: String, completionHandler: @escaping ((Bool) -> Void)) {
-        Auth.auth().createUser(withEmail: phone, password: password){result, arg  in
-            let profile = result?.user.createProfileChangeRequest()
-            profile?.displayName = nickname
-            profile?.photoURL = URL(string: "")
-//            result?.user.updatePhoneNumber(PhoneAuthCredential(coder: NSCoder()))
-            profile?.commitChanges()
-        }
-        
-//        Auth.auth().currentUser?.phoneNumber
     }
     
     ///firebase 로그아웃
@@ -98,75 +110,99 @@ class FirebaseLogin: FirebaseLoginProtocol{
         }
     }
     
-    ///firebase 로그인
-    func login(credential: AuthCredential, completionHandler: @escaping ((Bool) -> Void)) {
-        //로그인
+    ///firebase 로그인 - 기본로그인
+    func login(phone: String, password: String, completionHandler: @escaping ((Bool) -> Void)) {
+        Task(priority: .userInitiated){
+            do{
+                guard let user = try await networkManager.selectWherePhone(phone: phone) else {return}
+                
+                if user.count > 0{
+                    //검색된 회원이 있으면 로그인
+                    guard let email = user.first?.value.email else {return}
+                    Auth.auth().signIn(withEmail: email, password: password){ [weak self] authResult, error in
+                        if let error = error{
+                            print(error.localizedDescription)
+                            completionHandler(false)
+                            return
+                        }
+                        completionHandler(true)
+                    }
+                }
+                else{
+                    completionHandler(false)
+                }
+            }catch{
+                print(error.localizedDescription)
+            }
+        }
+        
+    }
+    
+    ///firebase 로그인 - 소셜인증
+    func socialLogin(credential: AuthCredential, completionHandler: @escaping ((Bool) -> Void)) {
+        //지정된 타사 사용자 인증 정보 로그인
         Auth.auth().signIn(with: credential) { [weak self] authResult, error in
             if let error = error {
-              let authError = error as NSError
-              if self!.isMFAEnabled, authError.code == AuthErrorCode.secondFactorRequired.rawValue {
-                // 사용자는 다중 요인 사용자입니다. 두 번째 요인 과제가 필요합니다.
-                let resolver = authError
-                  .userInfo[AuthErrorUserInfoMultiFactorResolverKey] as! MultiFactorResolver
-                var displayNameString = ""
-                for tmpFactorInfo in resolver.hints {
-                  displayNameString += tmpFactorInfo.displayName ?? ""
-                  displayNameString += " "
+                let authError = error as NSError
+                if self?.isMFAEnabled == true, authError.code == AuthErrorCode.secondFactorRequired.rawValue {
+                    // 사용자는 다중 요인 사용자입니다. 두 번째 요인 과제가 필요합니다.
+                    let resolver = authError
+                    .userInfo[AuthErrorUserInfoMultiFactorResolverKey] as! MultiFactorResolver
+                    var displayNameString = ""
+                    for tmpFactorInfo in resolver.hints {
+                        displayNameString += tmpFactorInfo.displayName ?? ""
+                        displayNameString += " "
+                    }
                 }
-//                  self?.showTextInputPrompt(
-//                  withMessage: "Select factor to sign in\n\(displayNameString)",
-//                  completionBlock: { userPressedOK, displayName in
-//                    var selectedHint: PhoneMultiFactorInfo?
-//                    for tmpFactorInfo in resolver.hints {
-//                      if displayName == tmpFactorInfo.displayName {
-//                        selectedHint = tmpFactorInfo as? PhoneMultiFactorInfo
-//                      }
-//                    }
-//                    PhoneAuthProvider.provider()
-//                      .verifyPhoneNumber(with: selectedHint!, uiDelegate: nil,
-//                                         multiFactorSession: resolver
-//                                           .session) { verificationID, error in
-//                        if error != nil {
-//                          print(
-//                            "Multi factor start sign in failed. Error: \(error.debugDescription)"
-//                          )
-//                        } else {
-//                          self?.showTextInputPrompt(
-//                            withMessage: "Verification code for \(selectedHint?.displayName ?? "")",
-//                            completionBlock: { userPressedOK, verificationCode in
-//                              let credential: PhoneAuthCredential? = PhoneAuthProvider.provider()
-//                                .credential(withVerificationID: verificationID!,
-//                                            verificationCode: verificationCode!)
-//                              let assertion: MultiFactorAssertion? = PhoneMultiFactorGenerator
-//                                .assertion(with: credential!)
-//                              resolver.resolveSignIn(with: assertion!) { authResult, error in
-//                                if error != nil {
-//                                  print(
-//                                    "Multi factor finanlize sign in failed. Error: \(error.debugDescription)"
-//                                  )
-//                                } else {
-//                                    //self.navigationController?.popViewController(animated: true)
-//                                }
-//                              }
-//                            }
-//                          )
-//                        }
-//                      }
-//                  }
-//                )
-              } else {
-                  print(error.localizedDescription)
-                  completionHandler(false)
-                  return
-              }
-              // ...
-              return
+                else {
+                    print(error.localizedDescription)
+                    completionHandler(false)
+                    return
+                }
+                return
             }
             //로그인 성공
             completionHandler(true)
         }
     }
     
+    ///firebase 회원가입 - createUser email로만 회원가입 가능
+    ///1. 현재 로그인한 유저정보를 db에 저장시킴
+    ///2. db에서 받아온 email정보를 현재로그인 정보에 업데이트
+    func Join(password: String, completionHandler: @escaping ((Bool) -> Void)) {
+        guard let phone = Auth.auth().currentUser?.phoneNumber else {return}
+        
+        let user = User(id: "", email: "", phone: phone, password: password)
+        
+        Task(priority: .userInitiated){
+            do{
+                guard let dataName = try await networkManager.updateUser(user: user) else {return}
+                let email = "\(dataName)@email.com"
+                
+                try await Auth.auth().currentUser?.updateEmail(to: email)
+                completionHandler(true)
+            }catch{
+                //에러처리
+                print(error.localizedDescription)
+                completionHandler(false)
+                return
+            }
+        }
+    }
+
+    ///firebase 사용자 정보 업데이트 - 사용자 프로필 설정 후, db저장 전
+    func userInfoUpdate(displayName: String, photoURL: String){
+        let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
+        changeRequest?.displayName = displayName
+        changeRequest?.photoURL = URL(string: photoURL)
+        changeRequest?.commitChanges(){error in
+            if let error = error {
+                //실패
+                return
+            }
+        }
+    }
+        
     ///firebase 전화번호 로그인 요청
     func phoneNumberLogin(verificationCode: String, completionHandler: @escaping ((Bool) -> Void)) {
         guard let verificationID = UserDefaults.standard.string(forKey: "authId") else {return}
@@ -176,7 +212,7 @@ class FirebaseLogin: FirebaseLoginProtocol{
                 verificationCode: verificationCode
         ) as AuthCredential
         
-        self.login(credential: credential){result in
+        self.socialLogin(credential: credential){result in
             completionHandler(result)
         }
     }
@@ -184,20 +220,16 @@ class FirebaseLogin: FirebaseLoginProtocol{
     ///firebase 전화번호 로그인 - 인증번호 전송
     ///- 원래 요청이 시간 초과되지 않았다면 SMS를 재차 보내지 않습니다.
     ///- test number - 01000120000 / code - 002002
-    internal func requestVerificationCode(phoneNumber: String? = "", completionHandler: @escaping ((Bool) -> Void)) {
+    internal func requestVerificationCode(phoneNumber: String? = nil, completionHandler: @escaping ((Bool) -> Void)) {
         //Change language code to french.
 //        Auth.auth().languageCode = "kr";
         
-        if phoneNumber != "" {
-            self.phoneNumber = phoneNumber
+        if phoneNumber != nil {
+            self.phoneNumber = phoneNumber!
         }
         
         PhoneAuthProvider.provider().verifyPhoneNumber("+82 \(self.phoneNumber)", uiDelegate: nil) { verificationID, error in
             if let error = error {
-                //에러남-.-
-                //Can't find keyplane that supports type 4 for keyboard iPhone-PortraitChoco-NumberPad; using 27303_PortraitChoco_iPhone-Simple-Pad_Default
-                //https://millie-login-default-rtdb.firebaseio.com/users.json?print=pretty&orderBy=%22phone%22&equalTo=%2201056246246%22
-                //Invalid format.
                 print(error.localizedDescription)
                 completionHandler(false)
                 return
@@ -208,6 +240,13 @@ class FirebaseLogin: FirebaseLoginProtocol{
             
             completionHandler(true)
           }
+    }
+    
+///firebase 전화번호 로그인 - 인증번호 재전송
+    internal func requestVerificationCode(completionHandler: @escaping ((Bool) -> Void)) {
+        requestVerificationCode(phoneNumber: self.phoneNumber){result in
+            completionHandler(result)
+        }
     }
     
     ///textField에 안내 메시지 표시
