@@ -19,17 +19,26 @@ protocol FirebaseLoginProtocol {
     ///로그인 여부 확인
     func checkLogin() -> Bool
     
-    ///firebase 로그인 - 기본로그인
+    ///firebase 로그인 - 기본로그인(휴대폰)
     func login(phone: String, password: String, completionHandler: @escaping ((Bool) -> Void))
+    
+    ///firebase 로그인 - 기본로그인(이메일)
+    func login(email: String, password: String, completionHandler: @escaping ((Bool) -> Void))
     
     ///firebase 로그인 - 소셜인증
     func socialLogin(credential: AuthCredential, completionHandler: @escaping ((Bool) -> Void))
+    
+    ///firebase 커스텀 토큰 인증
+    func customLogin(customToken: String, completionHandler: @escaping ((Bool) -> Void))
     
     ///firebase 로그아웃
     func logout() -> Bool
     
     ///회원가입 여부 확인
     func checkJoin(phone: String, completionHandler: @escaping ((Bool) -> Void))
+    
+    ///유저 생성 join
+    func createUser(email: String, password: String, completionHandler: @escaping ((Bool) -> Void))
     
     ///firebase 회원가입 - createUser email로만 회원가입 가능
     ///1. 현재 로그인한 유저정보를 db에 저장시킴
@@ -54,7 +63,7 @@ protocol FirebaseLoginProtocol {
 
 
 class FirebaseLogin: FirebaseLoginProtocol{
-    let networkManager = NetworkManager()
+    let networkManager: NetworkManager
     
     ///MFA(다중인증) 여부
     ///
@@ -66,6 +75,10 @@ class FirebaseLogin: FirebaseLoginProtocol{
     var currentNonce: String?
     
     var phoneNumber: String = ""
+    
+    init(networkManager: NetworkManager = NetworkManager()) {
+        self.networkManager = networkManager
+    }
     
     ///회원가입 여부 확인
     func checkJoin(phone: String, completionHandler: @escaping ((Bool) -> Void)){
@@ -125,10 +138,12 @@ class FirebaseLogin: FirebaseLoginProtocol{
                             completionHandler(false)
                             return
                         }
+                        //로그인 완료
                         completionHandler(true)
                     }
                 }
                 else{
+                    //가입된 회원정보 없음
                     completionHandler(false)
                 }
             }catch{
@@ -138,16 +153,44 @@ class FirebaseLogin: FirebaseLoginProtocol{
         
     }
     
-    ///firebase 로그인 - 소셜인증
-    func socialLogin(credential: AuthCredential, completionHandler: @escaping ((Bool) -> Void)) {
+    ///firebase 로그인 - 이메일로그인
+    func login(email: String, password: String, completionHandler: @escaping ((Bool) -> Void)){
+            Task(priority: .userInitiated){
+                do{
+                    guard let user = try await networkManager.selectWhereEmail(email: email) else {return}
+                    
+                    if user.count > 0{
+                        //검색된 회원이 있으면 로그인
+                        guard let email = user.first?.value.email else {return}
+                        Auth.auth().signIn(withEmail: email, password: password){ [weak self] authResult, error in
+                            if let error = error{
+                                print(error.localizedDescription)
+                                completionHandler(false)
+                                return
+                            }
+                            completionHandler(true)
+                        }
+                    }
+                    else{
+                        completionHandler(false)
+                    }
+                }catch{
+                    print(error.localizedDescription)
+                }
+            }
+            
+    }
+    
+    ///firebase 로그인 - 커스텀 토큰 인증
+    func customLogin(customToken: String, completionHandler: @escaping ((Bool) -> Void)) {
         //지정된 타사 사용자 인증 정보 로그인
-        Auth.auth().signIn(with: credential) { [weak self] authResult, error in
+        Auth.auth().signIn(withCustomToken: customToken) { [weak self] authResult, error in
             if let error = error {
                 let authError = error as NSError
                 if self?.isMFAEnabled == true, authError.code == AuthErrorCode.secondFactorRequired.rawValue {
                     // 사용자는 다중 요인 사용자입니다. 두 번째 요인 과제가 필요합니다.
                     let resolver = authError
-                    .userInfo[AuthErrorUserInfoMultiFactorResolverKey] as! MultiFactorResolver
+                        .userInfo[AuthErrorUserInfoMultiFactorResolverKey] as! MultiFactorResolver
                     var displayNameString = ""
                     for tmpFactorInfo in resolver.hints {
                         displayNameString += tmpFactorInfo.displayName ?? ""
@@ -166,13 +209,51 @@ class FirebaseLogin: FirebaseLoginProtocol{
         }
     }
     
+    ///firebase 로그인 - 소셜인증
+    func socialLogin(credential: AuthCredential, completionHandler: @escaping ((Bool) -> Void)) {
+        //지정된 타사 사용자 인증 정보 로그인
+        Auth.auth().signIn(with: credential) { [weak self] authResult, error in
+            if let error = error {
+                let authError = error as NSError
+                if self?.isMFAEnabled == true, authError.code == AuthErrorCode.secondFactorRequired.rawValue {
+                    // 사용자는 다중 요인 사용자입니다. 두 번째 요인 과제가 필요합니다.
+                    let resolver = authError
+                        .userInfo[AuthErrorUserInfoMultiFactorResolverKey] as! MultiFactorResolver
+                    var displayNameString = ""
+                    for tmpFactorInfo in resolver.hints {
+                        displayNameString += tmpFactorInfo.displayName ?? ""
+                        displayNameString += " "
+                    }
+                }
+                else {
+                    print(error.localizedDescription)
+                    completionHandler(false)
+                    return
+                }
+                return
+            }
+            //로그인 성공
+            completionHandler(true)
+        }
+    }
+    
+    func createUser(email: String, password: String, completionHandler: @escaping ((Bool) -> Void)) {
+        Auth.auth().createUser(withEmail: email, password: password){ [weak self] authResult, error in
+            if let error = error {
+                completionHandler(false)
+                return
+            }
+            completionHandler(true)
+        }
+    }
+    
     ///firebase 회원가입 - createUser email로만 회원가입 가능
     ///1. 현재 로그인한 유저정보를 db에 저장시킴
     ///2. db에서 받아온 email정보를 현재로그인 정보에 업데이트
     func Join(password: String, completionHandler: @escaping ((Bool) -> Void)) {
         guard let phone = Auth.auth().currentUser?.phoneNumber else {return}
         
-        let user = User(id: "", email: "", phone: phone, password: password)
+        let user = User(id: loginType.phone, email: "", phone: phone, password: password)
         
         Task(priority: .userInitiated){
             do{
@@ -189,7 +270,7 @@ class FirebaseLogin: FirebaseLoginProtocol{
             }
         }
     }
-
+    
     ///firebase 사용자 정보 업데이트 - 사용자 프로필 설정 후, db저장 전
     func userInfoUpdate(displayName: String, photoURL: String){
         let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
@@ -202,27 +283,27 @@ class FirebaseLogin: FirebaseLoginProtocol{
             }
         }
     }
-        
+    
     ///firebase 전화번호 로그인 요청
     func phoneNumberLogin(verificationCode: String, completionHandler: @escaping ((Bool) -> Void)) {
         guard let verificationID = UserDefaults.standard.string(forKey: "authId") else {return}
         
         let credential = PhoneAuthProvider.provider().credential(
-                withVerificationID: verificationID,
-                verificationCode: verificationCode
+            withVerificationID: verificationID,
+            verificationCode: verificationCode
         ) as AuthCredential
         
         self.socialLogin(credential: credential){result in
             completionHandler(result)
         }
     }
-        
+    
     ///firebase 전화번호 로그인 - 인증번호 전송
     ///- 원래 요청이 시간 초과되지 않았다면 SMS를 재차 보내지 않습니다.
     ///- test number - 01000120000 / code - 002002
     internal func requestVerificationCode(phoneNumber: String? = nil, completionHandler: @escaping ((Bool) -> Void)) {
         //Change language code to french.
-//        Auth.auth().languageCode = "kr";
+        //        Auth.auth().languageCode = "kr";
         
         if phoneNumber != nil {
             self.phoneNumber = phoneNumber!
@@ -239,16 +320,16 @@ class FirebaseLogin: FirebaseLoginProtocol{
             UserDefaults.standard.set(verificationID, forKey: "authId")
             
             completionHandler(true)
-          }
+        }
     }
     
-///firebase 전화번호 로그인 - 인증번호 재전송
+    ///firebase 전화번호 로그인 - 인증번호 재전송
     internal func requestVerificationCode(completionHandler: @escaping ((Bool) -> Void)) {
         requestVerificationCode(phoneNumber: self.phoneNumber){result in
             completionHandler(result)
         }
     }
-    
+        
     ///textField에 안내 메시지 표시
     ///- parameter withMessage: 사용자에게 보여줄 메시지
     ///
