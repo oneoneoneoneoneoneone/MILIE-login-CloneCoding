@@ -16,9 +16,10 @@ extension String {
     }
 
     func base64Decoded() -> String? { // base64 디코딩 수행 실시
-        if let data = Data(base64Encoded: self, options: .ignoreUnknownCharacters) {
+        if let data = Data(base64Encoded: self.padding(toLength: ((self.count+3)/4)*4, withPad: "=", startingAt: 0), options: .ignoreUnknownCharacters) {
             return String(data: data, encoding: .utf8)
         }
+        
         return ""
     }
 }
