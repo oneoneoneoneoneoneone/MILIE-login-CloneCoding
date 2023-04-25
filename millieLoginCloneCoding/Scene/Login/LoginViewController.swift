@@ -31,8 +31,9 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.loginVM = FirebaseLogin()
-        self.socialLoginVM = SocialLogin()
+        
+        self.loginVM = FirebaseLogin(networkManager: NetworkManager())
+        self.socialLoginVM = SocialLogin(firebaseLogin: loginVM, dbNetworkManager: NetworkManager(), serverNetworkManager: NetworkManager())
         self.appleLoginManager = AppleLoginManager(viewController: self, delegate: self, socialLoginVM: socialLoginVM)
         
         setAttribute()

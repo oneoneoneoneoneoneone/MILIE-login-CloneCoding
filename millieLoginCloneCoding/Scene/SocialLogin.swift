@@ -32,25 +32,24 @@ protocol SocialLoginProtocol{
 }
 
 
-class SocialLogin: SocialLoginProtocol{
+class SocialLogin{
     
-    let firebaseLogin: FirebaseLoginProtocol
-    let networkManager: NetworkManager
-    
-    ///MFA(다중인증) 여부
-    ///
-    ///소셜로그인 여부인듯?
-    var isMFAEnabled = false
-    
+    private var firebaseLogin: FirebaseLoginProtocol?
+    private var dbNetworkManager: DBNetworkManagerProtocol?
+    private var serverNetworkManager: ServerNetworkManagerProtocol?
+
     ///로그인 요청마다 생성되는 임의의 문자열
     ///apple login에 사용
     var currentNonce: String?
-        
-    init(firebaseLogin: FirebaseLogin = FirebaseLogin(), networkManager: NetworkManager = NetworkManager()) {
-        self.firebaseLogin = firebaseLogin
-        self.networkManager = networkManager
-    }
     
+    init(firebaseLogin: FirebaseLoginProtocol? = nil, dbNetworkManager: DBNetworkManagerProtocol? = nil, serverNetworkManager: ServerNetworkManagerProtocol?) {
+        self.firebaseLogin = firebaseLogin
+        self.dbNetworkManager = dbNetworkManager
+        self.serverNetworkManager = serverNetworkManager
+    }
+}
+    
+extension SocialLogin: SocialLoginProtocol{
     //MARK: kakao 로그인
     func kakaoLogin(isLogin: Bool, completionHandler: @escaping ((Bool) -> Void)){
         if !UserApi.isKakaoTalkLoginAvailable(){
@@ -64,7 +63,7 @@ class SocialLogin: SocialLoginProtocol{
             guard accessToken != nil else {
                 return
             }
-                        
+            
             //회원정보 조회
             UserApi.shared.me(){ (user, error) in
                 if let error = error {
@@ -84,7 +83,7 @@ class SocialLogin: SocialLoginProtocol{
                 Task(priority: .userInitiated){
                     do{
                         //db에서 회원 여부 확인
-                        if (try await self.networkManager.selectWhereEmail(email: userEmail)?.filter({$0.value.id.rawValue == loginType.kakao.rawValue}).keys.first) == nil{
+                        if (try await self.dbNetworkManager?.selectWhereEmail(email: userEmail)?.filter({$0.value.id.rawValue == loginType.kakao.rawValue}).keys.first) == nil{
                             if isLogin{
                                 //회원가입 요청 알랏
                                 completionHandler(false)
@@ -93,16 +92,16 @@ class SocialLogin: SocialLoginProtocol{
                             else{
                                 //기존유저가 아니면 - db추가
                                 let user = User(id: loginType.kakao, email: userEmail, phone: "", password: "")
-                                try await self.networkManager.updateUser(user: user)
-
+                                try await self.dbNetworkManager?.updateUser(user: user)
+                                
                             }
                         }
                         
                         //로컬서버에서 토큰 발급
-                        guard let customToken = try await self.networkManager.requestToken(accessToken: accessToken!) else {return}
+                        guard let customToken = try await self.serverNetworkManager?.requestToken(accessToken: accessToken!) else {return}
                         
                         //로그인
-                        self.firebaseLogin.customLogin(customToken: customToken){result in
+                        self.firebaseLogin?.customLogin(customToken: customToken){result in
                             if result{
                                 completionHandler(true)
                             }
@@ -144,9 +143,9 @@ class SocialLogin: SocialLoginProtocol{
                         completionHandler(nil)
                         return
                     }
-//                    let credential = OAuthProvider.credential(withProviderID: "kakao.com",
-//                                                              idToken: idToken,
-//                                                              rawNonce: nonce) as AuthCredential
+                    //                    let credential = OAuthProvider.credential(withProviderID: "kakao.com",
+                    //                                                              idToken: idToken,
+                    //                                                              rawNonce: nonce) as AuthCredential
                     completionHandler(accessToken)
                 }
             }
@@ -156,16 +155,24 @@ class SocialLogin: SocialLoginProtocol{
             return
         }
     }
+    
+    internal func getNonce(idToken: String) -> String? {
+        guard let payLoad = String(idToken.split(separator: ".")[1]).base64Decoded()?.data(using: .utf8) else {return ""}
+        let decodePayLoad = try! JSONDecoder().decode(PayLoad.self, from: payLoad)
+        let responseNonce = decodePayLoad.nonce
         
+        return responseNonce
+    }
+    
     //MARK: naver 로그인
     func naverLogin(isLogin: Bool, accessToken: String, completionHandler: @escaping ((Bool) -> Void)){
         Task(priority: .userInitiated){
             do{
                 //Naver 사용자 프로필 호출 API
-                guard let userEmail = try await networkManager.requestNaverLoginData(accessToken: accessToken)?.email else {return}
+                guard let userEmail = try await serverNetworkManager?.requestNaverLoginData(accessToken: accessToken)?.email else {return}
                 
                 //db에서 회원가입 여부 확인
-                guard let dataName = try await networkManager.selectWhereEmail(email: userEmail)?.filter({$0.value.id.rawValue == loginType.naver.rawValue}).first?.key else {
+                guard let dataName = try await dbNetworkManager?.selectWhereEmail(email: userEmail)?.filter({$0.value.id.rawValue == loginType.naver.rawValue}).first?.key else {
                     if isLogin{
                         //회원가입 요청 알랏
                         completionHandler(false)
@@ -174,13 +181,13 @@ class SocialLogin: SocialLoginProtocol{
                     else{
                         //기존유저가 아니면 - db추가
                         let user = User(id: loginType.naver, email: userEmail, phone: "", password: "")
-                        guard let dataName = try await networkManager.updateUser(user: user) else {return}
-
+                        guard let dataName = try await dbNetworkManager?.updateUser(user: user) else {return}
+                        
                         //firebase user 생성
-                        firebaseLogin.createUser(email: userEmail, password: dataName){result in
+                        firebaseLogin?.createUser(email: userEmail, password: dataName){result in
                             if result{
                                 //로그인
-                                self.firebaseLogin.login(email: userEmail, password: dataName){result in
+                                self.firebaseLogin?.login(email: userEmail, password: dataName){result in
                                     if result{
                                         completionHandler(true)
                                     }
@@ -192,7 +199,7 @@ class SocialLogin: SocialLoginProtocol{
                 }
                 
                 //로그인
-                self.firebaseLogin.login(email: userEmail, password: dataName){result in
+                self.firebaseLogin?.login(email: userEmail, password: dataName){result in
                     if result{
                         completionHandler(true)
                     }
@@ -203,7 +210,7 @@ class SocialLogin: SocialLoginProtocol{
             }
         }
     }
-        
+    
     //MARK: facebook 로그인
     func facebookLogin(completionHandler: @escaping ((Bool) -> Void)){}
     
@@ -219,7 +226,7 @@ class SocialLogin: SocialLoginProtocol{
         Task(priority: .userInitiated){
             do{
                 //db에서 회원가입 여부 확인
-                if (try await networkManager.selectWhereEmail(email: userCode)?.filter({$0.value.id.rawValue == loginType.apple.rawValue}).first?.key) == nil{
+                if (try await dbNetworkManager?.selectWhereEmail(email: userCode)?.filter({$0.value.id.rawValue == loginType.apple.rawValue}).first?.key) == nil{
                     if isLogin{
                         //회원가입 요청 알랏
                         completionHandler(false)
@@ -228,7 +235,7 @@ class SocialLogin: SocialLoginProtocol{
                     else{
                         //기존유저가 아니면 - db추가
                         let user = User(id: loginType.apple, email: userCode, phone: "", password: "")
-                        try await networkManager.updateUser(user: user)
+                        try await dbNetworkManager?.updateUser(user: user)
                     }
                 }
                 //자격증명 생성
@@ -236,7 +243,7 @@ class SocialLogin: SocialLoginProtocol{
                                                           idToken: IDToken,
                                                           rawNonce: nonce) as AuthCredential
                 
-                self.firebaseLogin.socialLogin(credential: credential){result in
+                self.firebaseLogin?.socialLogin(credential: credential){result in
                     if result{
                         completionHandler(true)
                     }
@@ -255,7 +262,7 @@ class SocialLogin: SocialLoginProtocol{
             guard let email = email else {return}
             Task{
                 do{
-                    if (try await self.networkManager.selectWhereEmail(email: email)?.filter({$0.value.id.rawValue == loginType.google.rawValue}).keys.first) == nil{
+                    if (try await self.dbNetworkManager?.selectWhereEmail(email: email)?.filter({$0.value.id.rawValue == loginType.google.rawValue}).keys.first) == nil{
                         if isLogin{
                             //회원가입 요청 알랏
                             completionHandler(false)
@@ -264,7 +271,7 @@ class SocialLogin: SocialLoginProtocol{
                         else{
                             //기존유저가 아니면 - db추가
                             let user = User(id: loginType.google, email: email, phone: "", password: "")
-                            try await self.networkManager.updateUser(user: user)
+                            try await self.dbNetworkManager?.updateUser(user: user)
                         }
                     }
                     guard let credential = credential else {
@@ -272,7 +279,7 @@ class SocialLogin: SocialLoginProtocol{
                     }
                     
                     //로그인
-                    self.firebaseLogin.socialLogin(credential: credential){result in
+                    self.firebaseLogin?.socialLogin(credential: credential){result in
                         if result{
                             completionHandler(true)
                         }
@@ -288,11 +295,11 @@ class SocialLogin: SocialLoginProtocol{
     ///google 로그인 - GoogleSignIn 요청
     internal func requestGoogleSignIn(viewController: UIViewController, completionHandler: @escaping ((String?, AuthCredential?) -> Void)){
         guard let clientID = FirebaseApp.app()?.options.clientID else { return }
-
+        
         // Create Google Sign In configuration object.
         let config = GIDConfiguration(clientID: clientID)
         GIDSignIn.sharedInstance.configuration = config
-
+        
         // Start the sign in flow!
         GIDSignIn.sharedInstance.signIn(withPresenting: viewController) { result, error in
             guard error == nil else {
@@ -301,7 +308,7 @@ class SocialLogin: SocialLoginProtocol{
                 completionHandler(nil, nil)
                 return
             }
-
+            
             guard let user = result?.user,
                   let idToken = user.idToken?.tokenString
             else {
@@ -317,48 +324,4 @@ class SocialLogin: SocialLoginProtocol{
             completionHandler(user.profile?.email, credential)
         }
     }
-    
-    func getNonce(idToken: String) -> String? {
-        guard let payLoad = String(idToken.split(separator: ".")[1]).base64Decoded()?.data(using: .utf8) else {return ""}
-        let decodePayLoad = try! JSONDecoder().decode(PayLoad.self, from: payLoad)
-        let responseNonce = decodePayLoad.nonce
-        
-        return responseNonce
-    }
 }
-
-///naver Login
-//extension SocialLogin: NaverThirdPartyLoginConnectionDelegate{
-//    func oauth20ConnectionDidFinishRequestACTokenWithAuthCode() {
-//        //로그인 성공
-//        guard let idToken = NaverThirdPartyLoginConnection.getSharedInstance().accessToken else {return}
-//        let credential = OAuthProvider.credential(withProviderID: "naver.com",
-//                                                  accessToken: idToken) as AuthCredential
-//
-//        self.firebaseLogin.socialLogin(credential: credential){result in
-////            completionHandler(true)
-//        }
-//    }
-//
-//    func oauth20Connection(_ oauthConnection: NaverThirdPartyLoginConnection!, didFailWithError error: Error!) {
-//        //로그인 실패
-//        print(error.localizedDescription)
-//    }
-//
-//
-//    func oauth20ConnectionDidFinishRequestACTokenWithRefreshToken() {
-//
-//    }
-//
-//    func oauth20ConnectionDidFinishDeleteToken() {
-//
-//    }
-//
-//    func oauth20Connection(_ oauthConnection: NaverThirdPartyLoginConnection!, didFinishAuthorizationWithResult recieveType: THIRDPARTYLOGIN_RECEIVE_TYPE) {
-//
-//    }
-//
-//    func oauth20Connection(_ oauthConnection: NaverThirdPartyLoginConnection!, didFailAuthorizationWithRecieveType recieveType: THIRDPARTYLOGIN_RECEIVE_TYPE) {
-//
-//    }
-//}

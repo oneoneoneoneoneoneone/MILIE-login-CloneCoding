@@ -7,11 +7,31 @@
 
 import Foundation
 
+protocol DBNetworkManagerProtocol{
+    ///db 모든 유저
+    func selectAll() async throws -> [String : User]?
+    ///db email 일치 검색
+    func selectWhereEmail(email: String) async throws -> [String : User]?
+    ///db phone 일치 검색
+    func selectWherePhone(phone: String) async throws -> [String : User]?
+    ///db user 생성
+    func updateUser(user: User) async throws -> String?
+}
+
+protocol ServerNetworkManagerProtocol{
+    ///naver 유저 정보 가져오기
+    func requestNaverLoginData(accessToken: String) async throws -> Response?
+    ///localserver customToken 가져오기 (by.kakao)
+    func requestToken(accessToken: String) async throws -> String?
+}
+
 class NetworkManager{
     let api = API()
     let naverLoginAPI = NaverLoginAPI()
     let localAPI = LocalAPI()
-    
+}
+
+extension NetworkManager: DBNetworkManagerProtocol, ServerNetworkManagerProtocol{
     //MARK: db API
     func selectAll() async throws -> [String : User]?{
         guard let url = api.getURLComponents()?.url else {throw NSError(domain: "query", code: 0)}
@@ -31,7 +51,7 @@ class NetworkManager{
         return try await api.getUserData(url: url)
     }
 
-    func updateUser(user: User) async throws -> String?{//(id: String, phone: String, image: String, name: String, nickName: String, password: String)
+    func updateUser(user: User) async throws -> String?{
         guard let url = api.getURLComponents()?.url else {throw NSError(domain: "query", code: 0)}
         print(url)
         return try await api.postUserData(url: url, user: user)

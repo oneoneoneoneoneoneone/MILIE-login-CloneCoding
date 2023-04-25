@@ -62,29 +62,27 @@ protocol FirebaseLoginProtocol {
 }
 
 
-class FirebaseLogin: FirebaseLoginProtocol{
-    let networkManager: NetworkManager
+class FirebaseLogin{
+    private var dbNetworkManager: DBNetworkManagerProtocol?
     
     ///MFA(다중인증) 여부
     ///
     ///소셜로그인 여부인듯?
-    var isMFAEnabled = false
+    private var isMFAEnabled = false
+        
+    private var phoneNumber: String = ""
     
-    ///로그인 요청마다 생성되는 임의의 문자열
-    ///apple login에 사용
-    var currentNonce: String?
-    
-    var phoneNumber: String = ""
-    
-    init(networkManager: NetworkManager = NetworkManager()) {
-        self.networkManager = networkManager
+    init(networkManager: DBNetworkManagerProtocol? = nil) {
+        self.dbNetworkManager = networkManager
     }
-    
+}
+
+extension FirebaseLogin: FirebaseLoginProtocol{
     ///회원가입 여부 확인
     func checkJoin(phone: String, completionHandler: @escaping ((Bool) -> Void)){
         Task(priority: .userInitiated){
             do{
-                guard let user = try await networkManager.selectWherePhone(phone: phone) else {return}
+                guard let user = try await dbNetworkManager?.selectWherePhone(phone: phone) else {return}
                 
                 if user.count > 0{
                     //회원정보 있음
@@ -127,7 +125,7 @@ class FirebaseLogin: FirebaseLoginProtocol{
     func login(phone: String, password: String, completionHandler: @escaping ((Bool) -> Void)) {
         Task(priority: .userInitiated){
             do{
-                guard let user = try await networkManager.selectWherePhone(phone: phone) else {return}
+                guard let user = try await dbNetworkManager?.selectWherePhone(phone: phone) else {return}
                 
                 if user.count > 0{
                     //검색된 회원이 있으면 로그인
@@ -157,7 +155,7 @@ class FirebaseLogin: FirebaseLoginProtocol{
     func login(email: String, password: String, completionHandler: @escaping ((Bool) -> Void)){
             Task(priority: .userInitiated){
                 do{
-                    guard let user = try await networkManager.selectWhereEmail(email: email) else {return}
+                    guard let user = try await dbNetworkManager?.selectWhereEmail(email: email) else {return}
                     
                     if user.count > 0{
                         //검색된 회원이 있으면 로그인
@@ -257,7 +255,7 @@ class FirebaseLogin: FirebaseLoginProtocol{
         
         Task(priority: .userInitiated){
             do{
-                guard let dataName = try await networkManager.updateUser(user: user) else {return}
+                guard let dataName = try await dbNetworkManager?.updateUser(user: user) else {return}
                 let email = "\(dataName)@email.com"
                 
                 try await Auth.auth().currentUser?.updateEmail(to: email)
