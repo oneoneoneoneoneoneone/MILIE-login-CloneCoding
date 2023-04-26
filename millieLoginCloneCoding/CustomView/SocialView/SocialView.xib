@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
+        <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SocialView" customModule="millieLoginCloneCoding" customModuleProvider="target">
+            <connections>
+                <outlet property="appleLoginButton" destination="bIE-SK-Lxg" id="mKm-TY-wzL"/>
+                <outlet property="facebookLoginButton" destination="FsQ-lb-8q7" id="W1U-vN-KGo"/>
+                <outlet property="googleLoginButton" destination="aJ6-9m-MFO" id="hK7-Rp-rvF"/>
+                <outlet property="kakaoLoginButton" destination="Fh7-HQ-J5Z" id="QZC-ga-gYL"/>
+                <outlet property="naverLoginButton" destination="v2a-4G-Qpa" id="zvL-7p-gtV"/>
+                <outlet property="view" destination="iN0-l3-epB" id="62k-XZ-Y9S"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="410" height="80"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="u7E-Gu-knJ">
+                    <rect key="frame" x="0.0" y="0.0" width="410" height="80"/>
+                    <subviews>
+                        <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fh7-HQ-J5Z">
+                            <rect key="frame" x="0.0" y="15" width="50" height="50"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="50" id="EgQ-2l-Cqv"/>
+                                <constraint firstAttribute="width" constant="50" id="x0K-ja-5XN"/>
+                            </constraints>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain">
+                                <backgroundConfiguration key="background" image="kakao" imageContentMode="scaleAspectFill"/>
+                            </buttonConfiguration>
+                            <connections>
+                                <action selector="kakaoLoginButtonTap:" destination="-1" eventType="touchUpInside" id="z30-pR-Bx8"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v2a-4G-Qpa">
+                            <rect key="frame" x="90" y="15" width="50" height="50"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="50" id="iRB-tN-xoS"/>
+                                <constraint firstAttribute="height" constant="50" id="ovm-We-vnr"/>
+                            </constraints>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain">
+                                <backgroundConfiguration key="background" image="naver" imageContentMode="scaleAspectFill"/>
+                            </buttonConfiguration>
+                            <connections>
+                                <action selector="naverLoginButtonTap:" destination="-1" eventType="touchUpInside" id="bn1-g9-Jun"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FsQ-lb-8q7">
+                            <rect key="frame" x="180" y="15" width="50" height="50"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="50" id="1hM-zX-eEy"/>
+                                <constraint firstAttribute="height" constant="50" id="shz-X9-www"/>
+                            </constraints>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain">
+                                <backgroundConfiguration key="background" image="facebook" imageContentMode="scaleAspectFill"/>
+                            </buttonConfiguration>
+                            <connections>
+                                <action selector="facebookLoginButtonTap:" destination="-1" eventType="touchUpInside" id="LfK-SM-gvk"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bIE-SK-Lxg" customClass="ASAuthorizationAppleIDButton">
+                            <rect key="frame" x="270" y="15" width="50" height="50"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="50" id="Gea-5I-2hE"/>
+                                <constraint firstAttribute="height" constant="50" id="geB-1c-LkQ"/>
+                            </constraints>
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain">
+                                <backgroundConfiguration key="background" image="apple" imageContentMode="scaleAspectFill"/>
+                            </buttonConfiguration>
+                            <connections>
+                                <action selector="appleLoginButtonTap:" destination="-1" eventType="touchUpInside" id="pe6-nc-KPO"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aJ6-9m-MFO">
+                            <rect key="frame" x="360" y="15" width="50" height="50"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="50" id="BpZ-9Z-Ige"/>
+                                <constraint firstAttribute="height" constant="50" id="psA-mC-Pc9"/>
+                            </constraints>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain">
+                                <backgroundConfiguration key="background" image="google" imageContentMode="scaleAspectFill"/>
+                            </buttonConfiguration>
+                            <connections>
+                                <action selector="googleLoginButtonTap:" destination="-1" eventType="touchUpInside" id="VTM-Ot-QCc"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="u7E-Gu-knJ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="4E4-at-QVL"/>
+                <constraint firstItem="u7E-Gu-knJ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="DQb-PE-ytU"/>
+                <constraint firstAttribute="trailing" secondItem="u7E-Gu-knJ" secondAttribute="trailing" id="GK5-re-aoT"/>
+                <constraint firstAttribute="bottom" secondItem="u7E-Gu-knJ" secondAttribute="bottom" id="WJD-lh-VS8"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="221.37404580152671" y="-245.77464788732397"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="apple" width="2048" height="2048"/>
+        <image name="facebook" width="400" height="400"/>
+        <image name="google" width="2048" height="2048"/>
+        <image name="kakao" width="2048" height="2048"/>
+        <image name="naver" width="2048" height="2048"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
