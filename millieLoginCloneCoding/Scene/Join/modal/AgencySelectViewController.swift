@@ -54,6 +54,16 @@ class AgencySelectViewController: UIViewController{
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         
+        setLayout()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        
+        delegate?.dismissedAgency()
+    }
+    
+    private func setLayout(){
         [grayBar, tableView].forEach{
             view.addSubview($0)
         }
@@ -71,12 +81,6 @@ class AgencySelectViewController: UIViewController{
         ]
         
         NSLayoutConstraint.activate(constraints)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(true)
-        
-        delegate?.dismissedAgency()
     }
 }
 

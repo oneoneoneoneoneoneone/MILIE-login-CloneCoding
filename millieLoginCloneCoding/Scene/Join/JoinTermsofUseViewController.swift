@@ -13,8 +13,20 @@ protocol TermsofUseTableViewDelegate{
 
 ///소셜로그인
 class JoinTermsofUseViewController: UIViewController {
+    private var loginVM: LoginProtocol?
+    
     @IBOutlet weak var tableView: TermsofUseTableView!
     @IBOutlet weak var nextButton: UIButton!
+    
+    init?(coder: NSCoder, loginVM: LoginProtocol?){
+        self.loginVM = loginVM
+        super.init(coder: coder)
+    }
+    
+    @available(*, unavailable, renamed: "init(coder:delegate:)")
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +43,12 @@ class JoinTermsofUseViewController: UIViewController {
     }
     
     @IBAction func nextButtonTap(_ sender: UIButton) {
+        let joinProfileViewController =  UIStoryboard(name: "Join", bundle: nil)
+            .instantiateViewController(identifier: "JoinProfileViewController"){ (coder) -> JoinProfileViewController? in
+                return .init(coder: coder, loginVM: self.loginVM)
+            }
+        
+        self.navigationController?.pushViewController(joinProfileViewController, animated: true)
     }
 }
 

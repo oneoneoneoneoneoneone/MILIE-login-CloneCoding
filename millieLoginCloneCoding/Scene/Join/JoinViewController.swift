@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import AuthenticationServices
 
 protocol AgencyDelegate{
     func sendValue(selectedAgency: String)
@@ -16,18 +15,14 @@ protocol TermsofUseDelegate{
     func dismissedTermsofUse()
 }
 protocol SocialJoinDelegate{
-    func kakaoJoin()
-    func naverJoin()
-    func facebookJoin()
-    func appleJoin()
-    func googleJoin()
-    
-    func socialJoinDismissed()
+    func moveToJoinTermsofUseViewController()
 }
 
-class JoinViewController: UIViewController {
-    private var loginVM: FirebaseLoginProtocol!
-    private var socialLoginVM: SocialLoginProtocol!
+class JoinViewController: UIViewController{
+
+    private var loginVM: LoginProtocol?
+    private var socialLoginVM: SocialLoginProtocol?
+    private var appleLoginManager: AppleLoginManager?
     
     @IBOutlet weak var nameInputView: InputStackView!
     
@@ -45,19 +40,25 @@ class JoinViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //test
-        nextButton.isEnabled = true
+        self.loginVM = FirebaseLogin()
+        self.socialLoginVM = SocialLogin()
         
         setAttribute()
+        
+        //test
+//        nextButton.isEnabled = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.loginVM = FirebaseLogin()
-        self.socialLoginVM = SocialLogin()
-        
-        //firebase 로그인 캡챠인증 후 오류나는거같음
-        phoneInputView.textField.becomeFirstResponder()
+
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if phoneInputView.isHidden{
+            self.phoneInputView.isHidden = false
+            self.phoneInputView.textField.becomeFirstResponder()
+        }
     }
         
     private func setAttribute(){
@@ -99,9 +100,10 @@ class JoinViewController: UIViewController {
     }
     
     @IBAction func socialJoinButtonTap(_ sender: UIButton) {
-        guard let socialJoinViewController =  UIStoryboard(name: "Join", bundle: nil)
-            .instantiateViewController(withIdentifier: "SocialJoinViewController") as? SocialJoinViewController else {return}
-        socialJoinViewController.delegate = self
+        let socialJoinViewController = UIStoryboard(name: "Join", bundle: nil)
+            .instantiateViewController(identifier: "SocialJoinViewController"){ (coder) -> SocialJoinViewController? in
+                return .init(coder: coder, viewController: self, viewDelegate: self)
+            }
         socialJoinViewController.modalPresentationStyle = .overFullScreen
 
         self.present(socialJoinViewController, animated: false)
@@ -118,19 +120,21 @@ class JoinViewController: UIViewController {
             return
         }
         //회원 여부 확인
-        loginVM.checkJoin(phone: phoneInputView.textField.text, email: ""){ [self] result in
+        loginVM?.checkJoin(phone: phoneInputView.textField.text!){ [self] result in
             if result{
                 //이미 회원임
                 return
             }
             
+            //서비스 약관동의 모달
             DispatchQueue.main.async {
                 self.view.endEditing(true)
-                agencyStackView.layer.borderColor = UIColor.black.cgColor
+                self.agencyStackView.layer.borderColor = UIColor.black.cgColor
                 
-                guard let termsofUseViewController =  UIStoryboard(name: "Join", bundle: nil)
-                    .instantiateViewController(withIdentifier: "TermsofUseViewController") as? TermsofUseViewController else {return}
-                termsofUseViewController.delegate = self
+                let termsofUseViewController = UIStoryboard(name: "Join", bundle: nil)
+                    .instantiateViewController(identifier: "TermsofUseViewController"){ (coder) -> TermsofUseViewController? in
+                        return .init(coder: coder, delegate: self)
+                    }
                 
                 if let sheet = termsofUseViewController.sheetPresentationController {
                     //크기
@@ -249,11 +253,14 @@ extension JoinViewController: AgencyDelegate{
 
 extension JoinViewController: TermsofUseDelegate{
     func dismissedTermsofUse() {
-        //휴대폰번호 보내기 실패 확인. 개인정보 검증하는듯
         guard let phoneNumber = phoneInputView.textField.text else {return}
-        loginVM.requestVerificationCode(phoneNumber: phoneNumber){result in
+        loginVM?.requestVerificationCode(phoneNumber: phoneNumber){result in
             if result{
-                let joinVerificationCodeViewController = JoinVerificationCodeViewController(loginVM: self.loginVM)
+                let joinVerificationCodeViewController = UIStoryboard(name: "Join", bundle: nil)
+                    .instantiateViewController(identifier: "JoinVerificationCodeViewController"){ (coder) -> JoinVerificationCodeViewController? in
+                        return .init(coder: coder, loginVM: self.loginVM)
+                    }
+                
                 self.navigationController?.pushViewController(joinVerificationCodeViewController, animated: true)
             }else{
                 //알랏
@@ -262,111 +269,13 @@ extension JoinViewController: TermsofUseDelegate{
         
     }
 }
-
-extension JoinViewController: SocialJoinDelegate{
-    func kakaoJoin() {
-        socialLoginVM.kakaoLogin{result in
-            if result{
-                //login 성공
-                self.dismiss(animated: false)
-                self.navigationController?.popToRootViewController(animated: true)
+extension JoinViewController: SocialJoinDelegate {
+    func moveToJoinTermsofUseViewController(){
+        let joinTermsofUseViewController = UIStoryboard(name: "Join", bundle: nil)
+            .instantiateViewController(identifier: "JoinTermsofUseViewController"){ (coder) -> JoinTermsofUseViewController? in
+                return .init(coder: coder, loginVM: self.loginVM)
             }
-            else{
-            }
-        }
-    }
-    
-    func naverJoin() {
         
-    }
-    
-    func facebookJoin() {
-        
-    }
-    
-    func appleJoin() {
-        //firebase 자격증명에 사용할..
-        let cryptography = Cryptography()
-        let nonce = cryptography.randomNonceString()
-        socialLoginVM.currentNonce = nonce
-        
-        //사용자의 전체 이름과 이메일 주소에 대한 인증 요청을 수행하여 인증 흐름을 시작
-        //시스템은 사용자가 기기에서 Apple ID로 로그인했는지 확인
-        //설정에서 Apple ID로 로그인하라는 경고를 표시
-        let appleIDProvider = ASAuthorizationAppleIDProvider()
-        let request = appleIDProvider.createRequest()
-        request.requestedScopes = [.fullName, .email]
-        //firebase에서 사용할..
-        request.nonce = cryptography.sha256(nonce)
-        
-        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
-        authorizationController.delegate = self
-        authorizationController.presentationContextProvider = self
-        authorizationController.performRequests()
-    }
-    
-    func googleJoin() {
-        self.socialLoginVM.googleLogin(viewController: self){result in
-            if result{
-                //login 성공
-                self.dismiss(animated: false)
-                self.navigationController?.popToRootViewController(animated: true)
-            }
-            else{
-            }
-        }
-    }
-    
-    func socialJoinDismissed(){
-        view.alpha = 1
-    }
-}
-
-
-//MARK: extension ASAuthorizationControllerDelegate
-
-extension JoinViewController: ASAuthorizationControllerDelegate {
-    ///인증에 성공하면 인증 컨트롤러는 앱이 사용자 데이터를 키체인에 저장하는 데 사용하는 위임 기능을 호출
-    ///
-    ///사용자가 처음 로그인할 때만 표시 이름 등의 사용자 정보를 앱에 공유
-    ///이전에 Firebase를 사용하지 않고 Apple을 사용하여 사용자를 앱에 로그인하도록 했으면 Apple은 Firebase에 사용자의 표시 이름을 제공하지 않습니다.
-    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
-        switch authorization.credential {
-        case let appleIDCredential as ASAuthorizationAppleIDCredential:
-            guard let appleIDToken = appleIDCredential.identityToken else {
-                print("Unable to fetch identity token")
-                return
-            }
-            guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
-                print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
-                return
-            }
-            
-            //firebase 자격증명 사용
-            socialLoginVM.appleLogin(IDToken: idTokenString){result in
-                if result{
-                    //login 성공
-                    DispatchQueue.main.async{
-                        self.dismiss(animated: true)
-                        self.navigationController?.popToRootViewController(animated: true)
-                    }
-                }
-                else{
-                }
-            }
-            //appleIDCredential.identityToken - 바뀜
-            //appleIDCredential.user - 일정
-            //fullName, email - 2번째 로그인부터 안들어옴
-        default:
-            break
-        }
-    }
-}
-
-///모달 시트에서 사용자에게 Apple로 로그인 콘텐츠를 제공하는 앱에서 창을 가져오는 함수
-extension JoinViewController: ASAuthorizationControllerPresentationContextProviding {
-    /// - Tag: provide_presentation_anchor
-    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
-        return self.view.window!
+        self.navigationController?.pushViewController(joinTermsofUseViewController, animated: true)
     }
 }

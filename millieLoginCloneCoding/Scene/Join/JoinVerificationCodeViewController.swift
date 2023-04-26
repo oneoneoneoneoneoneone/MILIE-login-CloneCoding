@@ -8,11 +8,21 @@
 import UIKit
 
 class JoinVerificationCodeViewController: UIViewController {
-    var loginVM: FirebaseLoginProtocol!
+    private var loginVM: LoginProtocol?
     
     @IBOutlet weak var verificationCodeInputView: InputStackView!
     @IBOutlet weak var resendButton: UIButton!
     @IBOutlet weak var nextButton: UIButton!
+    
+    required init?(coder: NSCoder, loginVM: LoginProtocol?) {
+        self.loginVM = loginVM
+        super.init(coder: coder)
+    }
+    
+    @available(*, unavailable, renamed: "init(coder:delegate:)")
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +37,7 @@ class JoinVerificationCodeViewController: UIViewController {
     }
     
     @IBAction func resendButtonTap(_ sender: UIButton) {
-        loginVM.requestVerificationCode(){result in
+        loginVM?.requestVerificationCode(){result in
             if result{
                 //재전송
             }else{
@@ -39,12 +49,13 @@ class JoinVerificationCodeViewController: UIViewController {
     @IBAction func nextButtonTap(_ sender: UIButton) {
         guard let verificationCode = verificationCodeInputView.textField.text else {return}
         
-        loginVM.phoneNumberLogin(verificationCode: verificationCode){result in
+        loginVM?.phoneNumberLogin(verificationCode: verificationCode){result in
             if result{
                 //login 성공
-                guard let joinProfileViewController =  UIStoryboard(name: "Join", bundle: nil)
-                    .instantiateViewController(withIdentifier: "JoinProfileViewController") as? JoinProfileViewController else {return}
-                joinProfileViewController.loginVM = self.loginVM
+                let joinProfileViewController =  UIStoryboard(name: "Join", bundle: nil)
+                    .instantiateViewController(identifier: "JoinProfileViewController"){ (coder) -> JoinProfileViewController? in
+                        return .init(coder: coder, loginVM: self.loginVM)
+                    }
                 
                 self.navigationController?.pushViewController(joinProfileViewController, animated: true)
             }
