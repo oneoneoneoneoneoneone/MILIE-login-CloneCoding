@@ -28,7 +28,7 @@ protocol SocialLoginProtocol{
     
     func appleLogin(isLogin: Bool, userCode: String, IDToken: String, completionHandler: @escaping ((Bool) -> Void))
     
-    func googleLogin(isLogin: Bool, viewController: UIViewController, completionHandler: @escaping ((Bool) -> Void))
+    func googleLogin(isLogin: Bool, viewController: UIViewController?, completionHandler: @escaping ((Bool) -> Void))
 }
 
 
@@ -42,7 +42,7 @@ class SocialLogin{
     ///apple login에 사용
     var currentNonce: String?
     
-    init(firebaseLogin: FirebaseLoginProtocol? = nil, dbNetworkManager: DBNetworkManagerProtocol? = nil, serverNetworkManager: ServerNetworkManagerProtocol?) {
+    init(firebaseLogin: FirebaseLoginProtocol? = FirebaseLogin(), dbNetworkManager: DBNetworkManagerProtocol? = NetworkManager(), serverNetworkManager: ServerNetworkManagerProtocol? = NetworkManager()) {
         self.firebaseLogin = firebaseLogin
         self.dbNetworkManager = dbNetworkManager
         self.serverNetworkManager = serverNetworkManager
@@ -256,7 +256,8 @@ extension SocialLogin: SocialLoginProtocol{
     }
     
     //MARK: google 로그인 - 자격증명 생성
-    func googleLogin(isLogin: Bool, viewController: UIViewController, completionHandler: @escaping ((Bool) -> Void)){
+    func googleLogin(isLogin: Bool, viewController: UIViewController?, completionHandler: @escaping ((Bool) -> Void)){
+        guard let viewController = viewController else {return}
         requestGoogleSignIn(viewController: viewController){ email, credential in
             //db에서 회원 여부 확인
             guard let email = email else {return}

@@ -16,6 +16,20 @@ import KakaoSDKCommon
 import KakaoSDKAuth
 
 protocol FirebaseLoginProtocol {
+    ///firebase 로그인 - 기본로그인(이메일)
+    func login(email: String, password: String, completionHandler: @escaping ((Bool) -> Void))
+    
+    ///firebase 로그인 - 소셜인증
+    func socialLogin(credential: AuthCredential, completionHandler: @escaping ((Bool) -> Void))
+    
+    ///firebase 커스텀 토큰 인증
+    func customLogin(customToken: String, completionHandler: @escaping ((Bool) -> Void))
+    
+    ///유저 생성 join
+    func createUser(email: String, password: String, completionHandler: @escaping ((Bool) -> Void))
+}
+
+protocol LoginProtocol {
     ///로그인 여부 확인
     func checkLogin() -> Bool
     
@@ -72,12 +86,12 @@ class FirebaseLogin{
         
     private var phoneNumber: String = ""
     
-    init(networkManager: DBNetworkManagerProtocol? = nil) {
+    init(networkManager: DBNetworkManagerProtocol? = NetworkManager()) {
         self.dbNetworkManager = networkManager
     }
 }
 
-extension FirebaseLogin: FirebaseLoginProtocol{
+extension FirebaseLogin: LoginProtocol, FirebaseLoginProtocol{
     ///회원가입 여부 확인
     func checkJoin(phone: String, completionHandler: @escaping ((Bool) -> Void)){
         Task(priority: .userInitiated){
