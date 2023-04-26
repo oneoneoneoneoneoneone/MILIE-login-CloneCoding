@@ -210,126 +210,56 @@
                                 <rect key="frame" x="20" y="516.66666666666663" width="390" height="14.333333333333371"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eCa-vj-Not">
-                                        <rect key="frame" x="0.0" y="6.6666666666667425" width="150" height="1"/>
+                                        <rect key="frame" x="0.0" y="6.6666666666667425" width="140" height="1"/>
                                         <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="150" id="6Ff-wt-qwN"/>
+                                            <constraint firstAttribute="width" constant="140" id="6Ff-wt-qwN"/>
                                             <constraint firstAttribute="height" constant="1" id="iTH-1h-u1p"/>
                                         </constraints>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="또는" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xqb-EN-L9D">
-                                        <rect key="frame" x="184.66666666666666" y="0.0" width="21" height="14.333333333333334"/>
+                                        <rect key="frame" x="150" y="0.0" width="90" height="14.333333333333334"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8fz-L8-tdW">
-                                        <rect key="frame" x="240" y="6.6666666666667425" width="150" height="1"/>
+                                        <rect key="frame" x="250" y="6.6666666666667425" width="140" height="1"/>
                                         <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="150" id="4wH-ku-owI"/>
+                                            <constraint firstAttribute="width" constant="140" id="4wH-ku-owI"/>
                                             <constraint firstAttribute="height" constant="1" id="os5-GY-YBZ"/>
                                         </constraints>
                                     </view>
                                 </subviews>
                             </stackView>
-                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="sX8-33-tTJ">
-                                <rect key="frame" x="20" y="551" width="390" height="50"/>
-                                <subviews>
-                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qpq-06-sTB">
-                                        <rect key="frame" x="10" y="0.0" width="50" height="50"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="50" id="2Ai-9c-PVl"/>
-                                            <constraint firstAttribute="height" constant="50" id="ZdZ-fS-RnF"/>
-                                        </constraints>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain">
-                                            <backgroundConfiguration key="background" image="kakao" imageContentMode="scaleAspectFill"/>
-                                        </buttonConfiguration>
-                                        <connections>
-                                            <action selector="kakaoLoginButtonTap:" destination="m3V-mW-Cs2" eventType="touchUpInside" id="sag-6e-lOs"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X3h-Gu-aod">
-                                        <rect key="frame" x="90" y="0.0" width="50" height="50"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="50" id="dNN-yY-WPT"/>
-                                            <constraint firstAttribute="height" constant="50" id="ndg-3k-3fo"/>
-                                        </constraints>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain">
-                                            <backgroundConfiguration key="background" image="naver" imageContentMode="scaleAspectFill"/>
-                                        </buttonConfiguration>
-                                        <connections>
-                                            <action selector="naverLoginButtonTap:" destination="m3V-mW-Cs2" eventType="touchUpInside" id="NE8-Ne-15o"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U7I-7U-RbE">
-                                        <rect key="frame" x="170" y="0.0" width="50" height="50"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="50" id="9wx-sS-UFT"/>
-                                            <constraint firstAttribute="width" constant="50" id="AWU-At-klS"/>
-                                        </constraints>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain">
-                                            <backgroundConfiguration key="background" image="facebook" imageContentMode="scaleAspectFill"/>
-                                        </buttonConfiguration>
-                                        <connections>
-                                            <action selector="facebookLoginButtonTap:" destination="m3V-mW-Cs2" eventType="touchUpInside" id="a9a-n2-7Jj"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U9n-fu-vfW" customClass="ASAuthorizationAppleIDButton">
-                                        <rect key="frame" x="250" y="0.0" width="50" height="50"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="50" id="E24-4Q-mYp"/>
-                                            <constraint firstAttribute="height" constant="50" id="R6Z-5o-D5v"/>
-                                        </constraints>
-                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain">
-                                            <backgroundConfiguration key="background" image="apple" imageContentMode="scaleAspectFill"/>
-                                        </buttonConfiguration>
-                                        <connections>
-                                            <action selector="appleLoginButtonTap:" destination="m3V-mW-Cs2" eventType="touchUpInside" id="xBF-E7-dbG"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="las-bS-VfY">
-                                        <rect key="frame" x="330" y="0.0" width="50" height="50"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="50" id="8D2-e3-UTh"/>
-                                            <constraint firstAttribute="width" constant="50" id="hcf-ug-Q1h"/>
-                                        </constraints>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain">
-                                            <backgroundConfiguration key="background" image="google" imageContentMode="scaleAspectFill"/>
-                                        </buttonConfiguration>
-                                        <connections>
-                                            <action selector="googleLoginButtonTap:" destination="m3V-mW-Cs2" eventType="touchUpInside" id="8ct-oz-he8"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <directionalEdgeInsets key="directionalLayoutMargins" top="0.0" leading="10" bottom="0.0" trailing="10"/>
-                            </stackView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="buX-07-wyP" customClass="SocialView" customModule="millieLoginCloneCoding" customModuleProvider="target">
+                                <rect key="frame" x="20" y="551" width="390" height="80"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="80" id="nP0-b7-rJY"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="r8u-0z-suN"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="sX8-33-tTJ" firstAttribute="top" secondItem="dUN-DL-EK3" secondAttribute="bottom" constant="20" id="21r-zs-fGN"/>
                             <constraint firstItem="r8u-0z-suN" firstAttribute="trailing" secondItem="dUN-DL-EK3" secondAttribute="trailing" constant="20" id="3FC-rE-O5A"/>
                             <constraint firstItem="L0X-tw-uC7" firstAttribute="leading" secondItem="r8u-0z-suN" secondAttribute="leading" constant="20" id="3qG-Fm-Mzk"/>
                             <constraint firstItem="g7c-Zm-v1h" firstAttribute="top" secondItem="BDx-QD-mDL" secondAttribute="bottom" constant="30" id="9Ju-4t-MxE"/>
                             <constraint firstItem="dUN-DL-EK3" firstAttribute="top" secondItem="qRg-IC-zPm" secondAttribute="bottom" constant="30" id="AM2-7D-DDz"/>
                             <constraint firstItem="BDx-QD-mDL" firstAttribute="top" secondItem="L0X-tw-uC7" secondAttribute="bottom" constant="10" id="BKg-2b-kFd"/>
-                            <constraint firstItem="r8u-0z-suN" firstAttribute="trailing" secondItem="sX8-33-tTJ" secondAttribute="trailing" constant="20" id="E8J-02-fUe"/>
                             <constraint firstItem="dUN-DL-EK3" firstAttribute="leading" secondItem="r8u-0z-suN" secondAttribute="leading" constant="20" id="FZK-re-ket"/>
                             <constraint firstItem="Bzs-fh-gQv" firstAttribute="top" secondItem="SMB-rc-rOw" secondAttribute="bottom" constant="20" id="Isg-qN-wAt"/>
-                            <constraint firstItem="sX8-33-tTJ" firstAttribute="leading" secondItem="r8u-0z-suN" secondAttribute="leading" constant="20" id="PiE-qd-oE8"/>
+                            <constraint firstItem="r8u-0z-suN" firstAttribute="trailing" secondItem="buX-07-wyP" secondAttribute="trailing" constant="20" id="LHE-Mn-hTp"/>
                             <constraint firstItem="r8u-0z-suN" firstAttribute="trailing" secondItem="Bzs-fh-gQv" secondAttribute="trailing" constant="20" id="Q3U-30-uRT"/>
                             <constraint firstItem="r8u-0z-suN" firstAttribute="trailing" secondItem="BDx-QD-mDL" secondAttribute="trailing" constant="20" id="Ssw-7w-Sq4"/>
                             <constraint firstItem="r8u-0z-suN" firstAttribute="trailing" secondItem="L0X-tw-uC7" secondAttribute="trailing" constant="20" id="VWr-Nd-m3b"/>
+                            <constraint firstItem="buX-07-wyP" firstAttribute="leading" secondItem="r8u-0z-suN" secondAttribute="leading" constant="20" id="Y38-wI-rdF"/>
                             <constraint firstItem="g7c-Zm-v1h" firstAttribute="leading" secondItem="r8u-0z-suN" secondAttribute="leading" constant="20" id="Yza-GD-9YH"/>
                             <constraint firstItem="qRg-IC-zPm" firstAttribute="leading" secondItem="r8u-0z-suN" secondAttribute="leading" constant="20" id="ZMN-fQ-Oaz"/>
                             <constraint firstItem="BDx-QD-mDL" firstAttribute="leading" secondItem="r8u-0z-suN" secondAttribute="leading" constant="20" id="d5R-HR-ByJ"/>
+                            <constraint firstItem="buX-07-wyP" firstAttribute="top" secondItem="dUN-DL-EK3" secondAttribute="bottom" constant="20" id="dec-so-Pyr"/>
                             <constraint firstItem="SMB-rc-rOw" firstAttribute="leading" secondItem="r8u-0z-suN" secondAttribute="leading" constant="20" id="foH-6O-DTz"/>
                             <constraint firstItem="L0X-tw-uC7" firstAttribute="top" secondItem="r8u-0z-suN" secondAttribute="top" constant="30" id="iCe-QO-HoE"/>
                             <constraint firstItem="r8u-0z-suN" firstAttribute="trailing" secondItem="qRg-IC-zPm" secondAttribute="trailing" constant="20" id="iz0-DA-a76"/>
@@ -342,14 +272,10 @@
                     </view>
                     <navigationItem key="navigationItem" largeTitleDisplayMode="always" id="BV1-Z7-ImP"/>
                     <connections>
-                        <outlet property="appleLoginButton" destination="U9n-fu-vfW" id="gFQ-64-g4b"/>
-                        <outlet property="facebookLoginButton" destination="U7I-7U-RbE" id="1ds-IF-Dnj"/>
-                        <outlet property="googleLoginButton" destination="las-bS-VfY" id="TfN-ry-IIw"/>
-                        <outlet property="kakaoLoginButton" destination="qpq-06-sTB" id="rZT-yb-hb9"/>
                         <outlet property="loginButton" destination="Bzs-fh-gQv" id="Y3p-fr-106"/>
-                        <outlet property="naverLoginButton" destination="X3h-Gu-aod" id="8iA-4U-w3b"/>
                         <outlet property="passwordInputView" destination="SMB-rc-rOw" id="Cnw-vh-OeJ"/>
                         <outlet property="phoneInputView" destination="g7c-Zm-v1h" id="c5B-Ab-wd3"/>
+                        <outlet property="socialView" destination="buX-07-wyP" id="R3q-EZ-WAr"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="za8-h3-OHp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -430,11 +356,6 @@
         <segue reference="rbs-Is-4iu"/>
     </inferredMetricsTieBreakers>
     <resources>
-        <image name="apple" width="2048" height="2048"/>
-        <image name="facebook" width="400" height="400"/>
-        <image name="google" width="2048" height="2048"/>
-        <image name="kakao" width="2048" height="2048"/>
-        <image name="naver" width="2048" height="2048"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
