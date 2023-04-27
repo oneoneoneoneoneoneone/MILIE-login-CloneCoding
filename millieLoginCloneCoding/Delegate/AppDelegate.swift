@@ -10,6 +10,7 @@ import FirebaseCore
 import GoogleSignIn
 import KakaoSDKCommon
 import NaverThirdPartyLogin
+import FacebookCore
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -30,6 +31,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //naver app으로 열기
         naverConn.isNaverAppOauthEnable = true
         naverConn.isInAppOauthEnable = true
+        
+        //firebase
+        ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
         
         return true
     }

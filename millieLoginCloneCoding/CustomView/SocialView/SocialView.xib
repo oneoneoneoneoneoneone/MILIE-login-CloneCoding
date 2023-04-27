@@ -12,7 +12,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SocialView" customModule="millieLoginCloneCoding" customModuleProvider="target">
             <connections>
                 <outlet property="appleLoginButton" destination="bIE-SK-Lxg" id="mKm-TY-wzL"/>
-                <outlet property="facebookLoginButton" destination="FsQ-lb-8q7" id="W1U-vN-KGo"/>
+                <outlet property="facebookLoginButton" destination="FsQ-lb-8q7" id="fAr-0b-uCa"/>
                 <outlet property="googleLoginButton" destination="aJ6-9m-MFO" id="hK7-Rp-rvF"/>
                 <outlet property="kakaoLoginButton" destination="Fh7-HQ-J5Z" id="QZC-ga-gYL"/>
                 <outlet property="naverLoginButton" destination="v2a-4G-Qpa" id="zvL-7p-gtV"/>
@@ -66,7 +66,7 @@
                                 <backgroundConfiguration key="background" image="facebook" imageContentMode="scaleAspectFill"/>
                             </buttonConfiguration>
                             <connections>
-                                <action selector="facebookLoginButtonTap:" destination="-1" eventType="touchUpInside" id="LfK-SM-gvk"/>
+                                <action selector="facebookLoginButtonTap:" destination="-1" eventType="touchUpInside" id="PUJ-53-EHU"/>
                             </connections>
                         </button>
                         <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bIE-SK-Lxg" customClass="ASAuthorizationAppleIDButton">

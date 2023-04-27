@@ -8,9 +8,12 @@
 import UIKit
 import AuthenticationServices
 import NaverThirdPartyLogin
+import FacebookLogin
+import FacebookCore
+import FacebookAEM
 
-protocol AppleLoginManagerDelegate{
-    func appleLoginSuccess()
+protocol LoginManagerDelegate{
+    func loginSuccess()
 }
 
 class SocialView: UIView{
@@ -21,6 +24,7 @@ class SocialView: UIView{
     
     private var socialLoginVM: SocialLoginProtocol?
     private var appleLoginManager: AppleLoginManager?
+    private var facebookLoginManager: FacebookLoginManager?
     
     private var isLogin = true
     
@@ -31,25 +35,21 @@ class SocialView: UIView{
     @IBOutlet weak var appleLoginButton: ASAuthorizationAppleIDButton!
     @IBOutlet weak var googleLoginButton: UIButton!
        
-    func initSocialView(viewController: UIViewController?, viewDelegate: SocialJoinDelegate? = nil, modalViewController: UIViewController? = nil, socialLoginVM: SocialLoginProtocol? = SocialLogin(), appleLoginManager: AppleLoginManager? = AppleLoginManager()) {
+    func initSocialView(viewController: UIViewController?, viewDelegate: SocialJoinDelegate? = nil, modalViewController: UIViewController? = nil, socialLoginVM: SocialLoginProtocol? = SocialLogin(), appleLoginManager: AppleLoginManager? = AppleLoginManager(), facebookLoginManager: FacebookLoginManager? = FacebookLoginManager()) {
         self.viewController = viewController
         self.viewDelegate = viewDelegate
         self.modalViewController = modalViewController
         self.socialLoginVM = socialLoginVM
         self.appleLoginManager = appleLoginManager
+        self.facebookLoginManager = facebookLoginManager
         
-        appleLoginManager?.socialLoginVM = socialLoginVM
-        appleLoginManager?.delegate = self
-        appleLoginManager?.setAppleLoginPresentationAnchorView(viewController)
-        
-        isLogin = viewController is LoginViewController
+        setAttribute()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
         xibSetup()
-        setAttribute()
     }
     
     func xibSetup() {
@@ -62,6 +62,17 @@ class SocialView: UIView{
     }
     
     private func setAttribute(){
+        facebookLoginManager?.socialLoginVM = socialLoginVM
+        facebookLoginManager?.delegate = self
+        facebookLoginManager?.setFacebookLoginPresentationAnchorView(viewController)
+        
+        appleLoginManager?.socialLoginVM = socialLoginVM
+        appleLoginManager?.delegate = self
+        appleLoginManager?.setAppleLoginPresentationAnchorView(viewController)
+        
+        isLogin = viewController is LoginViewController
+        
+        
         kakaoLoginButton.layer.cornerRadius = 25
         naverLoginButton.layer.cornerRadius = 25
         facebookLoginButton.layer.cornerRadius = 25
@@ -73,18 +84,6 @@ class SocialView: UIView{
     
     private func socialJoinDismissed(){
         modalViewController?.dismiss(animated: false)
-    }
-    
-    private func loginSuccess(){
-        if isLogin{
-            //시작화면으로 가서 로그인 여부 확인하게 됨
-            viewController?.dismiss(animated: true)
-            viewController?.navigationController?.popToRootViewController(animated: true)
-        }
-        else{
-            //약관 동의 화면으로 이동해야함
-            viewDelegate?.moveToJoinTermsofUseViewController()
-        }
     }
     
     @IBAction func kakaoLoginButtonTap(_ sender: UIButton) {
@@ -106,11 +105,22 @@ class SocialView: UIView{
         naverConn.delegate = self
         naverConn.requestThirdPartyLogin()
     }
-    
+
     @IBAction func facebookLoginButtonTap(_ sender: UIButton) {
         socialJoinDismissed()
         
-        loginSuccess()
+        //firebase 자격증명에 사용할..
+        let cryptography = Cryptography()
+        let nonce = cryptography.randomNonceString()
+        socialLoginVM?.currentNonce = nonce
+
+        let loginbutton = FBLoginButton()
+        
+        loginbutton.delegate = facebookLoginManager
+        loginbutton.loginTracking = .limited
+//        loginbutton.permissions = ["email"]
+        loginbutton.nonce = cryptography.sha256(nonce)
+        loginbutton.sendActions(for: .touchUpInside)
     }
     
     @IBAction func appleLoginButtonTap(_ sender: UIButton) {
@@ -149,9 +159,17 @@ class SocialView: UIView{
 }
 
 ///apple
-extension SocialView: AppleLoginManagerDelegate{
-    func appleLoginSuccess() {
-        loginSuccess()
+extension SocialView: LoginManagerDelegate{
+    func loginSuccess() {
+        if isLogin{
+            //시작화면으로 가서 로그인 여부 확인하게 됨
+            viewController?.dismiss(animated: true)
+            viewController?.navigationController?.popToRootViewController(animated: true)
+        }
+        else{
+            //약관 동의 화면으로 이동해야함
+            viewDelegate?.moveToJoinTermsofUseViewController()
+        }
     }
 }
 
