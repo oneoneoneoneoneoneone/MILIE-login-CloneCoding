@@ -45,14 +45,19 @@ class LoginViewController: UIViewController {
         loginButton.layer.cornerRadius = 5
     }
     
+    @MainActor
     @IBAction func loginButtonTap(_ sender: UIButton) {
         guard let phoneNumber = phoneInputView.textField.text,
               let password = passwordInputView.textField.text else {return}
         
-        loginVM?.login(phone: phoneNumber, password: password){result in
-            if result {
+        Task{
+            do{
+                try await loginVM?.login(phone: phoneNumber, password: password)
                 self.dismiss(animated: true)
                 self.navigationController?.popToRootViewController(animated: true)
+            }
+            catch{
+                presentAlertMessage(message: error.localizedDescription)
             }
         }
     }

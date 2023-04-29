@@ -7,10 +7,8 @@
 
 import UIKit
 import AuthenticationServices
-import NaverThirdPartyLogin
 import FacebookLogin
-import FacebookCore
-import FacebookAEM
+import NaverThirdPartyLogin
 
 protocol LoginManagerDelegate{
     func loginSuccess()
@@ -25,6 +23,7 @@ class SocialView: UIView{
     private var socialLoginVM: SocialLoginProtocol?
     private var appleLoginManager: AppleLoginManager?
     private var facebookLoginManager: FacebookLoginManager?
+    private var naverLoginManager: NaverLoginManager?
     
     private var isLogin = true
     
@@ -35,13 +34,22 @@ class SocialView: UIView{
     @IBOutlet weak var appleLoginButton: ASAuthorizationAppleIDButton!
     @IBOutlet weak var googleLoginButton: UIButton!
        
-    func initSocialView(viewController: UIViewController?, viewDelegate: SocialJoinDelegate? = nil, modalViewController: UIViewController? = nil, socialLoginVM: SocialLoginProtocol? = SocialLogin(), appleLoginManager: AppleLoginManager? = AppleLoginManager(), facebookLoginManager: FacebookLoginManager? = FacebookLoginManager()) {
+    func initSocialView(viewController: UIViewController?,
+                        viewDelegate: SocialJoinDelegate? = nil,
+                        modalViewController: UIViewController? = nil,
+                        socialLoginVM: SocialLoginProtocol? = SocialLogin(),
+                        appleLoginManager: AppleLoginManager? = AppleLoginManager(),
+                        facebookLoginManager: FacebookLoginManager? = FacebookLoginManager(),
+                        naverLoginManager: NaverLoginManager? = NaverLoginManager()) {
         self.viewController = viewController
         self.viewDelegate = viewDelegate
         self.modalViewController = modalViewController
         self.socialLoginVM = socialLoginVM
         self.appleLoginManager = appleLoginManager
         self.facebookLoginManager = facebookLoginManager
+        self.naverLoginManager = naverLoginManager
+        
+        self.isLogin = viewController is LoginViewController
         
         setAttribute()
     }
@@ -62,17 +70,18 @@ class SocialView: UIView{
     }
     
     private func setAttribute(){
-        facebookLoginManager?.socialLoginVM = socialLoginVM
-        facebookLoginManager?.delegate = self
-        facebookLoginManager?.setFacebookLoginPresentationAnchorView(viewController)
-        
         appleLoginManager?.socialLoginVM = socialLoginVM
         appleLoginManager?.delegate = self
         appleLoginManager?.setAppleLoginPresentationAnchorView(viewController)
         
-        isLogin = viewController is LoginViewController
+        facebookLoginManager?.socialLoginVM = socialLoginVM
+        facebookLoginManager?.delegate = self
+        facebookLoginManager?.setFacebookLoginPresentationAnchorView(viewController)
         
-        
+        naverLoginManager?.socialLoginVM = socialLoginVM
+        naverLoginManager?.delegate = self
+        naverLoginManager?.setNaverLoginPresentationAnchorView(viewController)
+                
         kakaoLoginButton.layer.cornerRadius = 25
         naverLoginButton.layer.cornerRadius = 25
         facebookLoginButton.layer.cornerRadius = 25
@@ -86,14 +95,17 @@ class SocialView: UIView{
         modalViewController?.dismiss(animated: false)
     }
     
+    @MainActor
     @IBAction func kakaoLoginButtonTap(_ sender: UIButton) {
         socialJoinDismissed()
         
-        socialLoginVM?.kakaoLogin(isLogin: isLogin){[weak self] result in
-            if result{
-                self?.loginSuccess()
+        Task{
+            do{
+                try await socialLoginVM?.kakaoLogin(isLogin: isLogin)
+                loginSuccess()
             }
-            else{
+            catch{
+                viewController?.presentAlertMessage(message: error.localizedDescription)
             }
         }
     }
@@ -102,7 +114,7 @@ class SocialView: UIView{
         socialJoinDismissed()
         
         let naverConn: NaverThirdPartyLoginConnection = NaverThirdPartyLoginConnection.getSharedInstance()
-        naverConn.delegate = self
+        naverConn.delegate = naverLoginManager
         naverConn.requestThirdPartyLogin()
     }
 
@@ -110,16 +122,15 @@ class SocialView: UIView{
         socialJoinDismissed()
         
         //firebase 자격증명에 사용할..
-        let cryptography = Cryptography()
-        let nonce = cryptography.randomNonceString()
+        let nonce = Cryptography.randomNonceString()
         socialLoginVM?.currentNonce = nonce
 
         let loginbutton = FBLoginButton()
         
         loginbutton.delegate = facebookLoginManager
         loginbutton.loginTracking = .limited
-//        loginbutton.permissions = ["email"]
-        loginbutton.nonce = cryptography.sha256(nonce)
+        loginbutton.nonce = Cryptography.sha256(nonce)
+        
         loginbutton.sendActions(for: .touchUpInside)
     }
     
@@ -127,8 +138,7 @@ class SocialView: UIView{
         socialJoinDismissed()
         
         //firebase 자격증명에 사용할..
-        let cryptography = Cryptography()
-        let nonce = cryptography.randomNonceString()
+        let nonce = Cryptography.randomNonceString()
         socialLoginVM?.currentNonce = nonce
         
         //사용자의 전체 이름과 이메일 주소에 대한 인증 요청을 수행하여 인증 흐름을 시작
@@ -137,7 +147,7 @@ class SocialView: UIView{
         let request = ASAuthorizationAppleIDProvider().createRequest()
         request.requestedScopes = [.fullName, .email]
         //firebase에서 사용할..
-        request.nonce = cryptography.sha256(nonce)
+        request.nonce = Cryptography.sha256(nonce)
         
         let controller = ASAuthorizationController(authorizationRequests: [request])
         controller.delegate = appleLoginManager
@@ -145,20 +155,22 @@ class SocialView: UIView{
         controller.performRequests()    //요청
     }
     
+    @MainActor
     @IBAction func googleLoginButtonTap(_ sender: UIButton) {
         socialJoinDismissed()
         
-        socialLoginVM?.googleLogin(isLogin: isLogin, viewController: viewController){[weak self] result in
-            if result{
-                self?.loginSuccess()
+        Task{
+            do{
+                try await socialLoginVM?.googleLogin(isLogin: isLogin, viewController: viewController)
+                loginSuccess()
             }
-            else{
+            catch{
+                viewController?.presentAlertMessage(message: error.localizedDescription)
             }
         }
     }
 }
 
-///apple
 extension SocialView: LoginManagerDelegate{
     func loginSuccess() {
         if isLogin{
@@ -170,48 +182,5 @@ extension SocialView: LoginManagerDelegate{
             //약관 동의 화면으로 이동해야함
             viewDelegate?.moveToJoinTermsofUseViewController()
         }
-    }
-}
-
-
-///naver Login
-extension SocialView: NaverThirdPartyLoginConnectionDelegate{
-    func oauth20ConnectionDidFinishRequestACTokenWithAuthCode() {
-        //로그인 성공
-        guard let accessToken = NaverThirdPartyLoginConnection.getSharedInstance().accessToken else {return}
-        
-        socialLoginVM?.naverLogin(isLogin:isLogin, accessToken: accessToken){[weak self] result in
-            if result{
-                //login 성공
-                DispatchQueue.main.async{
-                    self?.loginSuccess()
-                }
-            }
-            else{
-            }
-            NaverThirdPartyLoginConnection.getSharedInstance().resetToken()
-        }
-    }
-    
-    func oauth20Connection(_ oauthConnection: NaverThirdPartyLoginConnection!, didFailWithError error: Error!) {
-        //로그인 실패
-        print(error.localizedDescription)
-    }
-    
-    
-    func oauth20ConnectionDidFinishRequestACTokenWithRefreshToken() {
-//        NaverThirdPartyLoginConnection.getSharedInstance().resetToken()
-    }
-    
-    func oauth20ConnectionDidFinishDeleteToken() {
-        
-    }
-    
-    func oauth20Connection(_ oauthConnection: NaverThirdPartyLoginConnection!, didFinishAuthorizationWithResult recieveType: THIRDPARTYLOGIN_RECEIVE_TYPE) {
-        
-    }
-    
-    func oauth20Connection(_ oauthConnection: NaverThirdPartyLoginConnection!, didFailAuthorizationWithRecieveType recieveType: THIRDPARTYLOGIN_RECEIVE_TYPE) {
-        
     }
 }

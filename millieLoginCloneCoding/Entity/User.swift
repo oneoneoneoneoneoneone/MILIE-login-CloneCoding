@@ -8,6 +8,12 @@
 import Foundation
 
 struct User: Codable {
-    let email, id, image, name: String
-    let nickname, password, phone: String
+    let id: String
+    let email: String
+    let phone: String
+    let password: String
+}
+
+enum loginType: String, Codable{
+    case phone, naver, kakao, facebook, apple, google
 }

@@ -22,7 +22,7 @@ protocol ServerNetworkManagerProtocol{
     ///naver 유저 정보 가져오기
     func requestNaverLoginData(accessToken: String) async throws -> Response?
     ///localserver customToken 가져오기 (by.kakao)
-    func requestToken(accessToken: String) async throws -> String?
+    func requestToken(loginType: loginType ,accessToken: String) async throws -> String?
 }
 
 class NetworkManager{
@@ -47,6 +47,7 @@ extension NetworkManager: DBNetworkManagerProtocol, ServerNetworkManagerProtocol
 
     func selectWherePhone(phone: String) async throws -> [String : User]?{
         guard let url = api.getURLComponents("phone", phone)?.url else {throw NSError(domain: "query", code: 0)}
+        
         print(url)
         return try await api.getUserData(url: url)
     }
@@ -59,15 +60,15 @@ extension NetworkManager: DBNetworkManagerProtocol, ServerNetworkManagerProtocol
     
     //MARK: naver API
     func requestNaverLoginData(accessToken: String) async throws -> Response?{
-        guard let url = naverLoginAPI.getURLComponents(accessToken)?.url else {throw NSError(domain: "url", code: 0)}
+        guard let url = naverLoginAPI.getURLComponents()?.url else {throw NSError(domain: "url", code: 0)}
         print(url)
         
         return try await naverLoginAPI.getNaverLoginData(url: url, accessToken: accessToken)
     }
     
     //MARK: local API
-    func requestToken(accessToken: String) async throws -> String?{
-        guard let url = localAPI.getURLComponents(accessToken)?.url else {throw NSError(domain: "url", code: 0)}
+    func requestToken(loginType: loginType ,accessToken: String) async throws -> String?{
+        guard let url = localAPI.getURLComponents(path: loginType.rawValue, accessToken: accessToken)?.url else {throw NSError(domain: "url", code: 0)}
         print(url)
         return try await localAPI.getToken(url: url, accessToken: accessToken)
     }

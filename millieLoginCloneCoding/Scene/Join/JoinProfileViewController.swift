@@ -41,13 +41,18 @@ class JoinProfileViewController: UIViewController {
     @IBAction func profilePhotoButtonTap(_ sender: UIButton) {
     }
     
+    @MainActor
     @IBAction func CompletionButtonTap(_ sender: UIButton) {
         loginVM?.userInfoUpdate(displayName: displayNameInputView.textField.text ?? "", photoURL: "")
-        loginVM?.Join(password: ""){result in
-            if result {
-                //회원가입 완
+        
+        Task{
+            do{
+                try await loginVM?.Join(password: "")
                 self.dismiss(animated: true)
                 self.navigationController?.popToRootViewController(animated: true)
+            }
+            catch{
+                presentAlertMessage(message: error.localizedDescription)
             }
         }
     }

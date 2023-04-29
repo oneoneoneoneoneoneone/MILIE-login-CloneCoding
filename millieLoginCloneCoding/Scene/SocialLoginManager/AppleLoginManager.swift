@@ -8,18 +8,12 @@
 import AuthenticationServices
 
 final class AppleLoginManager: NSObject {
-    var viewController: UIViewController?
-    var delegate: AppleLoginManagerDelegate?
+    private var viewController: UIViewController?
+    var delegate: LoginManagerDelegate?
     var socialLoginVM: SocialLoginProtocol?
-    
-    init(viewController: UIViewController? = nil, delegate: AppleLoginManagerDelegate? = nil, socialLoginVM: SocialLoginProtocol? = nil) {
+        
+    func setAppleLoginPresentationAnchorView(_ viewController: UIViewController?) {
         self.viewController = viewController
-        self.delegate = delegate
-        self.socialLoginVM = socialLoginVM
-    }
-    
-    func setAppleLoginPresentationAnchorView(_ view: UIViewController) {
-        self.viewController = view
     }
 }
 
@@ -28,6 +22,7 @@ extension AppleLoginManager: ASAuthorizationControllerDelegate {
     ///
     ///사용자가 처음 로그인할 때만 표시 이름 등의 사용자 정보를 앱에 공유
     ///이전에 Firebase를 사용하지 않고 Apple을 사용하여 사용자를 앱에 로그인하도록 했으면 Apple은 Firebase에 사용자의 표시 이름을 제공하지 않습니다.
+    @MainActor
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential{
             guard let appleIDToken = appleIDCredential.identityToken else {
@@ -39,16 +34,16 @@ extension AppleLoginManager: ASAuthorizationControllerDelegate {
                 return
             }
             let userCode = appleIDCredential.user
-            
             let isLogin = viewController is LoginViewController
             
             //firebase 자격증명 사용
-            socialLoginVM?.appleLogin(isLogin: isLogin, userCode: userCode, IDToken: idTokenString){ [self] result in
-                if result{
-                    //login 성공
-                    delegate?.appleLoginSuccess()
+            Task{
+                do{
+                    try await socialLoginVM?.appleLogin(isLogin: isLogin, userCode: userCode, IDToken: idTokenString)
+                    delegate?.loginSuccess()
                 }
-                else{
+                catch{
+                    viewController?.presentAlertMessage(message: error.localizedDescription)
                 }
             }
             //appleIDCredential.identityToken - 바뀜

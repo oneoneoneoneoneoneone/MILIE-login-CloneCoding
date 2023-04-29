@@ -46,25 +46,25 @@ class JoinVerificationCodeViewController: UIViewController {
         }
     }
     
+    @MainActor
     @IBAction func nextButtonTap(_ sender: UIButton) {
         guard let verificationCode = verificationCodeInputView.textField.text else {return}
         
-        loginVM?.phoneNumberLogin(verificationCode: verificationCode){result in
-            if result{
-                //login 성공
+        Task{
+            do{
+                try await loginVM?.phoneNumberLogin(verificationCode: verificationCode)
                 let joinProfileViewController =  UIStoryboard(name: "Join", bundle: nil)
                     .instantiateViewController(identifier: "JoinProfileViewController"){ (coder) -> JoinProfileViewController? in
-                        return .init(coder: coder, loginVM: self.loginVM)
-                    }
+                    return .init(coder: coder, loginVM: self.loginVM)
+                }
                 
                 self.navigationController?.pushViewController(joinProfileViewController, animated: true)
             }
-            else{
-                print("로그인 실패")
+            catch{
+                presentAlertMessage(message: error.localizedDescription)
             }
         }
     }
-    
 }
 
 extension JoinVerificationCodeViewController: InputStackViewDelegate{

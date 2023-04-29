@@ -9,9 +9,9 @@ import Foundation
 import Alamofire
 
 struct LocalAPI{
-    func getURLComponents(_ accessToken: String) -> URLComponents?{
+    func getURLComponents(path: String, accessToken: String) -> URLComponents?{
         var components = URLComponents(string: "http://\(Bundle.main.getplistValue(path: "APIKey", key: "ip"))):8000")
-        components?.path = "/verifyToken"
+        components?.path = "/\(path)/verifyToken"
         
         return components
     }

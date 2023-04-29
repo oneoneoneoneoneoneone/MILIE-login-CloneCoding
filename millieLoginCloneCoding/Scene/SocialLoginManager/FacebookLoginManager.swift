@@ -29,6 +29,7 @@ extension FacebookLoginManager: LoginButtonDelegate{
         return true
     }
     
+    @MainActor
     func loginButton(_ loginButton: FBSDKLoginKit.FBLoginButton, didCompleteWith result: FBSDKLoginKit.LoginManagerLoginResult?, error: Error?) {
         if let error = error {
           print(error.localizedDescription)
@@ -39,12 +40,13 @@ extension FacebookLoginManager: LoginButtonDelegate{
         
         let isLogin = viewController is LoginViewController
         
-        //firebase 자격증명 사용
-        socialLoginVM?.facebookLogin(isLogin: isLogin, userID: userID, idToken: idToken){ [self] result in
-            if result{
+        Task{
+            do{
+                try await socialLoginVM?.facebookLogin(isLogin: isLogin, userID: userID, idToken: idToken)
                 delegate?.loginSuccess()
             }
-            else{
+            catch{
+                viewController?.presentAlertMessage(message: error.localizedDescription)
             }
         }
     }

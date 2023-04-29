@@ -11,7 +11,7 @@ import Alamofire
 struct NaverLoginAPI{
     static let host = "openapi.naver.com"
     
-    func getURLComponents(_ accessToken: String) -> URLComponents?{
+    func getURLComponents() -> URLComponents?{
         var components = URLComponents(string: "https://openapi.naver.com")
         components?.host = NaverLoginAPI.host
         components?.path = "/v1/nid/me"

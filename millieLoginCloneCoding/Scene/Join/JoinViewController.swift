@@ -113,21 +113,17 @@ class JoinViewController: UIViewController{
         })
     }
     
-    
+    @MainActor
     @IBAction func nextButtonTap(_ sender: UIButton) {
         //입력값 검증
         if false{
             return
         }
         //회원 여부 확인
-        loginVM?.checkJoin(phone: phoneInputView.textField.text!){ [self] result in
-            if result{
-                //이미 회원임
-                return
-            }
-            
-            //서비스 약관동의 모달
-            DispatchQueue.main.async {
+        Task{
+            do{
+                try await loginVM?.checkJoin(phone: phoneInputView.textField.text!)
+                //서비스 약관동의 모달
                 self.view.endEditing(true)
                 self.agencyStackView.layer.borderColor = UIColor.black.cgColor
                 
@@ -150,6 +146,9 @@ class JoinViewController: UIViewController{
                     sheet.preferredCornerRadius = 30
                 }
                 self.present(termsofUseViewController, animated: true)
+            }
+            catch{
+                presentAlertMessage(message: error.localizedDescription)
             }
         }
     }
@@ -217,9 +216,7 @@ extension JoinViewController: InputStackViewDelegate{
             }
         }
         if textField == nameInputView.textField{
-            if textField.text!.count > 1{
-                nextButton.isEnabled = true
-            }
+            nextButton.isEnabled = textField.text!.count > 1
         }
     }
     
