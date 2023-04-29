@@ -336,9 +336,7 @@
 			isa = PBXGroup;
 			children = (
 				3351236529DC8A38005BA59B /* NetworkManager.swift */,
-				3351236729DC8B27005BA59B /* API.swift */,
-				3307404729F5167F00823DC2 /* LocalAPI.swift */,
-				3307404929F53D5A00823DC2 /* NaverLoginAPI.swift */,
+				339E3D7729FD61720085CD7C /* API */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -389,6 +387,16 @@
 				330412D929D2AC48008FD817 /* SceneDelegate.swift */,
 			);
 			path = Delegate;
+			sourceTree = "<group>";
+		};
+		339E3D7729FD61720085CD7C /* API */ = {
+			isa = PBXGroup;
+			children = (
+				3351236729DC8B27005BA59B /* API.swift */,
+				3307404729F5167F00823DC2 /* LocalAPI.swift */,
+				3307404929F53D5A00823DC2 /* NaverLoginAPI.swift */,
+			);
+			path = API;
 			sourceTree = "<group>";
 		};
 		33DF299829D33857000372A4 /* Scene */ = {

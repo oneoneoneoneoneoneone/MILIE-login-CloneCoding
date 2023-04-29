@@ -57,18 +57,8 @@ extension SocialLogin: SocialLoginProtocol{
             throw LoginError.notInstalledApp(key: "카카오톡")
         }
         
-        //kakao accessToken 요청
         let accessToken = try await requestKakaoToken()
-        
-        //kakao 회원정보 조회
-        let kakaoAccount: Account? = try await withCheckedThrowingContinuation{continuation in
-            UserApi.shared.me(){ (user, error) in
-                if let error = error {
-                    continuation.resume(throwing: error)
-                }
-                continuation.resume(returning: user?.kakaoAccount)
-            }
-        }
+        let kakaoAccount = try await requestKakaoAccount()
         
         //이메일이 안들어오면 연결 끊기
         guard let userEmail = kakaoAccount?.email else {
@@ -127,6 +117,16 @@ extension SocialLogin: SocialLoginProtocol{
         return accessToken
     }
     
+    internal func requestKakaoAccount() async throws -> Account?{
+        return try await withCheckedThrowingContinuation{continuation in
+            UserApi.shared.me(){ (user, error) in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                }
+                continuation.resume(returning: user?.kakaoAccount)
+            }
+        }
+    }
 
     
     //MARK: naver 로그인
