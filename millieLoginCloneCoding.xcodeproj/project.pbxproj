@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1116FA2CCD45C4CBA14A2CA3 /* Pods_millieLoginCloneCoding.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D90112BD71E83BE43F07E2E7 /* Pods_millieLoginCloneCoding.framework */; };
 		330412D829D2AC48008FD817 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330412D729D2AC48008FD817 /* AppDelegate.swift */; };
 		330412DA29D2AC48008FD817 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330412D929D2AC48008FD817 /* SceneDelegate.swift */; };
 		330412DC29D2AC48008FD817 /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330412DB29D2AC48008FD817 /* StartViewController.swift */; };
@@ -21,6 +22,13 @@
 		3304130D29D2ADE5008FD817 /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3304130C29D2ADE5008FD817 /* FirebaseAnalyticsSwift */; };
 		3304130F29D2ADE5008FD817 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 3304130E29D2ADE5008FD817 /* FirebaseAuth */; };
 		3304131129D2ADE5008FD817 /* FirebaseAuthCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 3304131029D2ADE5008FD817 /* FirebaseAuthCombine-Community */; };
+		3307404829F5167F00823DC2 /* LocalAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3307404729F5167F00823DC2 /* LocalAPI.swift */; };
+		3307404A29F53D5A00823DC2 /* NaverLoginAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3307404929F53D5A00823DC2 /* NaverLoginAPI.swift */; };
+		3307404C29F55AAD00823DC2 /* NaverMeResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3307404B29F55AAD00823DC2 /* NaverMeResult.swift */; };
+		3307405429F6E6C300823DC2 /* AppleLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3307405329F6E6C300823DC2 /* AppleLoginManager.swift */; };
+		3307405C29F7BCB100823DC2 /* SocialView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3307405B29F7BCB100823DC2 /* SocialView.xib */; };
+		3307405F29F7BCCA00823DC2 /* SocialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3307405E29F7BCCA00823DC2 /* SocialView.swift */; };
+		3307406129F81B5F00823DC2 /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3307406029F81B5F00823DC2 /* UIView+.swift */; };
 		3324278329E64F1200222E25 /* TermsHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3324278229E64F1200222E25 /* TermsHeader.xib */; };
 		3324278529E650B200222E25 /* TermsHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3324278429E650B200222E25 /* TermsHeader.swift */; };
 		332729E929DA951800540D9C /* JoinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 332729E829DA951800540D9C /* JoinViewController.swift */; };
@@ -45,8 +53,15 @@
 		335F201B29DC2865006898EC /* UIViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335F201A29DC2865006898EC /* UIViewController+.swift */; };
 		335F201D29DC3D01006898EC /* SocialLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335F201C29DC3D01006898EC /* SocialLogin.swift */; };
 		335F201F29DC3E06006898EC /* String+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335F201E29DC3E06006898EC /* String+.swift */; };
+		3371552E29ED90B4004BE3D4 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3371552D29ED90B4004BE3D4 /* Util.swift */; };
+		3371553029EE53D1004BE3D4 /* UINavigationController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3371552F29EE53D1004BE3D4 /* UINavigationController+.swift */; };
 		337E45C929D3419F0005AFEE /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337E45C829D3419F0005AFEE /* MainViewController.swift */; };
+		33B4BD8C29FD1B2600120319 /* NaverLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B4BD8B29FD1B2600120319 /* NaverLoginManager.swift */; };
+		33B4BD8E29FD25BB00120319 /* LoginError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B4BD8D29FD25BB00120319 /* LoginError.swift */; };
 		33C3474B29D2B65E0089B722 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C3474A29D2B65E0089B722 /* LoginViewController.swift */; };
+		33D957F929FA49770016B1F6 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 33D957F829FA49770016B1F6 /* FacebookCore */; };
+		33D957FB29FA49770016B1F6 /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 33D957FA29FA49770016B1F6 /* FacebookLogin */; };
+		33D957FD29FA4CEC0016B1F6 /* FacebookLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33D957FC29FA4CEC0016B1F6 /* FacebookLoginManager.swift */; };
 		33DF299529D31D9B000372A4 /* FirebaseLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DF299429D31D9B000372A4 /* FirebaseLogin.swift */; };
 		33DF299729D33846000372A4 /* JoinVerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DF299629D33846000372A4 /* JoinVerificationCodeViewController.swift */; };
 		33F51B4729D6AC810021884F /* KakaoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 33F51B4629D6AC810021884F /* KakaoSDK */; };
@@ -57,6 +72,8 @@
 		33FFC48129D3E0AD00ABA054 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 33FFC48029D3E0AD00ABA054 /* GoogleSignIn */; };
 		33FFC48329D3E0AD00ABA054 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 33FFC48229D3E0AD00ABA054 /* GoogleSignInSwift */; };
 		33FFC48A29D3F7CA00ABA054 /* Cryptography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FFC48929D3F7CA00ABA054 /* Cryptography.swift */; };
+		35BD7AD63E2B455E8A1BF824 /* Pods_millieLoginCloneCoding_millieLoginCloneCodingUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3799C26FC27D84D1C71914C3 /* Pods_millieLoginCloneCoding_millieLoginCloneCodingUITests.framework */; };
+		A0F09160A4F86B39D7E30D45 /* Pods_millieLoginCloneCodingTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 870D55941C90A17D7EB5DE24 /* Pods_millieLoginCloneCodingTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +94,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		03A177A0914D631C16EA955C /* Pods-millieLoginCloneCodingTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-millieLoginCloneCodingTests.release.xcconfig"; path = "Target Support Files/Pods-millieLoginCloneCodingTests/Pods-millieLoginCloneCodingTests.release.xcconfig"; sourceTree = "<group>"; };
 		330412D429D2AC48008FD817 /* millieLoginCloneCoding.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = millieLoginCloneCoding.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		330412D729D2AC48008FD817 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		330412D929D2AC48008FD817 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -91,6 +109,13 @@
 		330412F829D2AC49008FD817 /* millieLoginCloneCodingUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = millieLoginCloneCodingUITests.swift; sourceTree = "<group>"; };
 		330412FA29D2AC49008FD817 /* millieLoginCloneCodingUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = millieLoginCloneCodingUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		3304130729D2AD08008FD817 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		3307404729F5167F00823DC2 /* LocalAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAPI.swift; sourceTree = "<group>"; };
+		3307404929F53D5A00823DC2 /* NaverLoginAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverLoginAPI.swift; sourceTree = "<group>"; };
+		3307404B29F55AAD00823DC2 /* NaverMeResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverMeResult.swift; sourceTree = "<group>"; };
+		3307405329F6E6C300823DC2 /* AppleLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLoginManager.swift; sourceTree = "<group>"; };
+		3307405B29F7BCB100823DC2 /* SocialView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SocialView.xib; sourceTree = "<group>"; };
+		3307405E29F7BCCA00823DC2 /* SocialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialView.swift; sourceTree = "<group>"; };
+		3307406029F81B5F00823DC2 /* UIView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
 		3324278229E64F1200222E25 /* TermsHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TermsHeader.xib; sourceTree = "<group>"; };
 		3324278429E650B200222E25 /* TermsHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsHeader.swift; sourceTree = "<group>"; };
 		332729E829DA951800540D9C /* JoinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinViewController.swift; sourceTree = "<group>"; };
@@ -113,14 +138,27 @@
 		335F201A29DC2865006898EC /* UIViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+.swift"; sourceTree = "<group>"; };
 		335F201C29DC3D01006898EC /* SocialLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialLogin.swift; sourceTree = "<group>"; };
 		335F201E29DC3E06006898EC /* String+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+.swift"; sourceTree = "<group>"; };
+		3371552D29ED90B4004BE3D4 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		3371552F29EE53D1004BE3D4 /* UINavigationController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+.swift"; sourceTree = "<group>"; };
 		337E45C829D3419F0005AFEE /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		33B4BD8B29FD1B2600120319 /* NaverLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverLoginManager.swift; sourceTree = "<group>"; };
+		33B4BD8D29FD25BB00120319 /* LoginError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginError.swift; sourceTree = "<group>"; };
 		33C3474A29D2B65E0089B722 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		33D957FC29FA4CEC0016B1F6 /* FacebookLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookLoginManager.swift; sourceTree = "<group>"; };
 		33DF299429D31D9B000372A4 /* FirebaseLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseLogin.swift; sourceTree = "<group>"; };
 		33DF299629D33846000372A4 /* JoinVerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinVerificationCodeViewController.swift; sourceTree = "<group>"; };
 		33F51B4C29D6B01F0021884F /* APIKey.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = APIKey.plist; sourceTree = "<group>"; };
 		33F51B4E29D6C9890021884F /* KakaoPayLoad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoPayLoad.swift; sourceTree = "<group>"; };
 		33FFC48429D3E5CD00ABA054 /* millieLoginCloneCoding.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = millieLoginCloneCoding.entitlements; sourceTree = "<group>"; };
 		33FFC48929D3F7CA00ABA054 /* Cryptography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cryptography.swift; sourceTree = "<group>"; };
+		3799C26FC27D84D1C71914C3 /* Pods_millieLoginCloneCoding_millieLoginCloneCodingUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_millieLoginCloneCoding_millieLoginCloneCodingUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		430958F355B307473356CE46 /* Pods-millieLoginCloneCoding-millieLoginCloneCodingUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-millieLoginCloneCoding-millieLoginCloneCodingUITests.debug.xcconfig"; path = "Target Support Files/Pods-millieLoginCloneCoding-millieLoginCloneCodingUITests/Pods-millieLoginCloneCoding-millieLoginCloneCodingUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		870D55941C90A17D7EB5DE24 /* Pods_millieLoginCloneCodingTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_millieLoginCloneCodingTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		895E2595ED6F0E0D4BF0567B /* Pods-millieLoginCloneCoding.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-millieLoginCloneCoding.release.xcconfig"; path = "Target Support Files/Pods-millieLoginCloneCoding/Pods-millieLoginCloneCoding.release.xcconfig"; sourceTree = "<group>"; };
+		A04B7F9D46A4E2CAD8F29CD1 /* Pods-millieLoginCloneCoding-millieLoginCloneCodingUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-millieLoginCloneCoding-millieLoginCloneCodingUITests.release.xcconfig"; path = "Target Support Files/Pods-millieLoginCloneCoding-millieLoginCloneCodingUITests/Pods-millieLoginCloneCoding-millieLoginCloneCodingUITests.release.xcconfig"; sourceTree = "<group>"; };
+		C87691CAE6D0A42F181264CB /* Pods-millieLoginCloneCoding.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-millieLoginCloneCoding.debug.xcconfig"; path = "Target Support Files/Pods-millieLoginCloneCoding/Pods-millieLoginCloneCoding.debug.xcconfig"; sourceTree = "<group>"; };
+		D90112BD71E83BE43F07E2E7 /* Pods_millieLoginCloneCoding.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_millieLoginCloneCoding.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB7280E89F092AE828760CBF /* Pods-millieLoginCloneCodingTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-millieLoginCloneCodingTests.debug.xcconfig"; path = "Target Support Files/Pods-millieLoginCloneCodingTests/Pods-millieLoginCloneCodingTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +166,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				33D957F929FA49770016B1F6 /* FacebookCore in Frameworks */,
 				3351235E29DC87DF005BA59B /* FirebaseDatabase in Frameworks */,
 				33FFC48129D3E0AD00ABA054 /* GoogleSignIn in Frameworks */,
 				3304130D29D2ADE5008FD817 /* FirebaseAnalyticsSwift in Frameworks */,
@@ -139,6 +178,8 @@
 				3351236029DC87DF005BA59B /* FirebaseDatabaseSwift in Frameworks */,
 				33F51B4929D6AC810021884F /* KakaoSDKAuth in Frameworks */,
 				33F51B4B29D6AC810021884F /* KakaoSDKUser in Frameworks */,
+				33D957FB29FA49770016B1F6 /* FacebookLogin in Frameworks */,
+				1116FA2CCD45C4CBA14A2CA3 /* Pods_millieLoginCloneCoding.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -146,6 +187,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A0F09160A4F86B39D7E30D45 /* Pods_millieLoginCloneCodingTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,6 +195,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35BD7AD63E2B455E8A1BF824 /* Pods_millieLoginCloneCoding_millieLoginCloneCodingUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -167,6 +210,7 @@
 				330412F729D2AC49008FD817 /* millieLoginCloneCodingUITests */,
 				330412D529D2AC48008FD817 /* Products */,
 				3351235C29DC87DF005BA59B /* Frameworks */,
+				CBACC29BA6B8565808904B98 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -183,10 +227,10 @@
 		330412D629D2AC48008FD817 /* millieLoginCloneCoding */ = {
 			isa = PBXGroup;
 			children = (
+				3371552D29ED90B4004BE3D4 /* Util.swift */,
 				33FFC48829D3ED7200ABA054 /* plist */,
 				33FFC48429D3E5CD00ABA054 /* millieLoginCloneCoding.entitlements */,
-				330412D729D2AC48008FD817 /* AppDelegate.swift */,
-				330412D929D2AC48008FD817 /* SceneDelegate.swift */,
+				3371553129EE5433004BE3D4 /* Delegate */,
 				332729F129DA9C7C00540D9C /* Extension */,
 				33DF299829D33857000372A4 /* Scene */,
 				33DF299929D33873000372A4 /* ViewModel */,
@@ -214,10 +258,31 @@
 			path = millieLoginCloneCodingUITests;
 			sourceTree = "<group>";
 		};
+		3307405D29F7BCBB00823DC2 /* SocialView */ = {
+			isa = PBXGroup;
+			children = (
+				3307405B29F7BCB100823DC2 /* SocialView.xib */,
+				3307405E29F7BCCA00823DC2 /* SocialView.swift */,
+			);
+			path = SocialView;
+			sourceTree = "<group>";
+		};
+		3307406229F8BDCC00823DC2 /* SocialLoginManager */ = {
+			isa = PBXGroup;
+			children = (
+				3307405329F6E6C300823DC2 /* AppleLoginManager.swift */,
+				33B4BD8B29FD1B2600120319 /* NaverLoginManager.swift */,
+				33D957FC29FA4CEC0016B1F6 /* FacebookLoginManager.swift */,
+			);
+			path = SocialLoginManager;
+			sourceTree = "<group>";
+		};
 		332729E729DA8B2800540D9C /* Entity */ = {
 			isa = PBXGroup;
 			children = (
+				33B4BD8D29FD25BB00120319 /* LoginError.swift */,
 				33F51B4E29D6C9890021884F /* KakaoPayLoad.swift */,
+				3307404B29F55AAD00823DC2 /* NaverMeResult.swift */,
 				3351236129DC8865005BA59B /* User.swift */,
 			);
 			path = Entity;
@@ -230,7 +295,7 @@
 				332729EA29DA95AF00540D9C /* JoinTermsofUseViewController.swift */,
 				332729EC29DA95E800540D9C /* JoinProfileViewController.swift */,
 				33DF299629D33846000372A4 /* JoinVerificationCodeViewController.swift */,
-				335F201929DC1155006898EC /* modal */,
+				335F201929DC1155006898EC /* Modal */,
 			);
 			path = Join;
 			sourceTree = "<group>";
@@ -239,8 +304,10 @@
 			isa = PBXGroup;
 			children = (
 				332729EF29DA9C7800540D9C /* Bundle+plist.swift */,
-				335F201A29DC2865006898EC /* UIViewController+.swift */,
+				3307406029F81B5F00823DC2 /* UIView+.swift */,
 				335F201E29DC3E06006898EC /* String+.swift */,
+				3371552F29EE53D1004BE3D4 /* UINavigationController+.swift */,
+				335F201A29DC2865006898EC /* UIViewController+.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -248,6 +315,7 @@
 		332729F429DAA01D00540D9C /* CustomView */ = {
 			isa = PBXGroup;
 			children = (
+				3307405D29F7BCBB00823DC2 /* SocialView */,
 				3351237129DFC922005BA59B /* TermsofUseCollectionView */,
 				3351236C29DFC76E005BA59B /* InputStackView */,
 			);
@@ -257,6 +325,9 @@
 		3351235C29DC87DF005BA59B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D90112BD71E83BE43F07E2E7 /* Pods_millieLoginCloneCoding.framework */,
+				3799C26FC27D84D1C71914C3 /* Pods_millieLoginCloneCoding_millieLoginCloneCodingUITests.framework */,
+				870D55941C90A17D7EB5DE24 /* Pods_millieLoginCloneCodingTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -266,6 +337,8 @@
 			children = (
 				3351236529DC8A38005BA59B /* NetworkManager.swift */,
 				3351236729DC8B27005BA59B /* API.swift */,
+				3307404729F5167F00823DC2 /* LocalAPI.swift */,
+				3307404929F53D5A00823DC2 /* NaverLoginAPI.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -299,14 +372,23 @@
 			path = Cell;
 			sourceTree = "<group>";
 		};
-		335F201929DC1155006898EC /* modal */ = {
+		335F201929DC1155006898EC /* Modal */ = {
 			isa = PBXGroup;
 			children = (
 				335F201429DBE291006898EC /* AgencySelectViewController.swift */,
 				3351237929DFE565005BA59B /* TermsofUseViewController.swift */,
 				3327C73729DC621A008EEF5C /* SocialJoinViewController.swift */,
 			);
-			path = modal;
+			path = Modal;
+			sourceTree = "<group>";
+		};
+		3371553129EE5433004BE3D4 /* Delegate */ = {
+			isa = PBXGroup;
+			children = (
+				330412D729D2AC48008FD817 /* AppDelegate.swift */,
+				330412D929D2AC48008FD817 /* SceneDelegate.swift */,
+			);
+			path = Delegate;
 			sourceTree = "<group>";
 		};
 		33DF299829D33857000372A4 /* Scene */ = {
@@ -325,6 +407,7 @@
 			children = (
 				33DF299429D31D9B000372A4 /* FirebaseLogin.swift */,
 				335F201C29DC3D01006898EC /* SocialLogin.swift */,
+				3307406229F8BDCC00823DC2 /* SocialLoginManager */,
 				33FFC48929D3F7CA00ABA054 /* Cryptography.swift */,
 				3351236929DC9389005BA59B /* Network */,
 			);
@@ -370,6 +453,19 @@
 			path = plist;
 			sourceTree = "<group>";
 		};
+		CBACC29BA6B8565808904B98 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				C87691CAE6D0A42F181264CB /* Pods-millieLoginCloneCoding.debug.xcconfig */,
+				895E2595ED6F0E0D4BF0567B /* Pods-millieLoginCloneCoding.release.xcconfig */,
+				430958F355B307473356CE46 /* Pods-millieLoginCloneCoding-millieLoginCloneCodingUITests.debug.xcconfig */,
+				A04B7F9D46A4E2CAD8F29CD1 /* Pods-millieLoginCloneCoding-millieLoginCloneCodingUITests.release.xcconfig */,
+				FB7280E89F092AE828760CBF /* Pods-millieLoginCloneCodingTests.debug.xcconfig */,
+				03A177A0914D631C16EA955C /* Pods-millieLoginCloneCodingTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -377,9 +473,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 330412FE29D2AC49008FD817 /* Build configuration list for PBXNativeTarget "millieLoginCloneCoding" */;
 			buildPhases = (
+				B414EBA19BB22FA6C7923CCB /* [CP] Check Pods Manifest.lock */,
 				330412D029D2AC48008FD817 /* Sources */,
 				330412D129D2AC48008FD817 /* Frameworks */,
 				330412D229D2AC48008FD817 /* Resources */,
+				6340B133BBC4983F4C93BB77 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -398,6 +496,8 @@
 				33F51B4A29D6AC810021884F /* KakaoSDKUser */,
 				3351235D29DC87DF005BA59B /* FirebaseDatabase */,
 				3351235F29DC87DF005BA59B /* FirebaseDatabaseSwift */,
+				33D957F829FA49770016B1F6 /* FacebookCore */,
+				33D957FA29FA49770016B1F6 /* FacebookLogin */,
 			);
 			productName = millieLoginCloneCoding;
 			productReference = 330412D429D2AC48008FD817 /* millieLoginCloneCoding.app */;
@@ -407,6 +507,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3304130129D2AC49008FD817 /* Build configuration list for PBXNativeTarget "millieLoginCloneCodingTests" */;
 			buildPhases = (
+				6012B0CB853C3A69D62CE2CA /* [CP] Check Pods Manifest.lock */,
 				330412E629D2AC49008FD817 /* Sources */,
 				330412E729D2AC49008FD817 /* Frameworks */,
 				330412E829D2AC49008FD817 /* Resources */,
@@ -425,9 +526,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3304130429D2AC49008FD817 /* Build configuration list for PBXNativeTarget "millieLoginCloneCodingUITests" */;
 			buildPhases = (
+				7327B8EA40250046C1EA3E78 /* [CP] Check Pods Manifest.lock */,
 				330412F029D2AC49008FD817 /* Sources */,
 				330412F129D2AC49008FD817 /* Frameworks */,
 				330412F229D2AC49008FD817 /* Resources */,
+				8648B61FB30811765AAE8662 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -463,7 +566,7 @@
 				};
 			};
 			buildConfigurationList = 330412CF29D2AC48008FD817 /* Build configuration list for PBXProject "millieLoginCloneCoding" */;
-			compatibilityVersion = "Xcode 14.0";
+			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -475,6 +578,7 @@
 				3304130929D2ADE5008FD817 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				33FFC47F29D3E0AD00ABA054 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				33F51B4529D6AC810021884F /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
+				33D957F729FA49770016B1F6 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
 			);
 			productRefGroup = 330412D529D2AC48008FD817 /* Products */;
 			projectDirPath = "";
@@ -502,6 +606,7 @@
 				335F201329DB1379006898EC /* Join.storyboard in Resources */,
 				330412DF29D2AC48008FD817 /* Main.storyboard in Resources */,
 				3351236B29DFC430005BA59B /* TermsofUse.plist in Resources */,
+				3307405C29F7BCB100823DC2 /* SocialView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -521,6 +626,109 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		6012B0CB853C3A69D62CE2CA /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-millieLoginCloneCodingTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6340B133BBC4983F4C93BB77 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-millieLoginCloneCoding/Pods-millieLoginCloneCoding-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-millieLoginCloneCoding/Pods-millieLoginCloneCoding-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-millieLoginCloneCoding/Pods-millieLoginCloneCoding-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7327B8EA40250046C1EA3E78 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-millieLoginCloneCoding-millieLoginCloneCodingUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8648B61FB30811765AAE8662 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-millieLoginCloneCoding-millieLoginCloneCodingUITests/Pods-millieLoginCloneCoding-millieLoginCloneCodingUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-millieLoginCloneCoding-millieLoginCloneCodingUITests/Pods-millieLoginCloneCoding-millieLoginCloneCodingUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-millieLoginCloneCoding-millieLoginCloneCodingUITests/Pods-millieLoginCloneCoding-millieLoginCloneCodingUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B414EBA19BB22FA6C7923CCB /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-millieLoginCloneCoding-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		330412D029D2AC48008FD817 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -529,6 +737,7 @@
 				3324278529E650B200222E25 /* TermsHeader.swift in Sources */,
 				337E45C929D3419F0005AFEE /* MainViewController.swift in Sources */,
 				33C3474B29D2B65E0089B722 /* LoginViewController.swift in Sources */,
+				33D957FD29FA4CEC0016B1F6 /* FacebookLoginManager.swift in Sources */,
 				332729EB29DA95AF00540D9C /* JoinTermsofUseViewController.swift in Sources */,
 				3327C73829DC621A008EEF5C /* SocialJoinViewController.swift in Sources */,
 				330412DC29D2AC48008FD817 /* StartViewController.swift in Sources */,
@@ -536,19 +745,29 @@
 				3351237A29DFE565005BA59B /* TermsofUseViewController.swift in Sources */,
 				335F201529DBE291006898EC /* AgencySelectViewController.swift in Sources */,
 				3351236E29DFC794005BA59B /* TermsofUseTableView.swift in Sources */,
+				3371552E29ED90B4004BE3D4 /* Util.swift in Sources */,
+				33B4BD8E29FD25BB00120319 /* LoginError.swift in Sources */,
 				335F201D29DC3D01006898EC /* SocialLogin.swift in Sources */,
 				33DF299729D33846000372A4 /* JoinVerificationCodeViewController.swift in Sources */,
 				3351236229DC8865005BA59B /* User.swift in Sources */,
 				330412D829D2AC48008FD817 /* AppDelegate.swift in Sources */,
+				3307404A29F53D5A00823DC2 /* NaverLoginAPI.swift in Sources */,
 				332729ED29DA95E800540D9C /* JoinProfileViewController.swift in Sources */,
 				332729F029DA9C7800540D9C /* Bundle+plist.swift in Sources */,
 				335F201F29DC3E06006898EC /* String+.swift in Sources */,
 				33F51B4F29D6C9890021884F /* KakaoPayLoad.swift in Sources */,
 				335F201B29DC2865006898EC /* UIViewController+.swift in Sources */,
+				3307405F29F7BCCA00823DC2 /* SocialView.swift in Sources */,
 				3351236829DC8B27005BA59B /* API.swift in Sources */,
 				33FFC48A29D3F7CA00ABA054 /* Cryptography.swift in Sources */,
 				3351236629DC8A38005BA59B /* NetworkManager.swift in Sources */,
+				3307405429F6E6C300823DC2 /* AppleLoginManager.swift in Sources */,
+				3307406129F81B5F00823DC2 /* UIView+.swift in Sources */,
 				332729F629DAA05400540D9C /* InputStackView.swift in Sources */,
+				3371553029EE53D1004BE3D4 /* UINavigationController+.swift in Sources */,
+				33B4BD8C29FD1B2600120319 /* NaverLoginManager.swift in Sources */,
+				3307404C29F55AAD00823DC2 /* NaverMeResult.swift in Sources */,
+				3307404829F5167F00823DC2 /* LocalAPI.swift in Sources */,
 				33DF299529D31D9B000372A4 /* FirebaseLogin.swift in Sources */,
 				332729E929DA951800540D9C /* JoinViewController.swift in Sources */,
 				330412DA29D2AC48008FD817 /* SceneDelegate.swift in Sources */,
@@ -723,6 +942,7 @@
 		};
 		330412FF29D2AC49008FD817 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C87691CAE6D0A42F181264CB /* Pods-millieLoginCloneCoding.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -753,6 +973,7 @@
 		};
 		3304130029D2AC49008FD817 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 895E2595ED6F0E0D4BF0567B /* Pods-millieLoginCloneCoding.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -783,6 +1004,7 @@
 		};
 		3304130229D2AC49008FD817 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FB7280E89F092AE828760CBF /* Pods-millieLoginCloneCodingTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -803,6 +1025,7 @@
 		};
 		3304130329D2AC49008FD817 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 03A177A0914D631C16EA955C /* Pods-millieLoginCloneCodingTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -823,6 +1046,7 @@
 		};
 		3304130529D2AC49008FD817 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 430958F355B307473356CE46 /* Pods-millieLoginCloneCoding-millieLoginCloneCodingUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -841,6 +1065,7 @@
 		};
 		3304130629D2AC49008FD817 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A04B7F9D46A4E2CAD8F29CD1 /* Pods-millieLoginCloneCoding-millieLoginCloneCodingUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -907,6 +1132,14 @@
 				minimumVersion = 9.0.0;
 			};
 		};
+		33D957F729FA49770016B1F6 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/facebook/facebook-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 14.0.0;
+			};
+		};
 		33F51B4529D6AC810021884F /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kakao/kakao-ios-sdk";
@@ -955,6 +1188,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3304130929D2ADE5008FD817 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseDatabaseSwift;
+		};
+		33D957F829FA49770016B1F6 /* FacebookCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 33D957F729FA49770016B1F6 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookCore;
+		};
+		33D957FA29FA49770016B1F6 /* FacebookLogin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 33D957F729FA49770016B1F6 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookLogin;
 		};
 		33F51B4629D6AC810021884F /* KakaoSDK */ = {
 			isa = XCSwiftPackageProductDependency;
