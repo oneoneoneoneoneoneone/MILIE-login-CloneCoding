@@ -53,6 +53,7 @@ class LoginViewController: UIViewController {
         Task{
             do{
                 try await loginVM?.login(phone: phoneNumber, password: password)
+                
                 self.dismiss(animated: true)
                 self.navigationController?.popToRootViewController(animated: true)
             }

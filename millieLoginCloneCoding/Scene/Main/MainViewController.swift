@@ -8,11 +8,11 @@
 import UIKit
 
 class MainViewController: UIViewController {
-    private var loginVM: FirebaseLogin!
+    private var loginVM: LoginProtocol?
     
     @IBOutlet weak var userNameLabel: UILabel!
     @IBOutlet weak var logoutButton: UIButton!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.loginVM = FirebaseLogin()
@@ -22,12 +22,17 @@ class MainViewController: UIViewController {
     
     private func setAttribute(){
         logoutButton.layer.cornerRadius = 5
+        
+        userNameLabel.text = loginVM?.getCurrentUser()?.displayName
     }
     
     @IBAction func logoutButtonTap(_ sender: UIButton) {
-        if self.loginVM.logout(){
+        do{
+            try loginVM?.logout()
             self.dismiss(animated: true)
+        }
+        catch{
+            presentAlertMessage(message: error.localizedDescription)
         }
     }
 }
-

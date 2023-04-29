@@ -54,7 +54,7 @@ extension SocialLogin: SocialLoginProtocol{
     
     func kakaoLogin(isLogin: Bool) async throws{
         if !UserApi.isKakaoTalkLoginAvailable(){
-            throw NSError(domain: "카카오톡이 설치되지 않았습니다.", code: 0)
+            throw LoginError.notInstalledApp(key: "카카오톡")
         }
         
         //kakao accessToken 요청
@@ -73,19 +73,23 @@ extension SocialLogin: SocialLoginProtocol{
         //이메일이 안들어오면 연결 끊기
         guard let userEmail = kakaoAccount?.email else {
             UserApi.shared.unlink(){_ in}
-            throw NSError(domain: "이메일 동의 요청", code: 0)
+            throw LoginError.requestAgain(key: "이메일 제공을 동의하지 않으셨습니다. 다시 인증해주세요.")
         }
             
         //db에서 회원 여부 확인
         if (try await self.dbNetworkManager?.selectWhereEmail(email: userEmail)?.filter({$0.value.id == loginType.kakao.rawValue}).keys.first) == nil{
             if isLogin{
-                throw NSError(domain: "카카오톡 계정으로 가입 된 정보가 없습니다.", code: 0)
+                throw LoginError.notFoundSocialJoinData(key: "카카오")
             }
             else{
                 //기존유저가 아니면 - db추가
                 let user = User(id: loginType.kakao.rawValue, email: userEmail, phone: "", password: "")
                 try await self.dbNetworkManager?.updateUser(user: user)
             }
+        }
+        //회원가입 정보가 있음
+        if !isLogin{
+            throw LoginError.foundJoinData(key: "카카오 계정")
         }
         
         //로컬서버에서 토큰 발급
@@ -109,15 +113,15 @@ extension SocialLogin: SocialLoginProtocol{
         }
         
         guard let idToken = oauthToken?.idToken else {
-            throw NSError(domain: "idToken nil", code: 0)
+            throw LoginError.nilData(key: "idToken")
         }
         
         guard nonce == Cryptography.getNonce(idToken: idToken) else {
-            throw NSError(domain: "nonce discrepancy", code: 0)
+            throw LoginError.discrepancyData(key: "nonce")
         }
         
         guard let accessToken = oauthToken?.accessToken else {
-            throw NSError(domain: "accessToken nil", code: 0)
+            throw LoginError.nilData(key: "accessToken")
         }
         
         return accessToken
@@ -131,15 +135,19 @@ extension SocialLogin: SocialLoginProtocol{
         guard let userEmail = try await serverNetworkManager?.requestNaverLoginData(accessToken: accessToken)?.email else {return}
         
         //db에서 회원 여부 확인
-        if (try await self.dbNetworkManager?.selectWhereEmail(email: userEmail)?.filter({$0.value.id == loginType.kakao.rawValue}).keys.first) == nil{
+        if (try await self.dbNetworkManager?.selectWhereEmail(email: userEmail)?.filter({$0.value.id == loginType.naver.rawValue}).keys.first) == nil{
             if isLogin{
-                throw NSError(domain: "네이버 계정으로 가입 된 정보가 없습니다.", code: 0)
+                throw LoginError.notFoundSocialJoinData(key: "네이버")
             }
             else{
                 //기존유저가 아니면 - db추가
                 let user = User(id: loginType.naver.rawValue, email: userEmail, phone: "", password: "")
                 try await self.dbNetworkManager?.updateUser(user: user)
             }
+        }
+        //회원가입 정보가 있음
+        if !isLogin{
+            throw LoginError.foundJoinData(key: "네이버 계정")
         }
         
         //로컬서버에서 토큰 발급
@@ -152,20 +160,24 @@ extension SocialLogin: SocialLoginProtocol{
     //MARK: facebook 로그인
     func facebookLogin(isLogin: Bool, userID: String, idToken: String) async throws {
         guard let nonce = currentNonce else {
-            throw NSError(domain: "nonce discrepancy", code: 0)
+            throw LoginError.discrepancyData(key: "nonce")
         }
         
-        //db에서 회원가입 여부 확인
-        if (try await dbNetworkManager?.selectWhereEmail(email: userID)?.filter({$0.value.id == loginType.apple.rawValue}).first?.key) == nil{
+        //회원가입 정보가 없음
+        if (try await dbNetworkManager?.selectWhereEmail(email: userID)?.filter({$0.value.id == loginType.facebook.rawValue}).first?.key) == nil{
             if isLogin{
-                throw NSError(domain: "페이스북 계정으로 가입 된 정보가 없습니다.", code: 0)
+                throw LoginError.notFoundSocialJoinData(key: "페이스북")
             }
             else{
-                //기존유저가 아니면 - db추가
                 let user = User(id: loginType.facebook.rawValue, email: userID, phone: "", password: "")
                 try await dbNetworkManager?.updateUser(user: user)
             }
         }
+        //회원가입 정보가 있음
+        if !isLogin{
+            throw LoginError.foundJoinData(key: "페이스북 계정")
+        }
+        
         //자격증명 생성
         let credential = OAuthProvider.credential(withProviderID: "facebook.com",
                                                   idToken: idToken,
@@ -179,19 +191,23 @@ extension SocialLogin: SocialLoginProtocol{
     //MARK: apple 로그인 - 자격증명 생성
     func appleLogin(isLogin: Bool, userCode: String, IDToken: String) async throws {
         guard let nonce = currentNonce else {
-            throw NSError(domain: "nonce discrepancy", code: 0)
+            throw LoginError.discrepancyData(key: "nonce")
         }
         
         //db에서 회원가입 여부 확인
         if (try await dbNetworkManager?.selectWhereEmail(email: userCode)?.filter({$0.value.id == loginType.apple.rawValue}).first?.key) == nil{
             if isLogin{
-                throw NSError(domain: "애플 계정으로 가입 된 정보가 없습니다.", code: 0)
+                throw LoginError.notFoundSocialJoinData(key: "애플")
             }
             else{
                 //기존유저가 아니면 - db추가
                 let user = User(id: loginType.apple.rawValue, email: userCode, phone: "", password: "")
                 try await dbNetworkManager?.updateUser(user: user)
             }
+        }
+        //회원가입 정보가 있음
+        if !isLogin{
+            throw LoginError.foundJoinData(key: "애플 계정")
         }
         
         //자격증명 생성
@@ -208,23 +224,27 @@ extension SocialLogin: SocialLoginProtocol{
         let signInResult = try await requestGoogleSignIn(viewController: viewController)
                 
         guard let idToken = signInResult.user.idToken?.tokenString else {
-            throw NSError(domain: "idToken nil", code: 0)
+            throw LoginError.nilData(key: "idToken")
         }
         guard let email = signInResult.user.profile?.email else {
-            throw NSError(domain: "email nil", code: 0)
+            throw LoginError.nilData(key: "email")
         }
         let accessToken = signInResult.user.accessToken.tokenString
             
         //db에서 회원 여부 확인
         if (try await self.dbNetworkManager?.selectWhereEmail(email: email)?.filter({$0.value.id == loginType.google.rawValue}).keys.first) == nil{
             if isLogin{
-                throw NSError(domain: "구글 계정으로 가입 된 정보가 없습니다.", code: 0)
+                throw LoginError.notFoundSocialJoinData(key: "구글")
             }
             else{
                 //기존유저가 아니면 - db추가
                 let user = User(id: loginType.google.rawValue, email: email, phone: "", password: "")
                 try await self.dbNetworkManager?.updateUser(user: user)
             }
+        }
+        //회원가입 정보가 있음
+        if !isLogin{
+            throw LoginError.foundJoinData(key: "구글 계정")
         }
         
         //자격증명 생성
@@ -237,7 +257,7 @@ extension SocialLogin: SocialLoginProtocol{
     ///google 로그인 - GoogleSignIn 요청
     internal func requestGoogleSignIn(viewController: UIViewController) async throws -> GIDSignInResult{
         guard let clientID = FirebaseApp.app()?.options.clientID else {
-            throw NSError(domain: "clientID nil", code: 0)
+            throw LoginError.nilData(key: "clientId")
         }
         
         // Create Google Sign In configuration object.

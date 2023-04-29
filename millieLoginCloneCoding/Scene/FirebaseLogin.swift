@@ -24,6 +24,9 @@ protocol FirebaseLoginProtocol {
 }
 
 protocol LoginProtocol {
+    ///
+    func getCurrentUser() -> FirebaseAuth.User?
+    
     ///로그인 여부 확인
     func checkLogin() -> Bool
     
@@ -31,7 +34,7 @@ protocol LoginProtocol {
     func login(phone: String, password: String) async throws
         
     ///firebase 로그아웃
-    func logout() -> Bool
+    func logout() throws
     
     ///회원가입 여부 확인
     func checkJoin(phone: String) async throws
@@ -73,12 +76,16 @@ class FirebaseLogin{
 }
 
 extension FirebaseLogin: LoginProtocol, FirebaseLoginProtocol{
+    func getCurrentUser() -> FirebaseAuth.User?{
+        return Auth.auth().currentUser
+    }
+    
     ///회원가입 여부 확인
     func checkJoin(phone: String) async throws{
         guard let user = try await dbNetworkManager?.selectWherePhone(phone: phone) else {return}
         
         if user.count > 0{
-            throw NSError(domain: "이미 가입된 휴대폰 번호입니다.", code:0)
+            throw LoginError.foundJoinData(key: "휴대폰 번호")
         }
     }
     
@@ -93,33 +100,26 @@ extension FirebaseLogin: LoginProtocol, FirebaseLoginProtocol{
     }
     
     ///firebase 로그아웃
-    func logout() -> Bool{
-        let firebaseAuth = Auth.auth()
-        do {
-            try firebaseAuth.signOut()
-            return true
-        } catch let signOutError as NSError {
-            print("Error signing out: %@", signOutError)
-            return false
-        }
+    func logout() throws{
+        try Auth.auth().signOut()
     }
     
     ///firebase 로그인 - 기본로그인
     func login(phone: String, password: String) async throws {
         guard let user = try await dbNetworkManager?.selectWherePhone(phone: phone) else {
-            throw NSError(domain: "회원정보 잘못 됨", code:0)
+            throw LoginError.nilData(key: "email")
         }
         if user.count == 0{
-            throw NSError(domain: "아이디 또는 비밀번호가 일치하지 않습니다.", code:0)
+            throw LoginError.notFoundLoginData
         }
         
-        //검색된 회 원이 있으면 로그인
+        //검색된 회원이 있으면 로그인
         guard let email = user.first?.key else {
-            throw NSError(domain: "회원정보 잘못 됨", code:0)
+            throw LoginError.nilData(key: "email")
         }
         
         //pw
-        try await Auth.auth().signIn(withEmail: "\(email)@email.com", password: "a1234!")
+        try await Auth.auth().signIn(withEmail: "\(email)@email.com", password: password)
     }
     
     ///firebase 로그인 - 커스텀 토큰 인증

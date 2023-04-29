@@ -33,11 +33,10 @@ class JoinProfileViewController: UIViewController {
     private func setAttribute(){
         displayNameInputView.delegate = self
         
+        profilePhotoButton.layer.cornerRadius = 10
         completionButton.layer.cornerRadius = 5
     }
     
-    //프로필 정보 업데이트
-    //이미지, 닉네임
     @IBAction func profilePhotoButtonTap(_ sender: UIButton) {
     }
     
@@ -47,7 +46,8 @@ class JoinProfileViewController: UIViewController {
         
         Task{
             do{
-                try await loginVM?.Join(password: "")
+                try await loginVM?.Join(password: "@@1234")
+                
                 self.dismiss(animated: true)
                 self.navigationController?.popToRootViewController(animated: true)
             }
@@ -60,11 +60,6 @@ class JoinProfileViewController: UIViewController {
 
 extension JoinProfileViewController: InputStackViewDelegate{
     func inputTextFieldDidChangeSelection(_ textField: UITextField) {
-        if textField.text!.count < 1{
-            completionButton.isEnabled = false
-        }else{
-            completionButton.isEnabled = true
-        }
-        
+        completionButton.isEnabled = textField.text != ""
     }
 }

@@ -69,12 +69,7 @@ class JoinVerificationCodeViewController: UIViewController {
 
 extension JoinVerificationCodeViewController: InputStackViewDelegate{
     func inputTextFieldDidChangeSelection(_ textField: UITextField) {
-        if textField.text == "" {
-            nextButton.isEnabled = false
-        }
-        else{
-            nextButton.isEnabled = true
-        }
+        nextButton.isEnabled = textField.text != ""
     }
     
     func inputTextField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
