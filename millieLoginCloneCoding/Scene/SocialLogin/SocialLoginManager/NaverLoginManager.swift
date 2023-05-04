@@ -5,16 +5,25 @@
 //  Created by hana on 2023/04/29.
 //
 
-import UIKit
+import Foundation
 import NaverThirdPartyLogin
 
-class NaverLoginManager: NSObject {
+class NaverLoginManager: NSObject, SocialLoginManagerProtocol {
     private var viewController: UIViewController?
-    var delegate: LoginManagerDelegate?
-    var socialLoginVM: SocialLoginProtocol?
+    private var delegate: LoginManagerDelegate?
+    private var serverNetworkManager: ServerNetworkManagerProtocol? = NetworkManager()
+    private var socialLoginVM: SocialLoginProtocol? = SocialLogin()
+    private var socialJoinVM: SocialJoinProtocol? = SocialJoin()
         
-    func setNaverLoginPresentationAnchorView(_ viewController: UIViewController?) {
+    func setSocialLoginPresentationAnchorView(_ viewController: UIViewController?, _ delegate: LoginManagerDelegate?) {
         self.viewController = viewController
+        self.delegate = delegate
+    }
+    
+    func requestLogin(){
+        let naverConn: NaverThirdPartyLoginConnection = NaverThirdPartyLoginConnection.getSharedInstance()
+        naverConn.delegate = self
+        naverConn.requestThirdPartyLogin()
     }
 }
 
@@ -22,11 +31,17 @@ extension NaverLoginManager: NaverThirdPartyLoginConnectionDelegate{
     @MainActor
     func oauth20ConnectionDidFinishRequestACTokenWithAuthCode() {
         guard let accessToken = NaverThirdPartyLoginConnection.getSharedInstance().accessToken else {return}
-        let isLogin = viewController is LoginViewController
         
         Task{
             do{
-                try await socialLoginVM?.naverLogin(isLogin:isLogin, accessToken: accessToken)
+                guard let userEmail = try await serverNetworkManager?.requestNaverLoginData(accessToken: accessToken)?.email else {return}
+                
+                if viewController is LoginViewController{
+                    try await socialLoginVM?.naverLogin(userEmail: userEmail, accessToken: accessToken)
+                }
+                if viewController is JoinViewController{
+                    try await socialJoinVM?.naverLogin(userEmail: userEmail, accessToken: accessToken)
+                }
                 NaverThirdPartyLoginConnection.getSharedInstance().resetToken()
                 delegate?.loginSuccess()
             }
