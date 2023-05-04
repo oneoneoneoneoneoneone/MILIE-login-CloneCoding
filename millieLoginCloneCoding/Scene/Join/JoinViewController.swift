@@ -19,10 +19,8 @@ protocol SocialJoinDelegate{
 }
 
 class JoinViewController: UIViewController{
-
+    
     private var loginVM: LoginProtocol?
-    private var socialLoginVM: SocialLoginProtocol?
-    private var appleLoginManager: AppleLoginManager?
     
     @IBOutlet weak var nameInputView: InputStackView!
     
@@ -39,19 +37,14 @@ class JoinViewController: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.loginVM = FirebaseLogin()
-        self.socialLoginVM = SocialLogin()
         
         setAttribute()
-        
-        //test
-//        nextButton.isEnabled = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -60,7 +53,7 @@ class JoinViewController: UIViewController{
             self.phoneInputView.textField.becomeFirstResponder()
         }
     }
-        
+    
     private func setAttribute(){
         nameInputView.delegate = self
         
@@ -74,39 +67,19 @@ class JoinViewController: UIViewController{
         agencyStackView.layer.cornerRadius = 5
         agencyStackView.layer.borderWidth = 1
         agencyStackView.layer.borderColor = UIColor.lightGray.cgColor
-                        
+        
         phoneInputView.delegate = self
     }
     
-    @IBAction func agencyButtonTap(_ sender: UIButton) {
+    @IBAction private func agencyButtonTap(_ sender: UIButton) {
         self.view.endEditing(true)
         agencyStackView.layer.borderColor = UIColor.black.cgColor
         
-        let agencyViewController = AgencySelectViewController(delegate: self)
-        if let sheet = agencyViewController.sheetPresentationController {
-            //크기
-            sheet.detents = [.medium(), .large()]
-            //무조건 싯트 아래 어둡게
-            sheet.largestUndimmedDetentIdentifier = .none
-            //크기확장X
-            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-            //아래 고정
-            sheet.prefersEdgeAttachedInCompactHeight = true
-            //너비 맞춤
-            sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
-            sheet.preferredCornerRadius = 30
-        }
-        self.present(agencyViewController, animated: true)
+        showSheetAgencySelectViewController()
     }
     
-    @IBAction func socialJoinButtonTap(_ sender: UIButton) {
-        let socialJoinViewController = UIStoryboard(name: "Join", bundle: nil)
-            .instantiateViewController(identifier: "SocialJoinViewController"){ (coder) -> SocialJoinViewController? in
-                return .init(coder: coder, viewController: self, viewDelegate: self)
-            }
-        socialJoinViewController.modalPresentationStyle = .overFullScreen
-
-        self.present(socialJoinViewController, animated: false)
+    @IBAction private func socialJoinButtonTap(_ sender: UIButton) {
+        showSocialJoinViewController()
         
         UIView.animate(withDuration: 0.3, animations:{
             self.view.alpha = 0.5
@@ -114,7 +87,7 @@ class JoinViewController: UIViewController{
     }
     
     @MainActor
-    @IBAction func nextButtonTap(_ sender: UIButton) {
+    @IBAction private func nextButtonTap(_ sender: UIButton) {
         //입력값 검증
         if false{
             return
@@ -123,34 +96,65 @@ class JoinViewController: UIViewController{
         Task{
             do{
                 try await loginVM?.checkJoin(phone: phoneInputView.textField.text!)
-                //서비스 약관동의 모달
-                self.view.endEditing(true)
-                self.agencyStackView.layer.borderColor = UIColor.black.cgColor
                 
-                let termsofUseViewController = UIStoryboard(name: "Join", bundle: nil)
-                    .instantiateViewController(identifier: "TermsofUseViewController"){ (coder) -> TermsofUseViewController? in
-                        return .init(coder: coder, delegate: self)
-                    }
+                view.endEditing(true)
+                agencyStackView.layer.borderColor = UIColor.black.cgColor
                 
-                if let sheet = termsofUseViewController.sheetPresentationController {
-                    //크기
-                    sheet.detents = [.medium(), .large()]
-                    //무조건 싯트 아래 어둡게
-                    sheet.largestUndimmedDetentIdentifier = .none
-                    //크기확장X
-                    sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-                    //아래 고정
-                    sheet.prefersEdgeAttachedInCompactHeight = true
-                    //너비 맞춤
-                    sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
-                    sheet.preferredCornerRadius = 30
-                }
-                self.present(termsofUseViewController, animated: true)
+                showTermsofUseViewController()
             }
             catch{
                 presentAlertMessage(message: error.localizedDescription)
             }
         }
+    }
+}
+
+//MARK: extension private Logic
+
+extension JoinViewController{
+    
+    private func showSheetAgencySelectViewController(){
+        let agencyViewController = AgencySelectViewController(delegate: self)
+        agencyViewController.sheetPresentationController?.setCustomFixed()
+        
+        present(agencyViewController, animated: true)
+    }
+
+    private func showSocialJoinViewController(){
+        let socialJoinViewController = UIStoryboard(name: "Join", bundle: nil)
+            .instantiateViewController(identifier: "SocialJoinViewController"){ (coder) -> SocialJoinViewController? in
+                return .init(coder: coder, viewController: self, viewDelegate: self)
+            }
+        socialJoinViewController.modalPresentationStyle = .overFullScreen
+
+        present(socialJoinViewController, animated: false)
+    }
+
+    private func showTermsofUseViewController(){
+        let termsofUseViewController = UIStoryboard(name: "Join", bundle: nil)
+            .instantiateViewController(identifier: "TermsofUseViewController"){ (coder) -> TermsofUseViewController? in
+                return .init(coder: coder, delegate: self)
+            }
+        termsofUseViewController.sheetPresentationController?.setCustomFixed()
+        
+        present(termsofUseViewController, animated: true)
+    }
+    
+    private func showNavigationJoinVerificationCodeViewController(){
+        let joinVerificationCodeViewController = UIStoryboard(name: "Join", bundle: nil)
+            .instantiateViewController(identifier: "JoinVerificationCodeViewController"){ (coder) -> JoinVerificationCodeViewController? in
+                return .init(coder: coder, loginVM: self.loginVM)
+            }
+        
+        navigationController?.pushViewController(joinVerificationCodeViewController, animated: true)
+    }
+    private func showNavigationJoinTermsofUseViewController(){
+        let joinTermsofUseViewController = UIStoryboard(name: "Join", bundle: nil)
+            .instantiateViewController(identifier: "JoinTermsofUseViewController"){ (coder) -> JoinTermsofUseViewController? in
+                return .init(coder: coder, loginVM: self.loginVM)
+            }
+        
+        navigationController?.pushViewController(joinTermsofUseViewController, animated: true)
     }
 }
 
@@ -251,14 +255,9 @@ extension JoinViewController: AgencyDelegate{
 extension JoinViewController: TermsofUseDelegate{
     func dismissedTermsofUse() {
         guard let phoneNumber = phoneInputView.textField.text else {return}
-        loginVM?.requestVerificationCode(phoneNumber: phoneNumber){result in
+        loginVM?.requestVerificationCode(phoneNumber: phoneNumber){[weak self] result in
             if result{
-                let joinVerificationCodeViewController = UIStoryboard(name: "Join", bundle: nil)
-                    .instantiateViewController(identifier: "JoinVerificationCodeViewController"){ (coder) -> JoinVerificationCodeViewController? in
-                        return .init(coder: coder, loginVM: self.loginVM)
-                    }
-                
-                self.navigationController?.pushViewController(joinVerificationCodeViewController, animated: true)
+                self?.showNavigationJoinVerificationCodeViewController()
             }else{
                 //알랏
             }
@@ -266,13 +265,9 @@ extension JoinViewController: TermsofUseDelegate{
         
     }
 }
+
 extension JoinViewController: SocialJoinDelegate {
     func moveToJoinTermsofUseViewController(){
-        let joinTermsofUseViewController = UIStoryboard(name: "Join", bundle: nil)
-            .instantiateViewController(identifier: "JoinTermsofUseViewController"){ (coder) -> JoinTermsofUseViewController? in
-                return .init(coder: coder, loginVM: self.loginVM)
-            }
-        
-        self.navigationController?.pushViewController(joinTermsofUseViewController, animated: true)
+        self.showNavigationJoinTermsofUseViewController()
     }
 }
