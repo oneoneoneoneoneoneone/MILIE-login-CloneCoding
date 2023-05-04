@@ -8,6 +8,8 @@
 import Foundation
 
 protocol DBNetworkManagerProtocol{
+    ///사용자 가입 확인
+    func checkJoinUser(accountKey: String, loginType: LoginType) async throws -> Bool?
     ///db 모든 유저
     func selectAll() async throws -> [String : User]?
     ///db email 일치 검색
@@ -22,7 +24,7 @@ protocol ServerNetworkManagerProtocol{
     ///naver 유저 정보 가져오기
     func requestNaverLoginData(accessToken: String) async throws -> Response?
     ///localserver customToken 가져오기 (by.kakao)
-    func requestToken(loginType: loginType ,accessToken: String) async throws -> String?
+    func requestToken(loginType: LoginType ,accessToken: String) async throws -> String?
 }
 
 class NetworkManager{
@@ -33,6 +35,10 @@ class NetworkManager{
 
 extension NetworkManager: DBNetworkManagerProtocol, ServerNetworkManagerProtocol{
     //MARK: db API
+    func checkJoinUser(accountKey: String, loginType: LoginType) async throws -> Bool?{
+        return try await selectWhereEmail(email: accountKey)?.filter{$0.value.id == loginType.rawValue}.isEmpty
+    }
+    
     func selectAll() async throws -> [String : User]?{
         guard let url = api.getURLComponents()?.url else {throw NSError(domain: "query", code: 0)}
 
@@ -67,7 +73,7 @@ extension NetworkManager: DBNetworkManagerProtocol, ServerNetworkManagerProtocol
     }
     
     //MARK: local API
-    func requestToken(loginType: loginType ,accessToken: String) async throws -> String?{
+    func requestToken(loginType: LoginType ,accessToken: String) async throws -> String?{
         guard let url = localAPI.getURLComponents(path: loginType.rawValue, accessToken: accessToken)?.url else {throw NSError(domain: "url", code: 0)}
         print(url)
         return try await localAPI.getToken(url: url, accessToken: accessToken)

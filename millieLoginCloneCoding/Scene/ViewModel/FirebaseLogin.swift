@@ -177,7 +177,7 @@ extension FirebaseLogin: LoginProtocol, FirebaseLoginProtocol{
     ///1. 현재 로그인한 유저정보를 db에 저장시킴
     ///2. db에서 받아온 email정보를 현재로그인 정보에 업데이트
     func Join(password: String) async throws {
-        let user = User(id: loginType.phone.rawValue, email: "", phone: self.phoneNumber, password: password)
+        let user = User(id: LoginType.phone.rawValue, email: "", phone: self.phoneNumber, password: password)
 
         guard let dataName = try await dbNetworkManager?.updateUser(user: user) else {return}
         let email = "\(dataName)@email.com"
