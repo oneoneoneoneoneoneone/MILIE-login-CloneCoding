@@ -10,10 +10,6 @@ import Foundation
 protocol DBNetworkManagerProtocol{
     ///사용자 가입 확인
     func checkJoinUser(accountKey: String, loginType: LoginType) async throws -> Bool?
-    ///db 모든 유저
-    func selectAll() async throws -> [String : User]?
-    ///db email 일치 검색
-    func selectWhereEmail(email: String) async throws -> [String : User]?
     ///db phone 일치 검색
     func selectWherePhone(phone: String) async throws -> [String : User]?
     ///db user 생성
@@ -38,14 +34,8 @@ extension NetworkManager: DBNetworkManagerProtocol, ServerNetworkManagerProtocol
     func checkJoinUser(accountKey: String, loginType: LoginType) async throws -> Bool?{
         return try await selectWhereEmail(email: accountKey)?.filter{$0.value.id == loginType.rawValue}.isEmpty
     }
-    
-    func selectAll() async throws -> [String : User]?{
-        guard let url = api.getURLComponents()?.url else {throw NSError(domain: "query", code: 0)}
 
-        return try await api.getUserData(url: url)
-    }
-
-    func selectWhereEmail(email: String) async throws -> [String : User]?{
+    private func selectWhereEmail(email: String) async throws -> [String : User]?{
         guard let url = api.getURLComponents("email", email)?.url else {throw NSError(domain: "query", code: 0)}
 
         return try await api.getUserData(url: url)

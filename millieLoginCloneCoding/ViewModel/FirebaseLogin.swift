@@ -10,7 +10,6 @@ import Firebase
 import FirebaseAuth
 import FirebaseCore
 import FirebaseAuthCombineSwift
-import Combine
 
 protocol FirebaseLoginProtocol {
     ///firebase 로그인 - 소셜인증
@@ -53,10 +52,10 @@ protocol LoginProtocol {
     ///firebase 전화번호 로그인 - 인증번호 전송
     ///- 원래 요청이 시간 초과되지 않았다면 SMS를 재차 보내지 않습니다.
     ///- test number - 01000120000 / code - 002002
-    func requestVerificationCode(phoneNumber: String?, completionHandler: @escaping ((Bool) -> Void))
+    func requestVerificationCode(phoneNumber: String?) async throws
     
     ///firebase 전화번호 로그인 - 인증번호 재전송
-    func requestVerificationCode(completionHandler: @escaping ((Bool) -> Void))
+    func requestVerificationCode() async throws
 }
 
 
@@ -183,6 +182,7 @@ extension FirebaseLogin: LoginProtocol, FirebaseLoginProtocol{
         let email = "\(dataName)@email.com"
         
         try await Auth.auth().currentUser?.updateEmail(to: email)
+//        @@
         try await Auth.auth().currentUser?.updatePassword(to: "a1234!")
     }
     
@@ -209,32 +209,20 @@ extension FirebaseLogin: LoginProtocol, FirebaseLoginProtocol{
     ///firebase 전화번호 로그인 - 인증번호 전송
     ///- 원래 요청이 시간 초과되지 않았다면 SMS를 재차 보내지 않습니다.
     ///- test number - 01000120000 / code - 002002
-    internal func requestVerificationCode(phoneNumber: String? = nil, completionHandler: @escaping ((Bool) -> Void)) {
-        //Change language code to french.
-        //        Auth.auth().languageCode = "kr";
-        
+    func requestVerificationCode(phoneNumber: String? = nil) async throws {
         if phoneNumber != nil {
             self.phoneNumber = phoneNumber!
         }
         
-        PhoneAuthProvider.provider().verifyPhoneNumber("+82 \(self.phoneNumber)", uiDelegate: nil) { verificationID, error in
-            if let error = error {
-                print(error.localizedDescription)
-                completionHandler(false)
-                return
-            }
-            //전송, id생성
-            self.isMFAEnabled = true
-            UserDefaults.standard.set(verificationID, forKey: "authId")
-            
-            completionHandler(true)
-        }
+        Auth.auth().languageCode = "kr";
+        let verificationID = try await PhoneAuthProvider.provider().verifyPhoneNumber("+82 \(self.phoneNumber)", uiDelegate: nil)
+        //전송, id생성
+        self.isMFAEnabled = true
+        UserDefaults.standard.set(verificationID, forKey: "authId")
     }
     
     ///firebase 전화번호 로그인 - 인증번호 재전송
-    internal func requestVerificationCode(completionHandler: @escaping ((Bool) -> Void)) {
-        requestVerificationCode(phoneNumber: self.phoneNumber){result in
-            completionHandler(result)
-        }
+    func requestVerificationCode() async throws {
+        try await requestVerificationCode(phoneNumber: self.phoneNumber)
     }
 }

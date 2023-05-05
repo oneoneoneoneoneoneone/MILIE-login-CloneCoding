@@ -30,11 +30,14 @@ class NaverLoginManager: NSObject, SocialLoginManagerProtocol {
 extension NaverLoginManager: NaverThirdPartyLoginConnectionDelegate{
     @MainActor
     func oauth20ConnectionDidFinishRequestACTokenWithAuthCode() {
-        guard let accessToken = NaverThirdPartyLoginConnection.getSharedInstance().accessToken else {return}
-        
         Task{
             do{
-                guard let userEmail = try await serverNetworkManager?.requestNaverLoginData(accessToken: accessToken)?.email else {return}
+                guard let accessToken = NaverThirdPartyLoginConnection.getSharedInstance().accessToken else {
+                    throw LoginError.nilData(key: "accessToken")
+                }
+                guard let userEmail = try await serverNetworkManager?.requestNaverLoginData(accessToken: accessToken)?.email else {
+                    throw LoginError.nilData(key: "email")
+                }
                 
                 if viewController is LoginViewController{
                     try await socialLoginVM?.naverLogin(userEmail: userEmail, accessToken: accessToken)
