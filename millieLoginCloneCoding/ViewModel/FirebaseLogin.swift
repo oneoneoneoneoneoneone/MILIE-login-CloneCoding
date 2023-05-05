@@ -18,7 +18,7 @@ protocol FirebaseLoginProtocol {
     ///firebase 커스텀 토큰 인증
     func customLogin(customToken: String) async throws
     
-    ///유저 생성 join
+    ///firebase 로그인 - 사용자 추가
     func createUser(email: String, password: String) async throws
 }
 
@@ -121,29 +121,6 @@ extension FirebaseLogin: LoginProtocol, FirebaseLoginProtocol{
         try await Auth.auth().signIn(withEmail: "\(email)@email.com", password: password)
     }
     
-    ///firebase 로그인 - 커스텀 토큰 인증
-    func customLogin(customToken: String) async throws {
-        do{
-            try await Auth.auth().signIn(withCustomToken: customToken)
-        }
-        catch {
-            let authError = error as NSError
-            if self.isMFAEnabled == true, authError.code == AuthErrorCode.secondFactorRequired.rawValue {
-                // 사용자는 다중 요인 사용자입니다. 두 번째 요인 과제가 필요합니다.
-                let resolver = authError
-                    .userInfo[AuthErrorUserInfoMultiFactorResolverKey] as! MultiFactorResolver
-                var displayNameString = ""
-                for tmpFactorInfo in resolver.hints {
-                    displayNameString += tmpFactorInfo.displayName ?? ""
-                    displayNameString += " "
-                }
-            }
-            else {
-                throw error
-            }
-        }
-    }
-    
     ///firebase 로그인 - 소셜인증
     func socialLogin(credential: AuthCredential) async throws {
         do{
@@ -168,6 +145,30 @@ extension FirebaseLogin: LoginProtocol, FirebaseLoginProtocol{
         }
     }
     
+    ///firebase 로그인 - 커스텀 토큰 인증
+    func customLogin(customToken: String) async throws {
+        do{
+            try await Auth.auth().signIn(withCustomToken: customToken)
+        }
+        catch {
+            let authError = error as NSError
+            if self.isMFAEnabled == true, authError.code == AuthErrorCode.secondFactorRequired.rawValue {
+                // 사용자는 다중 요인 사용자입니다. 두 번째 요인 과제가 필요합니다.
+                let resolver = authError
+                    .userInfo[AuthErrorUserInfoMultiFactorResolverKey] as! MultiFactorResolver
+                var displayNameString = ""
+                for tmpFactorInfo in resolver.hints {
+                    displayNameString += tmpFactorInfo.displayName ?? ""
+                    displayNameString += " "
+                }
+            }
+            else {
+                throw error
+            }
+        }
+    }
+    
+    ///firebase 로그인 - 사용자 추가
     func createUser(email: String, password: String) async throws {
         try await Auth.auth().createUser(withEmail: email, password: password)
     }

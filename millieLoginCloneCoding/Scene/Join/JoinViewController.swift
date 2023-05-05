@@ -86,13 +86,20 @@ class JoinViewController: UIViewController{
         })
     }
     
-    @MainActor
     @IBAction private func nextButtonTap(_ sender: UIButton) {
         //입력값 검증
         if false{
             return
         }
-        //회원 여부 확인
+        checkJoin()
+    }
+}
+
+//MARK: extension private Logic
+
+extension JoinViewController{
+    @MainActor
+    private func checkJoin(){
         Task{
             do{
                 try await loginVM?.checkJoin(phone: phoneInputView.textField.text!)
@@ -107,11 +114,6 @@ class JoinViewController: UIViewController{
             }
         }
     }
-}
-
-//MARK: extension private Logic
-
-extension JoinViewController{
     
     private func showSheetAgencySelectViewController(){
         let agencyViewController = AgencySelectViewController(delegate: self)
@@ -253,16 +255,18 @@ extension JoinViewController: AgencyDelegate{
 }
 
 extension JoinViewController: TermsofUseDelegate{
+    @MainActor
     func dismissedTermsofUse() {
         guard let phoneNumber = phoneInputView.textField.text else {return}
-        loginVM?.requestVerificationCode(phoneNumber: phoneNumber){[weak self] result in
-            if result{
-                self?.showNavigationJoinVerificationCodeViewController()
-            }else{
+        Task{
+            do{
+                try await loginVM?.requestVerificationCode(phoneNumber: phoneNumber)
+                showNavigationJoinVerificationCodeViewController()
+            }
+            catch{
                 //알랏
             }
         }
-        
     }
 }
 

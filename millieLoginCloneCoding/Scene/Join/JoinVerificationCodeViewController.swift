@@ -37,35 +37,54 @@ class JoinVerificationCodeViewController: UIViewController {
     }
     
     @IBAction func resendButtonTap(_ sender: UIButton) {
-        loginVM?.requestVerificationCode(){result in
-            if result{
-                //재전송
-            }else{
-                //싫패
+        requestVerificationCode()
+    }
+    
+    @IBAction func nextButtonTap(_ sender: UIButton) {
+        guard let verificationCode = verificationCodeInputView.textField.text else {return}
+        phoneNumberLogin(verificationCode: verificationCode)
+    }
+}
+
+//MARK: extension private Logic
+
+extension JoinVerificationCodeViewController{
+    @MainActor
+    func requestVerificationCode(){
+        Task{
+            do{
+                try await loginVM?.requestVerificationCode()
+            }
+            catch{
+                
             }
         }
     }
     
     @MainActor
-    @IBAction func nextButtonTap(_ sender: UIButton) {
-        guard let verificationCode = verificationCodeInputView.textField.text else {return}
-        
+    func phoneNumberLogin(verificationCode: String){
         Task{
             do{
                 try await loginVM?.phoneNumberLogin(verificationCode: verificationCode)
-                let joinProfileViewController =  UIStoryboard(name: "Join", bundle: nil)
-                    .instantiateViewController(identifier: "JoinProfileViewController"){ (coder) -> JoinProfileViewController? in
-                    return .init(coder: coder, loginVM: self.loginVM)
-                }
-                
-                self.navigationController?.pushViewController(joinProfileViewController, animated: true)
+                showNavigationJoinProfileViewController()
             }
             catch{
                 presentAlertMessage(message: error.localizedDescription)
             }
         }
     }
+    
+    func showNavigationJoinProfileViewController(){
+        let joinProfileViewController =  UIStoryboard(name: "Join", bundle: nil)
+            .instantiateViewController(identifier: "JoinProfileViewController"){ (coder) -> JoinProfileViewController? in
+            return .init(coder: coder, loginVM: self.loginVM)
+        }
+        
+        self.navigationController?.pushViewController(joinProfileViewController, animated: true)
+    }
 }
+
+//MARK: extension InputStackViewDelegate
 
 extension JoinVerificationCodeViewController: InputStackViewDelegate{
     func inputTextFieldDidChangeSelection(_ textField: UITextField) {
