@@ -34,11 +34,8 @@
                                 <rect key="frame" x="20" y="184.33333333333334" width="353" height="33.333333333333343"/>
                                 <subviews>
                                     <view hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ade-Ns-TmL" customClass="InputStackView" customModule="millieLoginCloneCoding" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="353" height="60"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="353" height="0.0"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="60" id="wdI-Cr-1WR"/>
-                                        </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="string" keyPath="text" value="이름"/>
                                             <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="이름 입력"/>
@@ -47,35 +44,35 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="PFy-7u-dmf">
-                                        <rect key="frame" x="0.0" y="0.0" width="353" height="60"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="353" height="21"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="생년월일 및 성별" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rYD-13-yJn">
-                                                <rect key="frame" x="8" y="7.9999999999999991" width="337" height="15.666666666666664"/>
+                                                <rect key="frame" x="8" y="8" width="337" height="0.0"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="APa-h7-MHt">
-                                                <rect key="frame" x="8" y="28.666666666666657" width="337" height="23.333333333333329"/>
+                                                <rect key="frame" x="8" y="13" width="337" height="0.0"/>
                                                 <subviews>
                                                     <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="YYMMDD" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Rcd-va-mCK">
-                                                        <rect key="frame" x="0.0" y="0.0" width="165.33333333333334" height="23.333333333333332"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="165.33333333333334" height="0.0"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                         <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                                     </textField>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Nx-S6-jg2">
-                                                        <rect key="frame" x="167.33333333333334" y="0.0" width="17.666666666666657" height="23.333333333333332"/>
+                                                        <rect key="frame" x="167.33333333333334" y="0.0" width="17.666666666666657" height="0.0"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="0" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="8JN-9k-YMK">
-                                                        <rect key="frame" x="187" y="0.0" width="23" height="23.333333333333332"/>
+                                                        <rect key="frame" x="187" y="0.0" width="23" height="0.0"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                         <textInputTraits key="textInputTraits" keyboardType="numberPad" secureTextEntry="YES"/>
                                                     </textField>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="•••••••" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mtg-Ie-PK4">
-                                                        <rect key="frame" x="212" y="0.0" width="125" height="23.333333333333332"/>
+                                                        <rect key="frame" x="212" y="0.0" width="125" height="0.0"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -83,9 +80,6 @@
                                                 </subviews>
                                             </stackView>
                                         </subviews>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="60" id="g88-E0-nKp"/>
-                                        </constraints>
                                         <directionalEdgeInsets key="directionalLayoutMargins" top="8" leading="8" bottom="8" trailing="8"/>
                                     </stackView>
                                     <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" axis="vertical" distribution="fillProportionally" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="wHZ-Fb-YFf">
@@ -97,12 +91,12 @@
                                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cNs-Dc-QDo">
+                                            <button opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cNs-Dc-QDo">
                                                 <rect key="frame" x="8" y="23.333333333333314" width="337" height="28.666666666666671"/>
                                                 <state key="normal" title="통신사 선택">
                                                     <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
-                                                <buttonConfiguration key="configuration" style="plain" imagePlacement="trailing" title="통신사 선택" imagePadding="0.0">
+                                                <buttonConfiguration key="configuration" style="plain" imagePlacement="trailing" title="통신사 선택" imagePadding="0.0" titleAlignment="leading">
                                                     <imageReference key="image" image="arrowtriangle.down.fill" catalog="system" symbolScale="small"/>
                                                     <fontDescription key="titleFontDescription" name=".AppleSDGothicNeoI-Regular" family=".Apple SD Gothic NeoI" pointSize="18"/>
                                                     <color key="baseForegroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -113,16 +107,13 @@
                                             </button>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="60" id="hou-YE-AqA"/>
+                                            <constraint firstAttribute="height" constant="60" id="XgH-xM-pTI"/>
                                         </constraints>
                                         <directionalEdgeInsets key="directionalLayoutMargins" top="8" leading="8" bottom="8" trailing="8"/>
                                     </stackView>
                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H9A-tq-tkz" customClass="InputStackView" customModule="millieLoginCloneCoding" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="353" height="60"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="353" height="0.0"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="60" id="wod-CE-AtH"/>
-                                        </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="string" keyPath="text" value="휴대폰 번호"/>
                                             <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="01012345678"/>
@@ -133,8 +124,17 @@
                                         <rect key="frame" x="0.0" y="0.0" width="353" height="33.333333333333336"/>
                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="해외에서 휴대폰 인증이 어려우신가요?">
-                                            <fontDescription key="titleFontDescription" type="system" weight="black" pointSize="16"/>
+                                        <buttonConfiguration key="configuration" style="plain">
+                                            <attributedString key="attributedTitle">
+                                                <fragment content="해외에서 휴대폰 인증이 어려우신가요?">
+                                                    <attributes>
+                                                        <color key="NSColor" red="0.50873974116161613" green="0.50873974116161613" blue="0.50873974116161613" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <font key="NSFont" size="16" name="AppleSDGothicNeo-Bold"/>
+                                                        <font key="NSOriginalFont" size="16" name="AppleSDGothicNeo-Bold"/>
+                                                        <integer key="NSUnderline" value="1"/>
+                                                    </attributes>
+                                                </fragment>
+                                            </attributedString>
                                             <color key="baseForegroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </buttonConfiguration>
                                         <connections>
@@ -258,7 +258,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="P8W-aC-Ot3"/>
                     <connections>
-                        <outlet property="nextButton" destination="wpQ-EI-WxA" id="AdQ-JC-gQo"/>
+                        <outlet property="nextButton" destination="wpQ-EI-WxA" id="DXg-47-Ju1"/>
                         <outlet property="tableView" destination="Lcr-aA-Wcr" id="fez-Iq-mYp"/>
                     </connections>
                 </viewController>
@@ -352,7 +352,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="oQa-3C-Jdj"/>
                     <connections>
-                        <outlet property="completionButton" destination="8J4-PV-UHd" id="IUC-ES-UMB"/>
+                        <outlet property="completionButton" destination="8J4-PV-UHd" id="7Zv-nu-t67"/>
                         <outlet property="displayNameInputView" destination="Qht-FP-Phu" id="hen-KH-rBM"/>
                         <outlet property="profilePhotoButton" destination="Dsb-vf-dsh" id="T8h-wi-Wx1"/>
                     </connections>
@@ -492,7 +492,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="nextButton" destination="tXB-r2-kAQ" id="nq2-mW-yzA"/>
+                        <outlet property="nextButton" destination="tXB-r2-kAQ" id="tDh-1Z-Tbd"/>
                         <outlet property="tableView" destination="ZLz-eB-IHG" id="sp0-Ol-d7S"/>
                     </connections>
                 </viewController>
@@ -520,33 +520,41 @@
                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gSX-9V-0VI" customClass="InputStackView" customModule="millieLoginCloneCoding" customModuleProvider="target">
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gSX-9V-0VI" customClass="InputStackView" customModule="millieLoginCloneCoding" customModuleProvider="target">
                                 <rect key="frame" x="20" y="184.33333333333334" width="353" height="60"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="60" id="YiP-fP-IQw"/>
-                                </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="text" value="인증번호"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="keyboardNumberPad" value="YES"/>
                                     <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="인증번호 6자리 입력"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="usedAccessoryLabel" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="fiG-HX-d4K">
-                                <rect key="frame" x="79.333333333333329" y="274.33333333333331" width="234.33333333333337" height="33.333333333333314"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="fiG-HX-d4K">
+                                <rect key="frame" x="79.333333333333329" y="274.33333333333337" width="234.33333333333337" height="33.333333333333371"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="인증번호가 오지 않는다면?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="se7-G4-zVL">
                                         <rect key="frame" x="0.0" y="0.0" width="168.66666666666666" height="33.333333333333336"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="textColor" red="0.50025647100000004" green="0.50025647100000004" blue="0.50025647100000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0AV-8w-ClO">
                                         <rect key="frame" x="168.66666666666669" y="0.0" width="65.666666666666686" height="33.333333333333336"/>
                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="재발송">
-                                            <fontDescription key="titleFontDescription" type="system" weight="black" pointSize="16"/>
+                                        <buttonConfiguration key="configuration" style="plain">
+                                            <attributedString key="attributedTitle">
+                                                <fragment content="재발송">
+                                                    <attributes>
+                                                        <color key="NSColor" red="0.50025647095959602" green="0.50025647095959602" blue="0.50025647095959602" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <font key="NSFont" size="16" name="AppleSDGothicNeo-Bold"/>
+                                                        <font key="NSOriginalFont" size="16" name="Arial-Black"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
+                                                        <integer key="NSUnderline" value="1"/>
+                                                    </attributes>
+                                                </fragment>
+                                            </attributedString>
                                             <color key="baseForegroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </buttonConfiguration>
                                         <connections>
@@ -593,7 +601,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="c71-qC-0rv"/>
                     <connections>
-                        <outlet property="nextButton" destination="sg8-N3-CZT" id="ngR-Wd-WEc"/>
+                        <outlet property="nextButton" destination="sg8-N3-CZT" id="kTx-Ih-HkI"/>
                         <outlet property="resendButton" destination="0AV-8w-ClO" id="nb9-ye-xus"/>
                         <outlet property="verificationCodeInputView" destination="gSX-9V-0VI" id="I6S-mp-y27"/>
                     </connections>
@@ -601,6 +609,94 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="q8A-jq-4y6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1992" y="1218"/>
+        </scene>
+        <!--Join Password View Controller-->
+        <scene sceneID="Bch-K3-KXd">
+            <objects>
+                <viewController storyboardIdentifier="JoinPasswordViewController" id="ep1-Jl-PE9" customClass="JoinPasswordViewController" customModule="millieLoginCloneCoding" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="pwu-Fy-XO9">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="비밀번호 설정" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g7b-QQ-zt9">
+                                <rect key="frame" x="20" y="89" width="353" height="33.666666666666657"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="28"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="사용할 비밀번호를 설정해주세요" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E4X-my-FPs">
+                                <rect key="frame" x="20" y="132.66666666666666" width="353" height="21.666666666666657"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zjQ-Gy-Vi9" customClass="InputStackView" customModule="millieLoginCloneCoding" customModuleProvider="target">
+                                <rect key="frame" x="20" y="184.33333333333334" width="353" height="60"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="text" value="비밀번호"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="비밀번호 입력"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="isValidation" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="secureTextEntry" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RKJ-o6-7zy" customClass="InputStackView" customModule="millieLoginCloneCoding" customModuleProvider="target">
+                                <rect key="frame" x="20" y="274.33333333333331" width="353" height="60"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="text" value="비밀번호 확인"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="비밀번호 재입력"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="isValidation" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="secureTextEntry" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tQ4-gp-eO7">
+                                <rect key="frame" x="0.0" y="748" width="393" height="60"/>
+                                <color key="backgroundColor" red="0.98823523520000001" green="0.92156863209999995" blue="0.46274507050000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="gsw-X2-OhP"/>
+                                </constraints>
+                                <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="다음" titleAlignment="center">
+                                    <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="20"/>
+                                    <color key="baseForegroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="nextButtonTap:" destination="czs-cb-mfe" eventType="touchUpInside" id="9Xa-1N-Dll"/>
+                                    <action selector="nextButtonTap:" destination="ep1-Jl-PE9" eventType="touchUpInside" id="loR-fx-xri"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="qU7-cE-dZX"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="tQ4-gp-eO7" firstAttribute="trailing" secondItem="qU7-cE-dZX" secondAttribute="trailing" id="0NF-4g-UXm"/>
+                            <constraint firstItem="RKJ-o6-7zy" firstAttribute="top" secondItem="zjQ-Gy-Vi9" secondAttribute="bottom" constant="30" id="0z5-68-QP6"/>
+                            <constraint firstItem="qU7-cE-dZX" firstAttribute="trailing" secondItem="zjQ-Gy-Vi9" secondAttribute="trailing" constant="20" id="1cc-Wd-rWE"/>
+                            <constraint firstItem="zjQ-Gy-Vi9" firstAttribute="top" secondItem="E4X-my-FPs" secondAttribute="bottom" constant="30" id="32m-qx-ELa"/>
+                            <constraint firstItem="qU7-cE-dZX" firstAttribute="trailing" secondItem="RKJ-o6-7zy" secondAttribute="trailing" constant="20" id="3zp-0m-dnD"/>
+                            <constraint firstItem="qU7-cE-dZX" firstAttribute="trailing" secondItem="g7b-QQ-zt9" secondAttribute="trailing" constant="20" id="4Fe-p8-0oh"/>
+                            <constraint firstAttribute="trailing" secondItem="E4X-my-FPs" secondAttribute="trailing" constant="20" id="8Vu-qW-eLB"/>
+                            <constraint firstItem="qU7-cE-dZX" firstAttribute="bottom" secondItem="tQ4-gp-eO7" secondAttribute="bottom" constant="10" id="CbE-2g-Jkf"/>
+                            <constraint firstItem="RKJ-o6-7zy" firstAttribute="leading" secondItem="qU7-cE-dZX" secondAttribute="leading" constant="20" id="J6U-3p-uWE"/>
+                            <constraint firstItem="zjQ-Gy-Vi9" firstAttribute="leading" secondItem="qU7-cE-dZX" secondAttribute="leading" constant="20" id="Y2D-ff-Nbi"/>
+                            <constraint firstItem="g7b-QQ-zt9" firstAttribute="leading" secondItem="qU7-cE-dZX" secondAttribute="leading" constant="20" id="fh3-zJ-38e"/>
+                            <constraint firstItem="E4X-my-FPs" firstAttribute="top" secondItem="g7b-QQ-zt9" secondAttribute="bottom" constant="10" id="gyb-Ag-Su5"/>
+                            <constraint firstItem="tQ4-gp-eO7" firstAttribute="leading" secondItem="qU7-cE-dZX" secondAttribute="leading" id="pYq-LG-QdD"/>
+                            <constraint firstItem="E4X-my-FPs" firstAttribute="leading" secondItem="qU7-cE-dZX" secondAttribute="leading" constant="20" id="rbU-2e-PQb"/>
+                            <constraint firstItem="g7b-QQ-zt9" firstAttribute="top" secondItem="qU7-cE-dZX" secondAttribute="top" constant="30" id="tmv-4k-qr5"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="nextButton" destination="tQ4-gp-eO7" id="Rlf-LY-h8D"/>
+                        <outlet property="passwordConfirmInputView" destination="RKJ-o6-7zy" id="N3L-Vv-hrS"/>
+                        <outlet property="passwordInputView" destination="zjQ-Gy-Vi9" id="j57-eB-DAJ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="E4p-YI-OWq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2746" y="1218"/>
         </scene>
     </scenes>
     <resources>
