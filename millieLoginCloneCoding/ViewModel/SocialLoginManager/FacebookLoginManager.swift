@@ -12,7 +12,6 @@ class FacebookLoginManager: NSObject, SocialLoginManagerProtocol {
     private var viewController: UIViewController?
     private var delegate: LoginManagerDelegate?
     private var socialLoginVM: SocialLoginProtocol? = SocialLogin()
-    private var socialJoinVM: SocialJoinProtocol? = SocialJoin()
     
     ///로그인 요청마다 생성되는 임의의 문자열
     private var currentNonce: String?
@@ -49,7 +48,6 @@ extension FacebookLoginManager: LoginButtonDelegate{
     
     @MainActor
     func loginButton(_ loginButton: FBSDKLoginKit.FBLoginButton, didCompleteWith result: FBSDKLoginKit.LoginManagerLoginResult?, error: Error?) {
-        
         Task{
             do{
                 if let error = error {
@@ -59,15 +57,21 @@ extension FacebookLoginManager: LoginButtonDelegate{
                     throw LoginError.discrepancyData(key: "nonce")
                 }
                 
-                guard let idToken = AuthenticationToken.current?.tokenString else {return}
-                guard let userID = Profile.current?.userID else {return}
-
+                guard let idToken = AuthenticationToken.current?.tokenString else {
+                    throw LoginError.nilData(key: "idToken")
+                }
+                guard let userID = Profile.current?.userID else {
+                    throw LoginError.nilData(key: "userID")
+                }
+                
                 if viewController is LoginViewController{
-                    try await socialLoginVM?.facebookLogin(userID: userID, idToken: idToken, nonce: currentNonce)
+                    try await socialLoginVM?.verifyUserCredentials(email: userID, loginType: LoginType.facebook)
                 }
                 if viewController is JoinViewController{
-                    try await socialJoinVM?.facebookLogin(userID: userID, idToken: idToken, nonce: currentNonce)
+                    try await socialLoginVM?.checkExistingUserEmail(email: userID, loginType: LoginType.facebook)
                 }
+                try await socialLoginVM?.facebookLogin(idToken: idToken, nonce: currentNonce)
+                
                 delegate?.loginSuccess()
             }
             catch{

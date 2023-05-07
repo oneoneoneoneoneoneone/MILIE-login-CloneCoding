@@ -15,7 +15,6 @@ class KakaoLoginManager: NSObject, SocialLoginManagerProtocol {
     private var viewController: UIViewController?
     private var delegate: LoginManagerDelegate?
     private var socialLoginVM: SocialLoginProtocol? = SocialLogin()
-    private var socialJoinVM: SocialJoinProtocol? = SocialJoin()
         
     func setSocialLoginPresentationAnchorView(_ viewController: UIViewController?, _ delegate: LoginManagerDelegate?) {
         self.viewController = viewController
@@ -29,7 +28,7 @@ class KakaoLoginManager: NSObject, SocialLoginManagerProtocol {
                 if !UserApi.isKakaoTalkLoginAvailable(){
                     throw LoginError.notInstalledApp(key: "카카오톡")
                 }
-                
+
                 let accessToken = try await requestKakaoToken()
                 guard let userEmail = try await getKakaoAccount()?.email  else {
                     UserApi.shared.unlink(){_ in}
@@ -37,15 +36,17 @@ class KakaoLoginManager: NSObject, SocialLoginManagerProtocol {
                 }
                 
                 if viewController is LoginViewController{
-                    try await socialLoginVM?.kakaoLogin(userEmail: userEmail, accessToken: accessToken)
+                  try await socialLoginVM?.verifyUserCredentials(email: userEmail, loginType: LoginType.kakao)
                 }
                 if viewController is JoinViewController{
-                    try await socialJoinVM?.kakaoLogin(userEmail: userEmail, accessToken: accessToken)
+                  try await socialLoginVM?.checkExistingUserEmail(email: userEmail, loginType: LoginType.kakao)
                 }
+                try await socialLoginVM?.kakaoLogin(accessToken: accessToken)
+
                 delegate?.loginSuccess()
             }
             catch{
-                viewController?.presentAlertMessage(message: error.localizedDescription)
+            viewController?.presentAlertMessage(message: error.localizedDescription)
             }
         }
     }

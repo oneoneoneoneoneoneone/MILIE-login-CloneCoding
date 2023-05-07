@@ -13,7 +13,6 @@ class GoogleLoginManager: NSObject, SocialLoginManagerProtocol {
     private var viewController: UIViewController?
     private var delegate: LoginManagerDelegate?
     private var socialLoginVM: SocialLoginProtocol? = SocialLogin()
-    private var socialJoinVM: SocialJoinProtocol? = SocialJoin()
         
     func setSocialLoginPresentationAnchorView(_ viewController: UIViewController?, _ delegate: LoginManagerDelegate?) {
         self.viewController = viewController
@@ -34,13 +33,15 @@ class GoogleLoginManager: NSObject, SocialLoginManagerProtocol {
                     throw LoginError.nilData(key: "email")
                 }
                 let accessToken = signInResult.user.accessToken.tokenString
-                                    
+                  
                 if viewController is LoginViewController{
-                    try await socialLoginVM?.googleLogin(email: email, idToken: idToken, accessToken: accessToken)
+                    try await socialLoginVM?.verifyUserCredentials(email: email, loginType: LoginType.google)
                 }
                 if viewController is JoinViewController{
-                    try await socialJoinVM?.googleLogin(email: email, idToken: idToken, accessToken: accessToken)
+                    try await socialLoginVM?.checkExistingUserEmail(email: email, loginType: LoginType.google)
                 }
+                try await socialLoginVM?.googleLogin(idToken: idToken, accessToken: accessToken)
+               
                 delegate?.loginSuccess()
             }
             catch{

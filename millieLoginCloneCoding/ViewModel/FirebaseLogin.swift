@@ -36,14 +36,18 @@ protocol LoginProtocol {
     func logout() throws
     
     ///회원가입 여부 확인
-    func checkJoin(phone: String) async throws
+    func checkExistingUserPhoneNumber(phone: String) async throws
+    
     
     ///firebase 회원가입 - createUser email로만 회원가입 가능
     ///1. 현재 로그인한 유저정보를 db에 저장시킴
     ///2. db에서 받아온 email정보를 현재로그인 정보에 업데이트
-    func Join(password: String) async throws
+    func createUser() async throws
     
-    ///firebase 사용자 정보 업데이트 - 사용자 프로필 설정 후, db저장 전
+    ///firebase 사용자 정보 업데이트 - 비밀번호
+    func userInfoUpdate(password: String) async throws
+    
+    ///firebase 사용자 정보 업데이트 - 사용자 프로필
     func userInfoUpdate(displayName: String, photoURL: String)
     
     ///firebase 전화번호 로그인 요청
@@ -80,10 +84,10 @@ extension FirebaseLogin: LoginProtocol, FirebaseLoginProtocol{
     }
     
     ///회원가입 여부 확인
-    func checkJoin(phone: String) async throws{
-        guard let user = try await dbNetworkManager?.selectWherePhone(phone: phone) else {return}
-        
-        if user.count > 0{
+    func checkExistingUserPhoneNumber(phone: String) async throws{
+        if (try await dbNetworkManager?.selectWherePhone(phone: phone)?
+            .filter{$0.value.id == LoginType.phone.rawValue}
+            .isEmpty) == false{
             throw LoginError.foundJoinData(key: "휴대폰 번호")
         }
     }
@@ -176,15 +180,18 @@ extension FirebaseLogin: LoginProtocol, FirebaseLoginProtocol{
     ///firebase 회원가입 - createUser email로만 회원가입 가능
     ///1. 현재 로그인한 유저정보를 db에 저장시킴
     ///2. db에서 받아온 email정보를 현재로그인 정보에 업데이트
-    func Join(password: String) async throws {
-        let user = User(id: LoginType.phone.rawValue, email: "", phone: self.phoneNumber, password: password)
-
-        guard let dataName = try await dbNetworkManager?.updateUser(user: user) else {return}
+    func createUser() async throws {
+        let user = User(id: LoginType.phone.rawValue, email: "", phone: self.phoneNumber)
+        guard let dataName = try await dbNetworkManager?.createUser(user: user) else {return}
+        
         let email = "\(dataName)@email.com"
         
         try await Auth.auth().currentUser?.updateEmail(to: email)
-//        @@
-        try await Auth.auth().currentUser?.updatePassword(to: "a1234!")
+    }
+    
+    ///firebase 사용자 정보 업데이트 - 비밀번호
+    func userInfoUpdate(password: String) async throws{
+        try await Auth.auth().currentUser?.updatePassword(to: password)
     }
     
     ///firebase 사용자 정보 업데이트 - 사용자 프로필 설정 후, db저장 전
@@ -192,8 +199,7 @@ extension FirebaseLogin: LoginProtocol, FirebaseLoginProtocol{
         let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
         changeRequest?.displayName = displayName
         changeRequest?.photoURL = URL(string: photoURL)
-        changeRequest?.commitChanges(){error in
-            //
+        changeRequest?.commitChanges(){_ in
         }
     }
     

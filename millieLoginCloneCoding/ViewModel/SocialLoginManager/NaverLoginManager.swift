@@ -13,7 +13,6 @@ class NaverLoginManager: NSObject, SocialLoginManagerProtocol {
     private var delegate: LoginManagerDelegate?
     private var serverNetworkManager: ServerNetworkManagerProtocol? = NetworkManager()
     private var socialLoginVM: SocialLoginProtocol? = SocialLogin()
-    private var socialJoinVM: SocialJoinProtocol? = SocialJoin()
         
     func setSocialLoginPresentationAnchorView(_ viewController: UIViewController?, _ delegate: LoginManagerDelegate?) {
         self.viewController = viewController
@@ -40,11 +39,13 @@ extension NaverLoginManager: NaverThirdPartyLoginConnectionDelegate{
                 }
                 
                 if viewController is LoginViewController{
-                    try await socialLoginVM?.naverLogin(userEmail: userEmail, accessToken: accessToken)
+                    try await socialLoginVM?.verifyUserCredentials(email: userEmail, loginType: LoginType.naver)
                 }
                 if viewController is JoinViewController{
-                    try await socialJoinVM?.naverLogin(userEmail: userEmail, accessToken: accessToken)
+                    try await socialLoginVM?.checkExistingUserEmail(email: userEmail, loginType: LoginType.naver)
                 }
+                try await socialLoginVM?.naverLogin(accessToken: accessToken)
+                
                 NaverThirdPartyLoginConnection.getSharedInstance().resetToken()
                 delegate?.loginSuccess()
             }

@@ -17,7 +17,6 @@ final class AppleLoginManager: NSObject, SocialLoginManagerProtocol {
     private var viewController: UIViewController?
     private var delegate: LoginManagerDelegate?
     private var socialLoginVM: SocialLoginProtocol? = SocialLogin()
-    private var socialJoinVM: SocialJoinProtocol? = SocialJoin()
     
     ///로그인 요청마다 생성되는 임의의 문자열
     private var currentNonce: String?
@@ -53,7 +52,7 @@ extension AppleLoginManager: ASAuthorizationControllerDelegate {
         Task{
             do{
                 guard let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential else {return}
-                guard let currentNonce = currentNonce else{
+                guard let currentNonce = currentNonce else {
                     throw LoginError.discrepancyData(key: "nonce")
                 }
                 guard let appleIDToken = appleIDCredential.identityToken else {
@@ -65,11 +64,13 @@ extension AppleLoginManager: ASAuthorizationControllerDelegate {
                 let userCode = appleIDCredential.user
                 
                 if viewController is LoginViewController{
-                    try await socialLoginVM?.appleLogin(userCode: userCode, IdToken: idTokenString, nonce: currentNonce)
+                    try await socialLoginVM?.verifyUserCredentials(email: userCode, loginType: LoginType.apple)
                 }
                 if viewController is JoinViewController{
-                    try await socialJoinVM?.appleLogin(userCode: userCode, IdToken: idTokenString, nonce: currentNonce)
+                    try await socialLoginVM?.checkExistingUserEmail(email: userCode, loginType: LoginType.apple)
                 }
+                try await socialLoginVM?.appleLogin(idToken: idTokenString, nonce: currentNonce)
+                
                 delegate?.loginSuccess()
             }
             catch{
