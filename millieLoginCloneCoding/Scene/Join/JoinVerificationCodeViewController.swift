@@ -14,6 +14,9 @@ class JoinVerificationCodeViewController: UIViewController {
     @IBOutlet weak var resendButton: UIButton!
     @IBOutlet weak var nextButton: UIButton!
     
+    private var timer: Timer = Timer()
+    private var timeLimit: Int = 180
+    
     required init?(coder: NSCoder, loginVM: LoginProtocol?) {
         self.loginVM = loginVM
         super.init(coder: coder)
@@ -28,21 +31,46 @@ class JoinVerificationCodeViewController: UIViewController {
         super.viewDidLoad()
                 
         setAttribute()
+        setTimer()
     }
     
     private func setAttribute(){
         verificationCodeInputView.delegate = self
-        
-        nextButton.layer.cornerRadius = 5
     }
     
-    @IBAction func resendButtonTap(_ sender: UIButton) {
+    @IBAction private func resendButtonTap(_ sender: UIButton) {
         requestVerificationCode()
     }
     
-    @IBAction func nextButtonTap(_ sender: UIButton) {
+    @IBAction private func nextButtonTap(_ sender: UIButton) {
+        if timer.isValid == false {
+            presentAlertMessage(message: "입력 가능 시간이 만료되었습니다")
+            verificationCodeInputView.textField.text = ""
+        }
+        
         guard let verificationCode = verificationCodeInputView.textField.text else {return}
         phoneNumberLogin(verificationCode: verificationCode)
+    }
+    
+    @objc private func timerCallback(){
+        if timeLimit < 2{
+            timer.invalidate()
+        }
+        timeLimit -= 1
+        setAccessoryLabelText()
+    }
+    
+    private func setTimer(){
+        timeLimit = 180
+        setAccessoryLabelText()
+        
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerCallback), userInfo: nil, repeats: true)
+    }
+    
+    private func setAccessoryLabelText(){
+        let time = Date(timeIntervalSince1970: TimeInterval(timeLimit))
+        
+        verificationCodeInputView.accessoryLabel.text = Util.timeFormatter.string(from: time)
     }
 }
 
@@ -54,9 +82,10 @@ extension JoinVerificationCodeViewController{
         Task{
             do{
                 try await loginVM?.requestVerificationCode()
+                setTimer()
             }
             catch{
-                
+                presentAlertMessage(message: error.localizedDescription)
             }
         }
     }
@@ -66,7 +95,7 @@ extension JoinVerificationCodeViewController{
         Task{
             do{
                 try await loginVM?.phoneNumberLogin(verificationCode: verificationCode)
-                showNavigationJoinProfileViewController()
+                showNavigationJoinPasswordViewController()
             }
             catch{
                 presentAlertMessage(message: error.localizedDescription)
@@ -74,13 +103,13 @@ extension JoinVerificationCodeViewController{
         }
     }
     
-    func showNavigationJoinProfileViewController(){
-        let joinProfileViewController =  UIStoryboard(name: "Join", bundle: nil)
-            .instantiateViewController(identifier: "JoinProfileViewController"){ (coder) -> JoinProfileViewController? in
+    func showNavigationJoinPasswordViewController(){
+        let joinPasswordViewController =  UIStoryboard(name: "Join", bundle: nil)
+            .instantiateViewController(identifier: "JoinPasswordViewController"){ (coder) -> JoinPasswordViewController? in
             return .init(coder: coder, loginVM: self.loginVM)
         }
         
-        self.navigationController?.pushViewController(joinProfileViewController, animated: true)
+        self.navigationController?.pushViewController(joinPasswordViewController, animated: true)
     }
 }
 
@@ -88,10 +117,17 @@ extension JoinVerificationCodeViewController{
 
 extension JoinVerificationCodeViewController: InputStackViewDelegate{
     func inputTextFieldDidChangeSelection(_ textField: UITextField) {
-        nextButton.isEnabled = textField.text != ""
+        if textField.text?.count == 6 {
+            nextButton.isEnabled = true
+            return
+        }
+        nextButton.isEnabled = false
     }
     
     func inputTextField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        true
+        if textField.text?.count == 6  && string != ""{
+            return false
+        }
+        return true
     }
 }
