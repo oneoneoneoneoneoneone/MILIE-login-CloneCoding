@@ -87,10 +87,12 @@ class JoinViewController: UIViewController{
     }
     
     @IBAction private func nextButtonTap(_ sender: UIButton) {
-        //입력값 검증
-        if false{
+        self.view.endEditing(true)
+
+        if isInputValidation() == false{
             return
         }
+        
         checkJoin()
     }
 }
@@ -98,11 +100,26 @@ class JoinViewController: UIViewController{
 //MARK: extension private Logic
 
 extension JoinViewController{
+    private func isInputValidation() -> Bool{
+        //입력값 검증
+        if phoneInputView.textField.text?.ranges(of: Util.phoneRegex).isEmpty == true ||
+            phoneInputView.textField.text?.ranges(of: Util.phone10Regex).isEmpty == true{
+            phoneInputView.setInvalidData("휴대폰 번호가 올바르지 않습니다.")
+            return false
+        }
+        if birthStackView.isHidden == true{
+//            phoneInputView.setInvalidData(text: "휴대폰 번호가 올바르지 않습니다.")
+            return false
+        }
+        
+        return true
+    }
+    
     @MainActor
     private func checkJoin(){
         Task{
             do{
-                try await loginVM?.checkJoin(phone: phoneInputView.textField.text!)
+                try await loginVM?.checkExistingUserPhoneNumber(phone: phoneInputView.textField.text!)
                 
                 view.endEditing(true)
                 agencyStackView.layer.borderColor = UIColor.black.cgColor
