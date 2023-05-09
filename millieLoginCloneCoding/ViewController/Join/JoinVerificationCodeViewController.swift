@@ -68,9 +68,7 @@ class JoinVerificationCodeViewController: UIViewController {
     }
     
     private func setAccessoryLabelText(){
-        let time = Date(timeIntervalSince1970: TimeInterval(timeLimit))
-        
-        verificationCodeInputView.accessoryLabel.text = Util.timeFormatter.string(from: time)
+        verificationCodeInputView.accessoryLabel.text = Util.setTimeFormat(timeLimit)
     }
 }
 
