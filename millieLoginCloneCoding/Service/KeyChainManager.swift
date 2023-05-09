@@ -36,7 +36,7 @@ class KeyChainManager{
         //추가
         let status = SecItemAdd(query as CFDictionary, nil)
         guard status == errSecSuccess else {
-            throw LoginError.etcData(key: SecCopyErrorMessageString(status, nil)! as String)
+            throw LoginError.unknown(key: SecCopyErrorMessageString(status, nil)! as String)
         }
     }
     
@@ -51,7 +51,7 @@ class KeyChainManager{
         let status = SecItemCopyMatching(query as CFDictionary, &item)
         guard status != errSecItemNotFound else { return }  //정보 없음
         guard status == errSecSuccess else {
-            throw LoginError.etcData(key: SecCopyErrorMessageString(status, nil)! as String)
+            throw LoginError.unknown(key: SecCopyErrorMessageString(status, nil)! as String)
         }
         
         //추출
@@ -78,7 +78,7 @@ class KeyChainManager{
         let status = SecItemUpdate(query as CFDictionary, attributes as CFDictionary)
         guard status != errSecItemNotFound else {return}
         guard status == errSecSuccess else {
-            throw LoginError.etcData(key: SecCopyErrorMessageString(status, nil)! as String)
+            throw LoginError.unknown(key: SecCopyErrorMessageString(status, nil)! as String)
         }
     }
     
@@ -89,7 +89,7 @@ class KeyChainManager{
         let status = SecItemDelete(query as CFDictionary)
         guard status != errSecItemNotFound else {return}
         guard status == errSecSuccess else {
-            throw LoginError.etcData(key: SecCopyErrorMessageString(status, nil)! as String)
+            throw LoginError.unknown(key: SecCopyErrorMessageString(status, nil)! as String)
         }
     }
 }

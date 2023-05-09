@@ -11,9 +11,8 @@ struct User: Codable {
     let id: String
     let email: String
     let phone: String
-    let password: String
 }
 
-enum loginType: String, Codable{
+enum LoginType: String, Codable{
     case phone, naver, kakao, facebook, apple, google
 }

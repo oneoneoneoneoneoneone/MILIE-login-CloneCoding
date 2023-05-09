@@ -59,7 +59,7 @@ extension AppleLoginManager: ASAuthorizationControllerDelegate {
                     throw LoginError.nilData(key: "appleIDToken")
                 }
                 guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
-                    throw LoginError.etcData(key: "Unable to serialize token string from data: \(appleIDToken.debugDescription)")
+                    throw LoginError.unknown(key: "Unable to serialize token string from data: \(appleIDToken.debugDescription)")
                 }
                 let userCode = appleIDCredential.user
                 

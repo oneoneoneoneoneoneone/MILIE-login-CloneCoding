@@ -82,7 +82,7 @@ extension FirebaseLogin: LoginProtocol, FirebaseLoginProtocol{
     
     ///회원가입 여부 확인
     func checkExistingUserPhoneNumber(phone: String) async throws{
-        if (try await dbNetworkManager?.selectWherePhone(phone: phone)?
+        if (try await dbNetworkManager?.selectForPhone(phone: phone)?
             .filter{$0.value.id == LoginType.phone.rawValue}
             .isEmpty) == false{
             throw LoginError.foundJoinData(key: "휴대폰 번호")
@@ -106,7 +106,7 @@ extension FirebaseLogin: LoginProtocol, FirebaseLoginProtocol{
     
     ///firebase 로그인 - 기본로그인
     func login(phone: String, password: String) async throws {
-        guard let user = try await dbNetworkManager?.selectWherePhone(phone: phone) else {
+        guard let user = try await dbNetworkManager?.selectForPhone(phone: phone) else {
             throw LoginError.nilData(key: "email")
         }
         if user.count == 0{

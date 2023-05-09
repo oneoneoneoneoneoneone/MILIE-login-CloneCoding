@@ -9,11 +9,14 @@ import Foundation
 
 protocol DBNetworkManagerProtocol{
     ///사용자 가입 확인
-    func checkJoinUser(accountKey: String, loginType: LoginType) async throws -> Bool?
+//    func checkJoinUser(accountKey: String, loginType: LoginType) async throws -> Bool?
+    ///db email 일치 검색
+    func selectForEmail(email: String) async throws -> [String : User]?
     ///db phone 일치 검색
-    func selectWherePhone(phone: String) async throws -> [String : User]?
+    func selectForPhone(phone: String) async throws -> [String : User]?
     ///db user 생성
-    func updateUser(user: User) async throws -> String?
+    @discardableResult
+    func createUser(user: User) async throws -> String?
 }
 
 protocol ServerNetworkManagerProtocol{
@@ -31,30 +34,32 @@ class NetworkManager{
 
 extension NetworkManager: DBNetworkManagerProtocol, ServerNetworkManagerProtocol{
     //MARK: db API
-    func checkJoinUser(accountKey: String, loginType: LoginType) async throws -> Bool?{
-        return try await selectWhereEmail(email: accountKey)?.filter{$0.value.id == loginType.rawValue}.isEmpty
-    }
+//    func checkJoinUser(accountKey: String, loginType: LoginType) async throws -> Bool?{
+//        return try await selectForEmail(email: accountKey)?.filter{$0.value.id == loginType.rawValue}.isEmpty
+//    }
 
-    private func selectWhereEmail(email: String) async throws -> [String : User]?{
+    func selectForEmail(email: String) async throws -> [String : User]?{
         guard let url = api.getURLComponents("email", email)?.url else {throw NSError(domain: "query", code: 0)}
 
         return try await api.getUserData(url: url)
     }
 
-    func selectWherePhone(phone: String) async throws -> [String : User]?{
+    func selectForPhone(phone: String) async throws -> [String : User]?{
         guard let url = api.getURLComponents("phone", phone)?.url else {throw NSError(domain: "query", code: 0)}
         
         print(url)
         return try await api.getUserData(url: url)
     }
 
-    func updateUser(user: User) async throws -> String?{
+    @discardableResult
+    func createUser(user: User) async throws -> String?{
         guard let url = api.getURLComponents()?.url else {throw NSError(domain: "query", code: 0)}
         print(url)
         return try await api.postUserData(url: url, user: user)
     }
     
     //MARK: naver API
+    
     func requestNaverLoginData(accessToken: String) async throws -> Response?{
         guard let url = naverLoginAPI.getURLComponents()?.url else {throw NSError(domain: "url", code: 0)}
         print(url)
@@ -63,6 +68,7 @@ extension NetworkManager: DBNetworkManagerProtocol, ServerNetworkManagerProtocol
     }
     
     //MARK: local API
+    
     func requestToken(loginType: LoginType ,accessToken: String) async throws -> String?{
         guard let url = localAPI.getURLComponents(path: loginType.rawValue, accessToken: accessToken)?.url else {throw NSError(domain: "url", code: 0)}
         print(url)

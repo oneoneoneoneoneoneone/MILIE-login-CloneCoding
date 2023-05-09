@@ -10,7 +10,7 @@ import Foundation
 enum LoginError: Error{
     case nilData(key: String)
     case discrepancyData(key: String)
-    case etcData(key: String)
+    case unknown(key: String)
     
     case notFoundLoginData
     case notFoundSocialJoinData(key: String)
@@ -27,7 +27,7 @@ extension LoginError:  LocalizedError{
             return NSLocalizedString("\(key) 값이 없습니다.", comment: "")
         case .discrepancyData(key: let key):
             return NSLocalizedString("\(key) 값이 일치하지 않습니다.", comment: "")
-        case .etcData(key: let key):
+        case .unknown(key: let key):
             return NSLocalizedString(key, comment: "")
         case .notFoundLoginData:
             return NSLocalizedString("아이디 또는 비밀번호가 일치하지 않습니다.", comment: "")

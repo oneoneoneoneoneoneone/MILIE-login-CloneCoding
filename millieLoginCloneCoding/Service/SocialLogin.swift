@@ -39,7 +39,7 @@ class SocialLogin{
 extension SocialLogin: SocialLoginProtocol{
     ///소셜로그인 회원정보 검증
     func verifyUserCredentials(email: String, loginType: LoginType) async throws{
-        if (try await dbNetworkManager?.selectWhereEmail(email: email)?
+        if (try await dbNetworkManager?.selectForEmail(email: email)?
             .filter{$0.value.id == loginType.rawValue}
             .isEmpty) == true{
             throw LoginError.notFoundSocialJoinData(key: loginType.rawValue)
@@ -48,7 +48,7 @@ extension SocialLogin: SocialLoginProtocol{
     
     ///소셜로그인 회원 여부 확인 -> 회원가입
     func checkExistingUserEmail(email: String, loginType: LoginType) async throws {
-        if (try await dbNetworkManager?.selectWhereEmail(email: email)?
+        if (try await dbNetworkManager?.selectForEmail(email: email)?
             .filter{$0.value.id == loginType.rawValue}
             .isEmpty) == false{
             throw LoginError.foundJoinData(key: "\(loginType.rawValue) 계정")
