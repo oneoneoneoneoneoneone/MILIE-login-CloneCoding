@@ -102,7 +102,7 @@ class JoinViewController: UIViewController{
 extension JoinViewController{
     private func isInputValidation() -> Bool{
         //입력값 검증
-        if phoneInputView.textField.text?.ranges(of: Util.phoneRegex).isEmpty == true ||
+        if phoneInputView.textField.text?.ranges(of: Util.phoneRegex).isEmpty == true &&
             phoneInputView.textField.text?.ranges(of: Util.phone10Regex).isEmpty == true{
             phoneInputView.setInvalidData("휴대폰 번호가 올바르지 않습니다.")
             return false
