@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import LocalAuthentication
 
 class LoginViewController: UIViewController {
     private var loginVM: LoginProtocol?
@@ -15,15 +16,6 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var socialView: SocialView!
         
-//    init?(coder: NSCoder, loginVM: FirebaseLoginProtocol? = FirebaseLogin()) {
-//        self.loginVM = loginVM
-//        super.init(coder: coder)
-//    }
-//
-//    required init?(coder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -34,6 +26,8 @@ class LoginViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        loginFaceID()
     }
     
     private func setAttribute(){
@@ -41,7 +35,7 @@ class LoginViewController: UIViewController {
         
         phoneInputView.delegate = self
         passwordInputView.delegate = self
-
+        
         loginButton.layer.cornerRadius = 5
     }
     
@@ -54,10 +48,46 @@ class LoginViewController: UIViewController {
             do{
                 try await loginVM?.login(phone: phoneNumber, password: password)
                 
+                if try KeyChainManager.isEmpty(){
+                    try KeyChainManager.add(account: phoneNumber, password: password)
+                }else{
+                    try KeyChainManager.update(account: phoneNumber, password: password)
+                }
+                
                 self.dismiss(animated: true)
                 self.navigationController?.popToRootViewController(animated: true)
             }
             catch{
+                presentAlertMessage(message: error.localizedDescription)
+            }
+        }
+    }
+    
+    func loginFaceID(){
+        Task{
+            do{
+                if try KeyChainManager.isEmpty() {
+                    return
+                }
+                
+                let context = LAContext()
+                context.localizedCancelTitle = "휴대폰번호/비밀번호 로그인하기"
+                
+                var error: NSError?
+                guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) else {
+                    throw error ?? LoginError.unknown(key: "Can't evaluate policy")
+                }
+                
+                try await context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Log in to your account")
+                try await KeyChainManager.read()
+                
+                self.dismiss(animated: true)
+                self.navigationController?.popToRootViewController(animated: true)
+            }
+            catch{
+                if error.localizedDescription == "Authentication canceled."{
+                    return
+                }
                 presentAlertMessage(message: error.localizedDescription)
             }
         }

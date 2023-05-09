@@ -7,10 +7,10 @@
 
 import Foundation
 
-class KeyChainManager{
-    let bundleId = Bundle.main.bundleIdentifier!
+struct KeyChainManager{
+    static let bundleId = Bundle.main.bundleIdentifier!
     
-    func isEmpty() throws -> Bool{
+    static func isEmpty() throws -> Bool{
         let query: [String: Any] = [kSecClass as String: kSecClassInternetPassword,
                                     kSecAttrServer as String: bundleId,
                                     kSecReturnAttributes as String: true,
@@ -24,7 +24,7 @@ class KeyChainManager{
         return false
     }
     
-    func add(account: String, password: String) throws{
+    static func add(account: String, password: String) throws{
         let account = account
         guard let password = password.data(using: String.Encoding.utf8) else {return}
         
@@ -40,7 +40,7 @@ class KeyChainManager{
         }
     }
     
-    func read() async throws {
+    static func read() async throws {
         let query: [String: Any] = [kSecClass as String: kSecClassInternetPassword,
                                     kSecAttrServer as String: bundleId,
                                     kSecReturnAttributes as String: true,
@@ -66,7 +66,7 @@ class KeyChainManager{
         try await FirebaseLogin().login(phone: account, password: password)
     }
     
-    func update(account: String, password: String) throws{
+    static func update(account: String, password: String) throws{
         let account = account
         guard let password = password.data(using: String.Encoding.utf8) else {return}
         
@@ -82,7 +82,7 @@ class KeyChainManager{
         }
     }
     
-    func delete() throws{
+    static func delete() throws{
         let query: [String: Any] = [kSecClass as String: kSecClassInternetPassword,
                                     kSecAttrServer as String: bundleId]
         
