@@ -17,9 +17,6 @@ protocol FirebaseLoginProtocol {
     
     ///firebase 커스텀 토큰 인증
     func customLogin(customToken: String) async throws
-    
-    ///firebase 로그인 - 사용자 추가
-    func createUser(email: String, password: String) async throws
 }
 
 protocol LoginProtocol {
@@ -170,11 +167,6 @@ extension FirebaseLogin: LoginProtocol, FirebaseLoginProtocol{
                 throw error
             }
         }
-    }
-    
-    ///firebase 로그인 - 사용자 추가
-    func createUser(email: String, password: String) async throws {
-        try await Auth.auth().createUser(withEmail: email, password: password)
     }
     
     ///firebase 회원가입 - createUser email로만 회원가입 가능

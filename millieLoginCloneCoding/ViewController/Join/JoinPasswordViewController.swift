@@ -107,7 +107,7 @@ extension JoinPasswordViewController: InputStackViewDelegate{
                 return
             }
             if textField.text?.ranges(of: Util.passwordSpecialCharRegex).isEmpty == false{
-                passwordInputView.setInvalidData("특수문자는 !@$^*-_만 입력 가능합니다")
+                passwordInputView.setInvalidData("특수문자는 !@$^*_-만 입력 가능합니다")
                 nextButton.isEnabled = false
                 return
             }

@@ -107,6 +107,9 @@ class InputStackView: UIView {
         hStackView.layer.cornerRadius = 5
         hStackView.layer.borderWidth = 1
         hStackView.layer.borderColor = UIColor.lightGray.cgColor
+        
+        clearButton.isHidden = true
+        accessoryImageView.isHidden = true
     }
     
     @IBAction private func textFieldEditingChanged(_ sender: UITextField) {
@@ -154,7 +157,7 @@ extension InputStackView: UITextFieldDelegate{
         titleLabel.textColor = .darkGray
         accessoryImageView.isHidden = true
         
-        if isValidation == true{
+        if isValidation == false{
             labelStackView.isHidden = true
         }
         delegate?.inputTextFieldDidBeginEditing?(textField)

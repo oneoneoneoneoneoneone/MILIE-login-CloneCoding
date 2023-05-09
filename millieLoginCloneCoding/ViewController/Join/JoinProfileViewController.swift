@@ -42,18 +42,18 @@ class JoinProfileViewController: UIViewController {
     
     @MainActor
     @IBAction func CompletionButtonTap(_ sender: UIButton) {
-        loginVM?.userInfoUpdate(displayName: displayNameInputView.textField.text ?? "", photoURL: "")
-        
-        Task{
-            do{
-                try await loginVM?.Join(password: "@@1234")
-                
-                self.dismiss(animated: true)
-                self.navigationController?.popToRootViewController(animated: true)
-            }
-            catch{
-                presentAlertMessage(message: error.localizedDescription)
-            }
+        do{
+            completionButton.isEnabled = false
+            guard let displayName = displayNameInputView.textField.text else {return}
+            loginVM?.userInfoUpdate(displayName: displayName, photoURL: "")
+            
+            self.dismiss(animated: true)
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+        catch{
+            presentAlertMessage(message: error.localizedDescription)
+            
+            completionButton.isEnabled = true
         }
     }
 }

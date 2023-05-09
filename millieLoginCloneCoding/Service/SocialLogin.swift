@@ -41,7 +41,7 @@ extension SocialLogin: SocialLoginProtocol{
     func verifyUserCredentials(email: String, loginType: LoginType) async throws{
         if (try await dbNetworkManager?.selectWhereEmail(email: email)?
             .filter{$0.value.id == loginType.rawValue}
-            .isEmpty) == false{
+            .isEmpty) == true{
             throw LoginError.notFoundSocialJoinData(key: loginType.rawValue)
         }
     }
@@ -50,10 +50,10 @@ extension SocialLogin: SocialLoginProtocol{
     func checkExistingUserEmail(email: String, loginType: LoginType) async throws {
         if (try await dbNetworkManager?.selectWhereEmail(email: email)?
             .filter{$0.value.id == loginType.rawValue}
-            .isEmpty) == true{
+            .isEmpty) == false{
             throw LoginError.foundJoinData(key: "\(loginType.rawValue) 계정")
         }
-        let user = User(id: LoginType.kakao.rawValue, email: email, phone: "")
+        let user = User(id: loginType.rawValue, email: email, phone: "")
         try await self.dbNetworkManager?.createUser(user: user)
     }
     
